@@ -1,9 +1,18 @@
-import { Display } from './editor/display.js'
-import { AbstractAutomata } from './automata/abstract-automata.js'
-import { AppError } from './app-error.js'
-import { Editor } from './editor/editor.js'
+import { AppError } from "./app-error.js"
+import { Display } from "./display.js"
+import { BucketTool } from "./tools/bucket-tool.js"
+import { LineTool } from "./tools/line-tool.js"
+import { PencilTool } from "./tools/pencil-tool.js"
+import { RectFillTool } from "./tools/rect-fill-tool.js"
+import { RectTool } from "./tools/rect-tool.js"
+import { Tool } from "./tools/tool.js"
 
 export class App {
+    static STATE_STOPPED = 0
+    static STATE_RUNNING = 1
+    static STATE_PAUSED = 2
+    static STATE_STEPPING = 3
+
     /** @type {AbstractAutomata} */
     #automata = null
 
@@ -13,24 +22,62 @@ export class App {
     /** @type {Display} */
     #display
 
-    /** @type {Editor} */
-    #editor
+    #tools = {
+        pencil: new PencilTool(this),
+        line: new LineTool(this),
+        rect: new RectTool(this),
+        rectFill: new RectFillTool(this),
+        bucket: new BucketTool(this),
+    }
 
-    #rows = 0
-    #cols = 0
-    #tileSize = 0
+    #buttons = {
+        automataBtn: document.getElementById('app-btn-automata'),
+        openBtn: document.getElementById('app-btn-open'),
+        saveBtn: document.getElementById('app-btn-save'),
+        playBtn: document.getElementById('app-btn-play'),
+        pauseBtn: document.getElementById('app-btn-pause'),
+        stopBtn: document.getElementById('app-btn-stop'),
+        stepBtn: document.getElementById('app-btn-step'),
+        speed1xBtn: document.getElementById('app-btn-1x'),
+        speed2xBtn: document.getElementById('app-btn-2x'),
+        speed4xBtn: document.getElementById('app-btn-4x'),
+        speed8xBtn: document.getElementById('app-btn-8x'),
+        speed16xBtn: document.getElementById('app-btn-16x'),
+        undoBtn: document.getElementById('app-btn-undo'),
+        redoBtn: document.getElementById('app-btn-redo'),
+        settingsBtn: document.getElementById('app-btn-settings'),
+        themeBtn: document.getElementById('app-btn-theme'),
+    }
+
+    #toolButtons = {
+        pencilBtn: document.getElementById('app-btn-pencil'),
+        lineBtn: document.getElementById('app-btn-line'),
+        rectBtn: document.getElementById('app-btn-rect'),
+        rectFillBtn: document.getElementById('app-btn-rect-fill'),
+        bucketBtn: document.getElementById('app-btn-bucket'),
+        selectionBtn: document.getElementById('app-btn-selection'),
+        eraserBtn: document.getElementById('app-btn-eraser'),
+    }
+
+    #currentState = App.STATE_STOPPED
+    #currentTool = this.#tools.pencil
+    #currentCellValue = 1
+    #generationDelay = 60
+    #rows = 50
+    #cols = 100
+    #tileSize = 10
     #colors = ['rgb(0, 0, 0)', 'rgb(255, 255, 255)']
     #defaultColor = 'rgb(255, 255, 255)'
 
     /**
      * @param {number} rows 
      * @param {number} cols 
-     * @param {number} tileSize 
      */
-    constructor(rows, cols, tileSize) {
+    constructor(rows, cols) {
+        this.#rows = rows
+        this.#cols = cols
         this.#display = new Display(this)
-        this.#editor = new Editor(this)
-        this.resize(rows, cols, tileSize)
+        this.#setupListeners()
     }
 
     /**
@@ -67,21 +114,6 @@ export class App {
     }
 
     /**
-     * @param {number} rows 
-     * @param {number} cols 
-     * @param {number} tileSize
-     */
-    resize(rows, cols, tileSize) {
-        this.#rows = rows
-        this.#cols = cols
-        this.#tileSize = tileSize
-        if (this.#automata) {
-            this.#automata.resize(rows, cols)
-        }
-        this.#display.resize(rows, cols)
-    }
-
-    /**
      * @param {number} value
      * @returns {string} 
      */
@@ -93,36 +125,114 @@ export class App {
     }
 
     /**
-     * @param {number} pos
-     * @returns 
-     */
-    translateCoordinateToGrid(pos) {
-        return pos - (pos % this.#tileSize)
-    }
-
-    /**
      * @param {number} pos 
      * @returns 
      */
-    translateCoordinateToAutomata(pos) {
+    translateCoordinateToGrid(pos) {
         return Math.floor(pos / this.#tileSize)
     }
 
-    set automata(automata) {
-        this.#automata = automata
-        this.#display.resize(this.#rows, this.#cols, this.#tileSize)
+    #setupListeners() {
+        this.#buttons.playBtn.addEventListener('click', () => this.#handlePlayBtn())
+        this.#buttons.pauseBtn.addEventListener('click', () => this.#handlePauseBtn())
+        this.#buttons.stopBtn.addEventListener('click', () => this.#handleStopBtn())
+        this.#buttons.stepBtn.addEventListener('click', () => this.#handleStepBtn())
+        this.#toolButtons.pencilBtn.addEventListener('click', evt => this.#handleToolBtn(evt, this.#tools.pencil))
+        this.#toolButtons.lineBtn.addEventListener('click', evt => this.#handleToolBtn(evt, this.#tools.line))
+        this.#toolButtons.rectBtn.addEventListener('click', evt => this.#handleToolBtn(evt, this.#tools.rect))
+        this.#toolButtons.rectFillBtn.addEventListener('click', evt => this.#handleToolBtn(evt, this.#tools.rectFill))
+        this.#toolButtons.bucketBtn.addEventListener('click', evt => this.#handleToolBtn(evt, this.#tools.bucket))
+    }
+
+    #disableButtons() {
+        Object.values(this.#buttons)
+            .filter(btn => btn && !btn.hasAttribute('disabled'))
+            .map(btn => btn.setAttribute('disabled', ''))
+    }
+
+    #enableButtons() {
+        Object.values(this.#buttons)
+            .filter(btn => btn && btn.hasAttribute('disabled'))
+            .map(btn => btn.removeAttribute('disabled'))
+    }
+
+    #handlePlayBtn() {
+        if (!this.automata) {
+            throw new AppError('Automata not set')
+        }
+        this.#disableButtons()
+        this.#currentState = App.STATE_RUNNING
+        this.startAutoGeneration(this.#generationDelay)
+        this.#buttons.stopBtn.removeAttribute('disabled')
+        this.#buttons.pauseBtn.removeAttribute('disabled')
+        this.#buttons.stepBtn.removeAttribute('disabled')
+    }
+
+    #handlePauseBtn() {
+        this.#currentState = App.STATE_PAUSED
+        this.stopAutoGeneration()
+        this.#buttons.playBtn.removeAttribute('disabled')
+        this.#buttons.pauseBtn.setAttribute('disabled', '')
+    }
+
+    #handleStopBtn() {
+        this.#currentState = App.STATE_STOPPED
+        this.stopAutoGeneration()
+        this.resetGeneration()
+        this.#enableButtons()
+        this.#buttons.stopBtn.setAttribute('disabled', '')
+        this.#buttons.pauseBtn.setAttribute('disabled', '')
+    }
+
+    #handleStepBtn() {
+        if (this.#currentState === App.STATE_STEPPING) {
+            this.nextGeneration()
+            return
+        }
+        this.#currentState = App.STATE_STEPPING
+        this.stopAutoGeneration()
+        this.nextGeneration()
+        this.#disableButtons()
+        this.#buttons.stepBtn.removeAttribute('disabled')
+        this.#buttons.stopBtn.removeAttribute('disabled')
+        this.#buttons.playBtn.removeAttribute('disabled')
+    }
+
+    #inactiveToolButtons() {
+        Object.values(this.#toolButtons).map(btn => btn.classList.remove('active'))
+    }
+
+    /**
+     * @param {PointerEvent} evt 
+     * @param {Tool} tool 
+     */
+    #handleToolBtn(evt, tool) {
+        this.#inactiveToolButtons()
+        evt.currentTarget.classList.add('active')
+        this.#currentTool = tool
+    }
+
+    get currentStateName() {
+        switch (this.#currentState) {
+            case App.STATE_STOPPED: return "Stopped"
+            case App.STATE_RUNNING: return "Running"
+            case App.STATE_STEPPING: return "Stepping"
+            case App.STATE_PAUSED: return "Paused"
+            default: return 'Unknown'
+        }
+    }
+
+    get currentTool() {
+        return this.#currentTool
     }
 
     get automata() {
         return this.#automata
     }
 
-    get display() {
-        return this.#display
-    }
-
-    get editor() {
-        return this.#editor
+    set automata(automata) {
+        this.#automata = automata
+        this.#automata.resize(this.#rows, this.#cols)
     }
 
     get colors() {
@@ -140,376 +250,8 @@ export class App {
     get tileSize() {
         return this.#tileSize
     }
+
+    get currentCellValue() {
+        return this.#currentCellValue
+    }
 }
-
-
-
-
-
-
-
-
-
-
-// /** @enum {number} */
-// const EditorState = Object.freeze({
-//     STOPPED: 0,
-//     RUNNING: 1,
-//     PAUSED: 2,
-//     STEPPING: 3
-// })
-
-
-//     #generationTick() {
-//         this.#automata.nextGeneration()
-
-//         this.#renderer.render()
-//         if (this.#editorState === EditorState.RUNNING) {
-//             this.#automata.getBaseAutomata().nextGeneration()
-//             this.#labels.labelGenerationCount.innerHTML = this.#automata.getBaseAutomata().getGenerationCount()
-//         }
-//     }
-
-
-
-
-
-
-//     #buttons = {
-//         btnAutomata: document.getElementById('app-btn-automata'),
-//         btnOpen: document.getElementById('app-btn-open'),
-//         btnSave: document.getElementById('app-btn-save'),
-//         btnPlay: document.getElementById('app-btn-play'),
-//         btnPause: document.getElementById('app-btn-pause'),
-//         btnStop: document.getElementById('app-btn-stop'),
-//         btnStep: document.getElementById('app-btn-step'),
-//         btn1x: document.getElementById('app-btn-1x'),
-//         btn2x: document.getElementById('app-btn-2x'),
-//         btn4x: document.getElementById('app-btn-4x'),
-//         btn8x: document.getElementById('app-btn-8x'),
-//         btn16x: document.getElementById('app-btn-16x'),
-//         btnUndo: document.getElementById('app-btn-undo'),
-//         btnRedo: document.getElementById('app-btn-redo'),
-//         btnPencil: document.getElementById('app-btn-pencil'),
-//         btnLine: document.getElementById('app-btn-line'),
-//         btnRect: document.getElementById('app-btn-rect'),
-//         btnBucket: document.getElementById('app-btn-bucket'),
-//         btnSelection: document.getElementById('app-btn-selection'),
-//         btnEraser: document.getElementById('app-btn-eraser'),
-//         btnSettings: document.getElementById('app-btn-settings'),
-//         btnTheme: document.getElementById('app-btn-theme'),
-//     }
-
-//     #labels = {
-//         labelGenerationCount: document.getElementById('app-generation-count'),
-//     }
-
-//     #tileSize = 10
-//     #rows = 50
-//     #cols = 100
-//     #editorState = EditorState.STOPPED
-
-//     /** @type {import('./display.js').Renderer} */
-//     #renderer = null
-
-//     /** @type {import('./automata.js').BaseAutomata} */
-//     #automata = null
-
-//     /** @type {number?} */
-//     #interval = null
-
-//     constructor() {
-//         this.#renderer = new Renderer(this, this.#cols, this.#rows, this.#tileSize)
-//         this.#setupListeners()
-//     }
-
-//     start() {
-//         const rule = GameOfLifeRules.GOL
-//         this.#automata = createGameOfLife(this.#cols, this.#rows, rule)
-//         const offsetRows = 21;
-//         const offsetCols = 46;
-//         this.#automata.getBaseAutomata().setCellState(0 + offsetRows, 1 + offsetCols, GameOfLifeCellState.ALIVE);
-//         this.#automata.getBaseAutomata().setCellState(1 + offsetRows, 3 + offsetCols, GameOfLifeCellState.ALIVE);
-//         this.#automata.getBaseAutomata().setCellState(2 + offsetRows, 0 + offsetCols, GameOfLifeCellState.ALIVE);
-//         this.#automata.getBaseAutomata().setCellState(2 + offsetRows, 1 + offsetCols, GameOfLifeCellState.ALIVE);
-//         this.#automata.getBaseAutomata().setCellState(2 + offsetRows, 4 + offsetCols, GameOfLifeCellState.ALIVE);
-//         this.#automata.getBaseAutomata().setCellState(2 + offsetRows, 5 + offsetCols, GameOfLifeCellState.ALIVE);
-//         this.#automata.getBaseAutomata().setCellState(2 + offsetRows, 6 + offsetCols, GameOfLifeCellState.ALIVE);
-//         this.#tick()
-//         this.#recreateLoop(100)
-//     }
-
-//     #recreateLoop(delay) {
-//         if (this.#interval !== null) {
-//             clearInterval(this.#interval)
-//         }
-//         this.#interval = setInterval(() => this.#tick(), delay)
-//     }
-
-//     #tick() {
-//         this.#renderer.render()
-//         if (this.#editorState === EditorState.RUNNING) {
-//             this.#automata.getBaseAutomata().nextGeneration()
-//             this.#labels.labelGenerationCount.innerHTML = this.#automata.getBaseAutomata().getGenerationCount()
-//         }
-//     }
-
-//     #resize(rows, cols, tileSize) {
-//         this.#rows = rows
-//         this.#cols = cols
-//         this.#tileSize = tileSize
-//         this.#renderer.resize(rows, cols, tileSize)
-//     }
-
-//     #disableButtons() {
-//         Object.values(this.#buttons)
-//             .filter(btn => !btn.hasAttribute('disabled'))
-//             .map(btn => btn.setAttribute('disabled', ''))
-//     }
-
-//     #enableButtons() {
-//         Object.values(this.#buttons)
-//             .filter(btn => btn.hasAttribute('disabled'))
-//             .map(btn => btn.removeAttribute('disabled'))
-//     }
-
-//     #btnPlayHandler() {
-//         if (!automata) {
-//             alert('Automata not set')
-//             return
-//         }
-//         this.#disableButtons()
-//         this.#editorState = EditorState.RUNNING
-//         this.#buttons.btnStop.removeAttribute('disabled')
-//         this.#buttons.btnPause.removeAttribute('disabled')
-//         this.#buttons.btnStep.removeAttribute('disabled')
-//     }
-
-//     #btnPauseHandler() {
-//         this.#editorState = EditorState.PAUSED
-//         this.#buttons.btnPlay.removeAttribute('disabled')
-//         this.#buttons.btnPause.setAttribute('disabled', '')
-//     }
-
-//     #btnStopHandler() {
-//         clearInterval(interval)
-//         this.#editorState = EditorState.STOPPED
-//         this.#labels.labelGenerationCount.innerHTML = 0
-//         this.#automata.getBaseAutomata().resetGeneration()
-//         this.#enableButtons()
-//         this.#buttons.btnStop.setAttribute('disabled', '')
-//         this.#buttons.btnPause.setAttribute('disabled', '')
-//     }
-
-//     #btnStepHandler() {
-//         if (this.#editorState === EditorState.STEPPING) {
-//             this.#automata.getBaseAutomata().nextGeneration()
-//             this.#labels.labelGenerationCount.innerHTML = this.#automata.getBaseAutomata().getGenerationCount()
-//             return
-//         }
-//         this.#editorState = EditorState.STEPPING
-//         this.#disableButtons()
-//         this.#buttons.btnStep.removeAttribute('disabled')
-//         this.#buttons.btnStop.removeAttribute('disabled')
-//         this.#buttons.btnPlay.removeAttribute('disabled')
-//         this.#automata.getBaseAutomata().nextGeneration()
-//         this.#labels.labelGenerationCount.innerHTML = this.#automata.getBaseAutomata().getGenerationCount()
-//     }
-
-//     #setupListeners() {
-//         this.#buttons.btnPlay.addEventListener('click', this.#btnPlayHandler)
-//         this.#buttons.btnPause.addEventListener('click', this.#btnPauseHandler)
-//         this.#buttons.btnStop.addEventListener('click', this.#btnStopHandler)
-//         this.#buttons.btnStep.addEventListener('click', this.#btnStepHandler)
-//     }
-
-//     get automata() {
-//         return this.#automata
-//     }
-
-
-
-
-
-
-
-
-// /**
-//  * @returns {Application}
-//  */
-// export const createApp = () => {
-
-//     /** @type {object} */
-//     const buttons = {
-//         btnAutomata: document.getElementById('app-btn-automata'),
-//         btnOpen: document.getElementById('app-btn-open'),
-//         btnSave: document.getElementById('app-btn-save'),
-//         btnPlay: document.getElementById('app-btn-play'),
-//         btnPause: document.getElementById('app-btn-pause'),
-//         btnStop: document.getElementById('app-btn-stop'),
-//         btnStep: document.getElementById('app-btn-step'),
-//         btn1x: document.getElementById('app-btn-1x'),
-//         btn2x: document.getElementById('app-btn-2x'),
-//         btn4x: document.getElementById('app-btn-4x'),
-//         btn8x: document.getElementById('app-btn-8x'),
-//         btn16x: document.getElementById('app-btn-16x'),
-//         btnUndo: document.getElementById('app-btn-undo'),
-//         btnRedo: document.getElementById('app-btn-redo'),
-//         btnPencil: document.getElementById('app-btn-pencil'),
-//         btnLine: document.getElementById('app-btn-line'),
-//         btnRect: document.getElementById('app-btn-rect'),
-//         btnBucket: document.getElementById('app-btn-bucket'),
-//         btnSelection: document.getElementById('app-btn-selection'),
-//         btnEraser: document.getElementById('app-btn-eraser'),
-//         btnSettings: document.getElementById('app-btn-settings'),
-//         btnTheme: document.getElementById('app-btn-theme'),
-//     }
-
-//     /** @type {object} */
-//     const labels = {
-//         labelGenerationCount: document.getElementById('app-generation-count'),
-//     }
-
-
-//     const tileSize = 10
-
-
-//     let rows = 50
-
-//     /** @type {number} */
-//     let cols = 100
-
-//     /** @type {import('./renderer.js').Renderer} */
-//     const renderer = null
-
-//     /** @type {EditorState} */
-//     let editorState = EditorState.STOPPED
-
-//     /** @type {import('./automata.js').BaseAutomata} */
-//     let automata = null
-
-//     /** @type {number} */
-//     let interval = null
-
-//     /** @returns {void} */
-//     const disableButtons = () => Object.values(buttons)
-//         .filter(btn => !btn.hasAttribute('disabled'))
-//         .map(btn => btn.setAttribute('disabled', ''))
-
-//     /** @returns {void} */
-//     const enableButtons = () => Object.values(buttons)
-//         .filter(btn => btn.hasAttribute('disabled'))
-//         .map(btn => btn.removeAttribute('disabled'))
-
-//     /** @returns {void} */
-//     const btnPlayHandler = () => {
-//         if (!automata) {
-//             alert('Automata not set')
-//             return
-//         }
-//         disableButtons()
-//         editorState = EditorState.RUNNING
-//         buttons.btnStop.removeAttribute('disabled')
-//         buttons.btnPause.removeAttribute('disabled')
-//         buttons.btnStep.removeAttribute('disabled')
-//     }
-
-//     /** @returns {void} */
-//     const btnPauseHandler = () => {
-//         editorState = EditorState.PAUSED
-//         buttons.btnPlay.removeAttribute('disabled')
-//         buttons.btnPause.setAttribute('disabled', '')
-//     }
-
-//     /** @returns {void} */
-//     const btnStopHandler = () => {
-//         clearInterval(interval)
-//         editorState = EditorState.STOPPED
-//         labels.labelGenerationCount.innerHTML = 0
-//         automata.getBaseAutomata().resetGeneration()
-//         enableButtons()
-//         buttons.btnStop.setAttribute('disabled', '')
-//         buttons.btnPause.setAttribute('disabled', '')
-//     }
-
-//     /** @returns {void} */
-//     const btnStepHandler = () => {
-//         if (editorState === EditorState.STEPPING) {
-//             automata.getBaseAutomata().nextGeneration()
-//             labels.labelGenerationCount.innerHTML = automata.getBaseAutomata().getGenerationCount()
-//             return
-//         }
-//         editorState = EditorState.STEPPING
-//         disableButtons()
-//         buttons.btnStep.removeAttribute('disabled')
-//         buttons.btnStop.removeAttribute('disabled')
-//         buttons.btnPlay.removeAttribute('disabled')
-//         automata.getBaseAutomata().nextGeneration()
-//         labels.labelGenerationCount.innerHTML = automata.getBaseAutomata().getGenerationCount()
-//     }
-
-//     /** @returns {void} */
-//     const setupListeners = () => {
-//         buttons.btnPlay.addEventListener('click', btnPlayHandler)
-//         buttons.btnPause.addEventListener('click', btnPauseHandler)
-//         buttons.btnStop.addEventListener('click', btnStopHandler)
-//         buttons.btnStep.addEventListener('click', btnStepHandler)
-//     }
-
-//     /**
-//      * @param {number} delay
-//      * @returns {void}
-//      */
-//     const recreateLoop = delay => {
-//         if (interval !== null) {
-//             clearInterval(interval)
-//         }
-//         interval = setInterval(() => tick(), delay)
-//     }
-
-//     /** @returns {void} */
-//     const tick = () => {
-//         renderer.render()
-//         if (editorState === EditorState.RUNNING) {
-//             automata.getBaseAutomata().nextGeneration()
-//             labels.labelGenerationCount.innerHTML = automata.getBaseAutomata().getGenerationCount()
-//         }
-//     }
-
-//     /** @returns {void} */
-//     /*const render = () => {
-//         renderer.clear()
-//         renderer.renderAutomata(automata.getBaseAutomata())
-//         renderer.renderGrid()
-//     }*/
-
-//     /** @returns {void} */
-//     const start = () => {
-//         setupListeners()
-//         const rule = GameOfLifeRules.GOL
-//         automata = createGameOfLife(cols, rows, rule)
-//         const offsetRows = 21;
-//         const offsetCols = 46;
-//         automata.getBaseAutomata().setCellState(0 + offsetRows, 1 + offsetCols, GameOfLifeCellState.ALIVE);
-//         automata.getBaseAutomata().setCellState(1 + offsetRows, 3 + offsetCols, GameOfLifeCellState.ALIVE);
-//         automata.getBaseAutomata().setCellState(2 + offsetRows, 0 + offsetCols, GameOfLifeCellState.ALIVE);
-//         automata.getBaseAutomata().setCellState(2 + offsetRows, 1 + offsetCols, GameOfLifeCellState.ALIVE);
-//         automata.getBaseAutomata().setCellState(2 + offsetRows, 4 + offsetCols, GameOfLifeCellState.ALIVE);
-//         automata.getBaseAutomata().setCellState(2 + offsetRows, 5 + offsetCols, GameOfLifeCellState.ALIVE);
-//         automata.getBaseAutomata().setCellState(2 + offsetRows, 6 + offsetCols, GameOfLifeCellState.ALIVE);
-//         tick()
-//         recreateLoop(100)
-//     }
-
-//     /** @returns {automata} */
-//     const getAutomata = () => automata
-
-//     const app = {
-//         start,
-//         getAutomata
-//     }
-
-//     app.renderer = createRenderer(app, cols, rows, tileSize)
-
-//     return app
-// }

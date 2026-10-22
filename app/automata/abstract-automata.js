@@ -117,11 +117,11 @@ export class AbstractAutomata {
             throw new AutomataError(`Invalid rows/cols: ${rows}/${cols}`)
         }
         const newData = []
-        for (let row = 0; row < cols; row++) {
+        for (let row = 0; row < rows; row++) {
             const line = []
-            for (let col = 0; col < rows; col++) {
+            for (let col = 0; col < cols; col++) {
                 if (row < this.#rows && col < this.#cols) {
-                    line.push(data[row][col])
+                    line.push(this.#data[row][col])
                 } else {
                     line.push(0)
                 }
@@ -131,8 +131,8 @@ export class AbstractAutomata {
         this.#rows = rows
         this.#cols = cols
         this.#data = newData
-        this.#buffer = structuredClone(data)
-        this.#initialData = structuredClone(data)
+        this.#buffer = structuredClone(this.#data)
+        this.#initialData = structuredClone(this.#data)
     }
 
     isGenerationZero() {

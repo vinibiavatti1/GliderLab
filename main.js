@@ -6,10 +6,9 @@ import { GameOfLife } from './app/automata/game-of-life/game-of-life.js'
 
 const DEFAULT_ROWS = 50
 const DEFAULT_COLS = 100
-const DEFAULT_TILESIZE = 10
 
 window.addEventListener('DOMContentLoaded', () => {
-    const app = new App(DEFAULT_ROWS, DEFAULT_COLS, DEFAULT_TILESIZE)
+    const app = new App(DEFAULT_ROWS, DEFAULT_COLS)
 
     const automata = new GameOfLife(DEFAULT_ROWS, DEFAULT_COLS, GameOfLifeRegistry.GOL)
 

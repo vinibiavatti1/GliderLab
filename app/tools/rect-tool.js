@@ -1,19 +1,26 @@
-import { Tool } from "./tool"
+import { Tool } from "./tool.js"
 
 /** @implements {Tool} */
-export class RectFillTool extends Tool {
-    #mousePressed = true
-    #mouseSrcRow = 0
-    #mouseSrcCol = 0
-    #mouseDstRow = 0
-    #mouseDstCol = 0
+export class RectTool extends Tool {
+    #mousePressed = false
+
+    /** @type {number?} */
+    #mouseSrcRow = null
+
+    /** @type {number?} */
+    #mouseSrcCol = null
+
+    /** @type {number?} */
+    #mouseDstRow = null
+
+    /** @type {number?} */
+    #mouseDstCol = null
 
     /**
      * @param {App} app 
-     * @param {Editor} editor 
      */
-    constructor(app, editor) {
-        super(app, editor)
+    constructor(app) {
+        super(app)
     }
 
     /**
@@ -44,14 +51,18 @@ export class RectFillTool extends Tool {
      */
     onMouseReleased(row, col) {
         this.#mousePressed = false
-        const srcRow = this.app.translateCoordinateToAutomata(this.#mouseSrcRow)
-        const srcCol = this.app.translateCoordinateToAutomata(this.#mouseSrcCol)
-        const dstRow = this.app.translateCoordinateToAutomata(this.#mouseDstRow)
-        const dstCol = this.app.translateCoordinateToAutomata(this.#mouseDstCol)
-        const cells = this.#getRectFillCells(srcCol, srcRow, dstCol, dstRow);
+        const cells = this.#getRectCells(this.#mouseSrcRow, this.#mouseSrcCol, this.#mouseDstRow, this.#mouseDstCol);
         for (const [col, row] of cells) {
-            this.app.automata.setValue(row, col, 1)
+            this.app.automata.setValue(row, col, this.app.currentCellValue)
         }
+        this.#mouseSrcRow = null
+        this.#mouseSrcCol = null
+        this.#mouseDstRow = null
+        this.#mouseDstCol = null
+    }
+
+    onMouseLeave() {
+
     }
 
     /**
@@ -61,7 +72,13 @@ export class RectFillTool extends Tool {
         if (!this.#mousePressed) {
             return
         }
-        const cells = this.#getRectFillCells(this.#mouseSrcRow, this.#mouseSrcCol, this.#mouseDstRow, this.#mouseDstCol);
+        if (this.#mouseSrcRow === null || this.#mouseSrcCol === null) {
+            return
+        }
+        if (this.#mouseDstRow === null || this.#mouseDstCol === null) {
+            return
+        }
+        const cells = this.#getRectCells(this.#mouseSrcRow, this.#mouseSrcCol, this.#mouseDstRow, this.#mouseDstCol);
         for (const [col, row] of cells) {
             displayBufferContext.fillRect(
                 col * this.app.tileSize,
@@ -79,7 +96,7 @@ export class RectFillTool extends Tool {
      * @param {number} dstRow 
      * @returns {number[][]}
      */
-    #getRectFillCells(srcRow, srcCol, dstRow, dstCol) {
+    #getRectCells(srcRow, srcCol, dstRow, dstCol) {
         const points = [];
         const minCol = Math.min(srcCol, dstCol);
         const maxCol = Math.max(srcCol, dstCol);
@@ -87,7 +104,10 @@ export class RectFillTool extends Tool {
         const maxRow = Math.max(srcRow, dstRow);
         for (let row = minRow; row <= maxRow; row++) {
             for (let col = minCol; col <= maxCol; col++) {
-                points.push([col, row]);
+                const isBorder = (row === minRow || row === maxRow || col === minCol || col === maxCol);
+                if (isBorder) {
+                    points.push([col, row]);
+                }
             }
         }
         return points;

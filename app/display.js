@@ -1,13 +1,9 @@
-import { App } from "../app.js"
-import { GameOfLife } from "../automata/game-of-life/game-of-life.js"
-import { Editor } from "./editor.js"
+import { App } from "./app.js"
+import { GameOfLife } from "./automata/game-of-life/game-of-life.js"
 
 export class Display {
     /** @type {App} */
     #app
-
-    /** @type {Editor} */
-    #editor
 
     /** @type {HTMLElement} */
     #display = document.getElementById('canvas')
@@ -39,16 +35,14 @@ export class Display {
     #gridStepColor = 'rgba(255, 255, 255, .4)'
     #cursorColor = 'rgba(255, 255, 255, .5)'
     #statusLabel = document.getElementById('app-status')
+    #mouseLeave = true
 
     /**
      * @param {App} app
-     * @param {number} rows 
-     * @param {number} cols 
      */
-    constructor(app, editor) {
+    constructor(app) {
         this.#app = app
-        this.#editor = editor
-        this.resize(this.#app.rows, this.#app.cols)
+        this.resize(this.#app.rows, this.#app.cols, this.#app.tileSize)
         this.#startRenderInterval()
         this.#setupListeners()
     }
@@ -79,7 +73,10 @@ export class Display {
         this.#renderGrid()
         this.#renderStatus()
         this.#renderCursor()
-        this.#editor.currentTool.renderPreview(this.#displayBufferContext)
+        if (this.#app.currentTool) {
+            this.#displayBufferContext.fillStyle = this.#cursorColor
+            this.#app.currentTool.renderPreview(this.#displayBufferContext)
+        }
         this.#flush()
     }
 
@@ -130,14 +127,17 @@ export class Display {
         if (this.#currentMouseRow === null || this.#currentMouseCol === null) {
             return
         }
+        if (this.#mouseLeave) {
+            return
+        }
         this.#displayBufferContext.fillStyle = this.#cursorColor
-        this.#displayBufferContext.fillRect(col, row, this.#app.tileSize, this.#app.tileSize)
+        this.#displayBufferContext.fillRect(this.#currentMouseCol, this.#currentMouseRow, this.#app.tileSize, this.#app.tileSize)
     }
 
     #renderStatus() {
         let text = ''
         text += `Automata: ${this.#app.automata.name} | `
-        text += `State: ${this.#app.editor.currentStateName} | `
+        text += `State: ${this.#app.currentStateName} | `
         text += `Generation: ${this.#app.automata.generationCount}`
         if (this.#app.automata instanceof GameOfLife) {
             text += ` | Population: ${this.#app.automata.population}`
@@ -145,27 +145,53 @@ export class Display {
         this.#statusLabel.innerHTML = text
     }
 
-    #handleMouseMove(evt) {
-        this.#currentMouseRow = this.#app.translateCoordinateToGrid(evt.offsetY)
-        this.#currentMouseCol = this.#app.translateCoordinateToGrid(evt.offsetX)
-        this.#editor.currentTool.onMouseMove(this.#currentMouseRow, this.#currentMouseCol)
+    /**
+     * @param {number} pos
+     * @returns 
+     */
+    snapToGrid(pos) {
+        return pos - (pos % this.#app.tileSize)
     }
 
+    /**
+     * @param {MouseEvent} evt 
+     */
+    #handleMouseMove(evt) {
+        this.#mouseLeave = false
+        this.#currentMouseRow = this.snapToGrid(evt.offsetY)
+        this.#currentMouseCol = this.snapToGrid(evt.offsetX)
+        const row = this.#app.translateCoordinateToGrid(evt.offsetY)
+        const col = this.#app.translateCoordinateToGrid(evt.offsetX)
+        this.#app.currentTool.onMouseMove(row, col)
+    }
+
+    /**
+     * @param {MouseEvent} evt 
+     */
     #handleMouseDown(evt) {
         const row = this.#app.translateCoordinateToGrid(evt.offsetY)
         const col = this.#app.translateCoordinateToGrid(evt.offsetX)
-        this.#editor.currentTool.onMousePressed(row, col)
+        this.#app.currentTool.onMousePressed(row, col)
     }
 
+    /**
+     * @param {MouseEvent} evt 
+     */
     #handleMouseUp(evt) {
         const row = this.#app.translateCoordinateToGrid(evt.offsetY)
         const col = this.#app.translateCoordinateToGrid(evt.offsetX)
-        this.#editor.currentTool.onMouseReleased(row, col)
+        this.#app.currentTool.onMouseReleased(row, col)
+    }
+
+    #handleMouseLeave() {
+        this.#mouseLeave = true
+        this.#app.currentTool.onMouseLeave()
     }
 
     #setupListeners() {
         this.#display.addEventListener('mousemove', evt => this.#handleMouseMove(evt))
         this.#display.addEventListener('mousedown', evt => this.#handleMouseDown(evt))
         this.#display.addEventListener('mouseup', evt => this.#handleMouseUp(evt))
+        this.#display.addEventListener('mouseleave', () => this.#handleMouseLeave())
     }
 }

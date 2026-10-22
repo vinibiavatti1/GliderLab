@@ -1,4 +1,4 @@
-import { Tool } from "./tool"
+import { Tool } from "./tool.js"
 
 /** @implements {Tool} */
 export class PencilTool extends Tool {
@@ -6,10 +6,9 @@ export class PencilTool extends Tool {
 
     /**
      * @param {App} app 
-     * @param {Editor} editor 
      */
-    constructor(app, editor) {
-        super(app, editor)
+    constructor(app) {
+        super(app)
     }
 
     /**
@@ -28,9 +27,7 @@ export class PencilTool extends Tool {
         if (!this.#mousePressed) {
             return
         }
-        const automataRow = this.app.translateCoordinateToAutomata(row)
-        const automataCol = this.app.translateCoordinateToAutomata(col)
-        this.app.automata.setValue(automataRow, automataCol, 1)
+        this.app.automata.setValue(row, col, this.app.currentCellValue)
     }
 
     /**
@@ -38,6 +35,10 @@ export class PencilTool extends Tool {
      * @param {number} col 
      */
     onMouseReleased(row, col) {
+        this.#mousePressed = false
+    }
+
+    onMouseLeave() {
         this.#mousePressed = false
     }
 

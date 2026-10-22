@@ -1,19 +1,26 @@
-import { Tool } from "./tool"
+import { Tool } from "./tool.js"
 
 /** @implements {Tool} */
 export class LineTool extends Tool {
-    #mousePressed = true
-    #mouseSrcRow = 0
-    #mouseSrcCol = 0
-    #mouseDstRow = 0
-    #mouseDstCol = 0
+    #mousePressed = false
+
+    /** @type {number?} */
+    #mouseSrcRow = null
+
+    /** @type {number?} */
+    #mouseSrcCol = null
+
+    /** @type {number?} */
+    #mouseDstRow = null
+
+    /** @type {number?} */
+    #mouseDstCol = null
 
     /**
      * @param {App} app 
-     * @param {Editor} editor 
      */
-    constructor(app, editor) {
-        super(app, editor)
+    constructor(app) {
+        super(app)
     }
 
     /**
@@ -44,14 +51,20 @@ export class LineTool extends Tool {
      */
     onMouseReleased(row, col) {
         this.#mousePressed = false
-        const srcRow = this.app.translateCoordinateToAutomata(this.#mouseSrcRow)
-        const srcCol = this.app.translateCoordinateToAutomata(this.#mouseSrcCol)
-        const dstRow = this.app.translateCoordinateToAutomata(this.#mouseDstRow)
-        const dstCol = this.app.translateCoordinateToAutomata(this.#mouseDstCol)
-        const cells = this.#getBresenhamLine(srcCol, srcRow, dstCol, dstRow);
-        for (const [col, row] of cells) {
-            this.app.automata.setValue(row, col, 1)
+        this.#mouseDstRow = row
+        this.#mouseDstCol = col
+        const cells = this.#getBresenhamLine(this.#mouseSrcRow, this.#mouseSrcCol, this.#mouseDstRow, this.#mouseDstCol);
+        for (const [c, r] of cells) {
+            this.app.automata.setValue(r, c, 1)
         }
+        this.#mouseSrcRow = null
+        this.#mouseSrcCol = null
+        this.#mouseDstRow = null
+        this.#mouseDstCol = null
+    }
+
+    onMouseLeave() {
+
     }
 
     /**
@@ -59,6 +72,12 @@ export class LineTool extends Tool {
      */
     renderPreview(displayBufferContext) {
         if (!this.#mousePressed) {
+            return
+        }
+        if (this.#mouseSrcRow === null || this.#mouseSrcCol === null) {
+            return
+        }
+        if (this.#mouseDstRow === null || this.#mouseDstCol === null) {
             return
         }
         const cells = this.#getBresenhamLine(this.#mouseSrcRow, this.#mouseSrcCol, this.#mouseDstRow, this.#mouseDstCol);

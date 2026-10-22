@@ -1,21 +1,15 @@
-import { App } from "../../app"
-import { AppError } from "../../app-error"
-import { Editor } from "../editor"
+import { App } from "../app.js"
+import { AppError } from "../app-error.js"
 
 export class Tool {
     /** @type {App} */
     #app
 
-    /** @type {Editor} */
-    #editor
-
     /**
      * @param {App} app 
-     * @param {Editor} editor 
      */
-    constructor(app, editor) {
+    constructor(app) {
         this.#app = app
-        this.#editor = editor
     }
 
     /**
@@ -45,6 +39,10 @@ export class Tool {
         throw new AppError('Not implemented')
     }
 
+    onMouseLeave() {
+        throw new AppError('Not implemented')
+    }
+
     /**
      * @abstract
      * @param {CanvasRenderingContext2D} displayBufferContext
@@ -55,9 +53,5 @@ export class Tool {
 
     get app() {
         return this.#app
-    }
-
-    get editor() {
-        return this.#editor
     }
 }
