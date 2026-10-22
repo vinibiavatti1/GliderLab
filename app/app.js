@@ -1,7 +1,7 @@
-import { Display } from './display.js'
+import { Display } from './editor/display.js'
 import { AbstractAutomata } from './automata/abstract-automata.js'
 import { AppError } from './app-error.js'
-import { Editor } from './editor.js'
+import { Editor } from './editor/editor.js'
 
 export class App {
     /** @type {AbstractAutomata} */
@@ -19,8 +19,8 @@ export class App {
     #rows = 0
     #cols = 0
     #tileSize = 0
-    #colors = ['rgb(0, 0, 0)', 'rgb(0, 180, 0)']
-    #defaultColor = 'rgb(0, 180, 0)'
+    #colors = ['rgb(0, 0, 0)', 'rgb(255, 255, 255)']
+    #defaultColor = 'rgb(255, 255, 255)'
 
     /**
      * @param {number} rows 
@@ -90,6 +90,22 @@ export class App {
             return this.#colors[value]
         }
         return this.#defaultColor
+    }
+
+    /**
+     * @param {number} pos
+     * @returns 
+     */
+    translateCoordinateToGrid(pos) {
+        return pos - (pos % this.#tileSize)
+    }
+
+    /**
+     * @param {number} pos 
+     * @returns 
+     */
+    translateCoordinateToAutomata(pos) {
+        return Math.floor(pos / this.#tileSize)
     }
 
     set automata(automata) {

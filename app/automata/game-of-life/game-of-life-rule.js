@@ -1,22 +1,20 @@
-import { GameOfLifeValue } from "./game-of-life-value.js"
-
 export class GameOfLifeRule {
     #name = ''
     #description = ''
     #notation = ''
 
-    /** @type {GameOfLifeValue[]} */
+    /** @type {number[]} */
     #survive = []
 
-    /** @type {GameOfLifeValue[]} */
+    /** @type {number[]} */
     #born = []
 
     /**
      * @param {string} name 
      * @param {string} description 
      * @param {string} notation 
-     * @param {GameOfLifeValue[]} born 
-     * @param {GameOfLifeValue[]} survive 
+     * @param {number[]} born 
+     * @param {number[]} survive 
      */
     constructor(name, description, notation, born, survive) {
         this.#name = name

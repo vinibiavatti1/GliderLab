@@ -1,14 +1,16 @@
 import { AppError } from "../../app-error.js";
 import { AbstractAutomata } from "../abstract-automata.js";
 import { GameOfLifeRule } from "./game-of-life-rule.js";
-import { GameOfLifeValue } from "./game-of-life-value.js";
 
-/**
- * @implements {AbstractAutomata}
- */
+/** @implements {AbstractAutomata} */
 export class GameOfLife extends AbstractAutomata {
+    static DEAD = 0
+    static ALIVE = 1
+
     /** @type {GameOfLifeRule} */
     #rule
+
+    #population = 0
 
     /**
      * @param {number} rows 
@@ -16,7 +18,7 @@ export class GameOfLife extends AbstractAutomata {
      * @param {GameOfLifeRule} rule
      */
     constructor(rows, cols, rule) {
-        super(rows, cols)
+        super(`${rule.name} (${rule.notation})`, rows, cols)
         this.#rule = rule
     }
 
@@ -24,18 +26,26 @@ export class GameOfLife extends AbstractAutomata {
         if (!this.#rule) {
             throw new AppError('Rule not set')
         }
+        let population = 0
         for (let row = 0; row < this.rows; row++) {
             for (let col = 0; col < this.cols; col++) {
-                const count = this.countSurroundingCells(row, col, GameOfLifeValue.ALIVE)
+                const count = this.countSurroundingCells(row, col, GameOfLife.ALIVE)
                 if (this.#rule.born.includes(count)) {
-                    this.buffer[row][col] = GameOfLifeValue.ALIVE
+                    this.buffer[row][col] = GameOfLife.ALIVE
+                    population++
                 } else if (this.#rule.survive.includes(count)) {
-                    this.buffer[row][col] = this.data[row][col]
+                    const current = this.data[row][col]
+                    this.buffer[row][col] = current
+                    if (current === GameOfLife.ALIVE) {
+                        population++
+                    }
                 } else {
-                    this.buffer[row][col] = GameOfLifeValue.DEAD
+                    this.buffer[row][col] = GameOfLife.DEAD
                 }
             }
         }
+        this.#population = population
+        this.flush()
     }
 
     get rule() {
@@ -44,5 +54,9 @@ export class GameOfLife extends AbstractAutomata {
 
     set rule(rule) {
         this.#rule = rule
+    }
+
+    get population() {
+        return this.#population
     }
 }

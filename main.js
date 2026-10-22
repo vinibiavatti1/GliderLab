@@ -1,6 +1,7 @@
 import { App } from './app/app.js'
+import { ElementarRule } from './app/automata/elementar/elementar-rule.js'
+import { Elementar } from './app/automata/elementar/elementar.js'
 import { GameOfLifeRegistry } from './app/automata/game-of-life/game-of-life-registry.js'
-import { GameOfLifeValue } from './app/automata/game-of-life/game-of-life-value.js'
 import { GameOfLife } from './app/automata/game-of-life/game-of-life.js'
 
 const DEFAULT_ROWS = 50
@@ -14,13 +15,16 @@ window.addEventListener('DOMContentLoaded', () => {
 
     const offsetRows = 21;
     const offsetCols = 46;
-    automata.setValue(0 + offsetRows, 1 + offsetCols, GameOfLifeValue.ALIVE);
-    automata.setValue(1 + offsetRows, 3 + offsetCols, GameOfLifeValue.ALIVE);
-    automata.setValue(2 + offsetRows, 0 + offsetCols, GameOfLifeValue.ALIVE);
-    automata.setValue(2 + offsetRows, 1 + offsetCols, GameOfLifeValue.ALIVE);
-    automata.setValue(2 + offsetRows, 4 + offsetCols, GameOfLifeValue.ALIVE);
-    automata.setValue(2 + offsetRows, 5 + offsetCols, GameOfLifeValue.ALIVE);
-    automata.setValue(2 + offsetRows, 6 + offsetCols, GameOfLifeValue.ALIVE);
+    automata.setValue(0 + offsetRows, 1 + offsetCols, GameOfLife.ALIVE);
+    automata.setValue(1 + offsetRows, 3 + offsetCols, GameOfLife.ALIVE);
+    automata.setValue(2 + offsetRows, 0 + offsetCols, GameOfLife.ALIVE);
+    automata.setValue(2 + offsetRows, 1 + offsetCols, GameOfLife.ALIVE);
+    automata.setValue(2 + offsetRows, 4 + offsetCols, GameOfLife.ALIVE);
+    automata.setValue(2 + offsetRows, 5 + offsetCols, GameOfLife.ALIVE);
+    automata.setValue(2 + offsetRows, 6 + offsetCols, GameOfLife.ALIVE);
+
+    /*const automata = new Elementar(DEFAULT_ROWS, DEFAULT_COLS, new ElementarRule(30))
+    automata.setValue(0, Math.round(DEFAULT_COLS / 2), Elementar.ALIVE)*/
 
     app.automata = automata
 })
