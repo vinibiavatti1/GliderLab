@@ -16,22 +16,28 @@ export class AbstractAutomata {
     /** @type {number[][]} */
     #initialData = []
 
+    /** @type {string[]} */
+    #colors = []
+
     #generationCount = 0n
     #rows = 0
     #cols = 0
+    #wrap = true
 
     /**
      * @param {string} name
      * @param {number} rows 
      * @param {number} cols 
+     * @param {string[]} cols 
      */
-    constructor(name, rows, cols) {
+    constructor(name, rows, cols, colors) {
         if (rows < 0 || cols < 0) {
             throw new AppError(`Invalid rows/cols: ${rows}/${cols}`)
         }
         this.#name = name
         this.#rows = rows
         this.#cols = cols
+        this.#colors = colors
         this.#recreateData()
     }
 
@@ -90,8 +96,8 @@ export class AbstractAutomata {
      * @param {number} col 
      * @returns {number?}
      */
-    getValueNormalized(row, col) {
-        [row, col] = this.#normalizeCoords(row, col)
+    getValueWrapped(row, col) {
+        [row, col] = this.#wrapCoords(row, col)
         return this.#data[row][col]
     }
 
@@ -147,14 +153,15 @@ export class AbstractAutomata {
      */
     countSurroundingCells(row, col, state) {
         let count = 0
-        count += this.getValueNormalized(row - 1, col - 1) === state ? 1 : 0
-        count += this.getValueNormalized(row - 1, col + 0) === state ? 1 : 0
-        count += this.getValueNormalized(row - 1, col + 1) === state ? 1 : 0
-        count += this.getValueNormalized(row + 0, col - 1) === state ? 1 : 0
-        count += this.getValueNormalized(row + 0, col + 1) === state ? 1 : 0
-        count += this.getValueNormalized(row + 1, col - 1) === state ? 1 : 0
-        count += this.getValueNormalized(row + 1, col + 0) === state ? 1 : 0
-        count += this.getValueNormalized(row + 1, col + 1) === state ? 1 : 0
+        const getFn = this.#wrap ? this.getValueWrapped : this.getValue
+        count += getFn.call(this, row - 1, col - 1) === state ? 1 : 0
+        count += getFn.call(this, row - 1, col + 0) === state ? 1 : 0
+        count += getFn.call(this, row - 1, col + 1) === state ? 1 : 0
+        count += getFn.call(this, row + 0, col - 1) === state ? 1 : 0
+        count += getFn.call(this, row + 0, col + 1) === state ? 1 : 0
+        count += getFn.call(this, row + 1, col - 1) === state ? 1 : 0
+        count += getFn.call(this, row + 1, col + 0) === state ? 1 : 0
+        count += getFn.call(this, row + 1, col + 1) === state ? 1 : 0
         return count
     }
 
@@ -187,7 +194,7 @@ export class AbstractAutomata {
      * @param {number} col 
      * @returns {[number, number]}
      */
-    #normalizeCoords(row, col) {
+    #wrapCoords(row, col) {
         if (row < 0) {
             row = this.#rows + row
         }
@@ -220,6 +227,10 @@ export class AbstractAutomata {
         this.#data = structuredClone(this.#initialData)
     }
 
+    set wrap(wrap) {
+        this.#wrap = wrap
+    }
+
     get name() {
         return this.#name
     }
@@ -242,5 +253,9 @@ export class AbstractAutomata {
 
     get generationCount() {
         return this.#generationCount
+    }
+
+    get colors() {
+        return this.#colors
     }
 }

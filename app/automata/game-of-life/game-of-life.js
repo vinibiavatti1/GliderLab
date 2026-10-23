@@ -18,7 +18,7 @@ export class GameOfLife extends AbstractAutomata {
      * @param {GameOfLifeRule} rule
      */
     constructor(rows, cols, rule) {
-        super(`${rule.name} (${rule.notation})`, rows, cols)
+        super(`${rule.name} (${rule.notation})`, rows, cols, rule.colors)
         this.#rule = rule
     }
 

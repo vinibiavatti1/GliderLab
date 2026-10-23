@@ -1,4 +1,5 @@
 import { AppError } from "./app-error.js"
+import { AutomataDialog } from "./dialogs/automata-dialog.js"
 import { Display } from "./display.js"
 import { BucketTool } from "./tools/bucket-tool.js"
 import { EraserTool } from "./tools/eraser-tool.js"
@@ -22,6 +23,9 @@ export class App {
 
     /** @type {Display} */
     #display
+
+    /** @type {AutomataDialog} */
+    #automataDialog
 
     #tools = {
         pencil: new PencilTool(this),
@@ -68,12 +72,13 @@ export class App {
     #rows = 50
     #cols = 100
     #tileSize = 10
-    #colors = ['rgb(0, 0, 0)', 'rgb(255, 255, 255)']
-    #defaultColor = 'rgb(255, 255, 255)'
+    #colors = []
+    #defaultColors = ['rgb(0, 0, 0)', 'rgb(255, 255, 255)']
     #undoStanshotsMaxSize = 20
 
     /** @type {number[][][]} */
     #undoSnapshots = []
+
     /** @type {number[][][]} */
     #redoSnapshots = []
 
@@ -85,6 +90,7 @@ export class App {
         this.#rows = rows
         this.#cols = cols
         this.#display = new Display(this)
+        this.#automataDialog = new AutomataDialog(this)
         this.#setupListeners()
     }
 
@@ -129,7 +135,13 @@ export class App {
         if (value < this.#colors.length) {
             return this.#colors[value]
         }
-        return this.#defaultColor
+        if (value < this.#defaultColors.length) {
+            return this.#defaultColors[value]
+        }
+        if (value === 0) {
+            return 'rgb(0, 0, 0)'
+        }
+        return 'rgb(255, 255, 255)'
     }
 
     /**
@@ -153,8 +165,22 @@ export class App {
         if (this.#undoSnapshots.length > this.#undoStanshotsMaxSize) {
             this.#undoSnapshots.shift()
         }
-        this.#disableButton(this.#buttons.redoBtn)
-        this.#enableButton(this.#buttons.undoBtn)
+        this.disableElement(this.#buttons.redoBtn)
+        this.enableElement(this.#buttons.undoBtn)
+    }
+
+    /**
+     * @param {HTMLElement} el 
+     */
+    disableElement(el) {
+        el.setAttribute('disabled', '')
+    }
+
+    /**
+     * @param {HTMLElement} el 
+     */
+    enableElement(el) {
+        el.removeAttribute('disabled')
     }
 
     #restoreLastUndoSnapshot() {
@@ -163,7 +189,7 @@ export class App {
         }
         const previousData = this.#undoSnapshots.pop()
         if (this.#undoSnapshots.length === 0) {
-            this.#disableButton(this.#buttons.undoBtn)
+            this.disableElement(this.#buttons.undoBtn)
         }
         if (previousData.length === 0 || previousData[0].length === 0) {
             return
@@ -174,7 +200,7 @@ export class App {
             this.#display.resize(this.#rows, this.#cols)
         }
         this.#redoSnapshots.push(structuredClone(this.#automata.data))
-        this.#enableButton(this.#buttons.redoBtn)
+        this.enableElement(this.#buttons.redoBtn)
         this.#automata.restoreSnapshot(this.#rows, this.#cols, previousData)
     }
 
@@ -184,7 +210,7 @@ export class App {
         }
         const subsequentData = this.#redoSnapshots.pop()
         if (this.#redoSnapshots.length === 0) {
-            this.#disableButton(this.#buttons.redoBtn)
+            this.disableElement(this.#buttons.redoBtn)
         }
         if (subsequentData.length === 0 || subsequentData[0].length === 0) {
             return
@@ -195,7 +221,7 @@ export class App {
             this.#display.resize(this.#rows, this.#cols)
         }
         this.#undoSnapshots.push(structuredClone(this.#automata.data))
-        this.#enableButton(this.#buttons.undoBtn)
+        this.enableElement(this.#buttons.undoBtn)
         this.#automata.restoreSnapshot(this.#rows, this.#cols, subsequentData)
     }
 
@@ -223,23 +249,23 @@ export class App {
         this.#currentState = App.STATE_RUNNING
         this.startAutoGeneration(this.#generationDelay)
 
-        this.#disableButton(this.#buttons.playBtn)
-        this.#enableButton(this.#buttons.pauseBtn)
-        this.#enableButton(this.#buttons.stopBtn)
-        this.#enableButton(this.#buttons.stepBtn)
+        this.disableElement(this.#buttons.playBtn)
+        this.enableElement(this.#buttons.pauseBtn)
+        this.enableElement(this.#buttons.stopBtn)
+        this.enableElement(this.#buttons.stepBtn)
 
-        this.#disableButton(this.#buttons.undoBtn)
-        this.#disableButton(this.#buttons.redoBtn)
+        this.disableElement(this.#buttons.undoBtn)
+        this.disableElement(this.#buttons.redoBtn)
     }
 
     #handlePauseBtn() {
         this.#currentState = App.STATE_PAUSED
         this.stopAutoGeneration()
 
-        this.#enableButton(this.#buttons.playBtn)
-        this.#disableButton(this.#buttons.pauseBtn)
-        this.#enableButton(this.#buttons.stopBtn)
-        this.#enableButton(this.#buttons.stepBtn)
+        this.enableElement(this.#buttons.playBtn)
+        this.disableElement(this.#buttons.pauseBtn)
+        this.enableElement(this.#buttons.stopBtn)
+        this.enableElement(this.#buttons.stepBtn)
     }
 
     #handleStopBtn() {
@@ -247,16 +273,16 @@ export class App {
         this.stopAutoGeneration()
         this.resetGeneration()
 
-        this.#enableButton(this.#buttons.playBtn)
-        this.#disableButton(this.#buttons.pauseBtn)
-        this.#disableButton(this.#buttons.stopBtn)
-        this.#enableButton(this.#buttons.stepBtn)
+        this.enableElement(this.#buttons.playBtn)
+        this.disableElement(this.#buttons.pauseBtn)
+        this.disableElement(this.#buttons.stopBtn)
+        this.enableElement(this.#buttons.stepBtn)
 
         if (this.#undoSnapshots.length > 0) {
-            this.#enableButton(this.#buttons.undoBtn)
+            this.enableElement(this.#buttons.undoBtn)
         }
         if (this.#redoSnapshots.length > 0) {
-            this.#enableButton(this.#buttons.redoBtn)
+            this.enableElement(this.#buttons.redoBtn)
         }
     }
 
@@ -270,10 +296,10 @@ export class App {
         this.stopAutoGeneration()
         this.nextGeneration()
 
-        this.#enableButton(this.#buttons.playBtn)
-        this.#disableButton(this.#buttons.pauseBtn)
-        this.#enableButton(this.#buttons.stopBtn)
-        this.#enableButton(this.#buttons.stepBtn)
+        this.enableElement(this.#buttons.playBtn)
+        this.disableElement(this.#buttons.pauseBtn)
+        this.enableElement(this.#buttons.stopBtn)
+        this.enableElement(this.#buttons.stepBtn)
     }
 
     #handleUndoBtn() {
@@ -286,20 +312,6 @@ export class App {
 
     #inactiveToolButtons() {
         Object.values(this.#toolButtons).map(btn => btn.classList.remove('active'))
-    }
-
-    /**
-     * @param {HTMLElement} button 
-     */
-    #disableButton(button) {
-        button.setAttribute('disabled', '')
-    }
-
-    /**
-     * @param {HTMLElement} button 
-     */
-    #enableButton(button) {
-        button.removeAttribute('disabled')
     }
 
     /**
@@ -332,7 +344,12 @@ export class App {
 
     set automata(automata) {
         this.#automata = automata
+        this.#colors = automata.colors
         this.#automata.resize(this.#rows, this.#cols)
+    }
+
+    set colors(colors) {
+        this.#colors = colors
     }
 
     get colors() {
@@ -357,5 +374,9 @@ export class App {
 
     get display() {
         return this.#display
+    }
+
+    get automataDialog() {
+        return this.#automataDialog
     }
 }

@@ -15,7 +15,7 @@ export class Elementar extends AbstractAutomata {
      * @param {ElementarRule} rule
      */
     constructor(rows, cols, rule) {
-        super(`Elementar (${rule.number})`, rows, cols)
+        super(`Elementar (${rule.number})`, rows, cols, 'rgb(255, 255, 255)')
         this.#rule = rule
         this.useBuffer = false
     }

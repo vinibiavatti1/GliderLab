@@ -2,9 +2,14 @@ import { GameOfLifeRule } from "./game-of-life-rule.js";
 
 /** @enum {GameOfLifeRule} */
 export const GameOfLifeRegistry = Object.freeze({
-    GOL: new GameOfLifeRule(
-        "Conway's Life", 'A chaotic rule that is by far the most well-known and well-studied. It exhibits highly complex behavior.', 'B3/S23', [3], [2, 3]
-    ),
+    GOL: GameOfLifeRule.new({
+        name: 'Conway\'s Life',
+        description: 'A chaotic rule that is by far the most well-known and well-studied. It exhibits highly complex behavior.',
+        notation: 'B3/S23',
+        born: [3],
+        survive: [2, 3],
+        colors: ['rgb(0, 0, 0)', 'rgb(0, 200, 0)'],
+    }),
     THREE_FOUR_LIFE: new GameOfLifeRule(
         '3-4 Life', 'An exploding rule that was initially thought to be a stable alternative to Conway\'s Life, until computer simulation found that most patterns tend to explode. It has many small oscillators and simple period 3 orthogonal and diagonal spaceships.', 'B34/S34', [3, 4], [3, 4]
     ),
@@ -15,7 +20,7 @@ export const GameOfLifeRegistry = Object.freeze({
         'AntiLife', "The black/white reversal of Conway's Game of Life.", 'B0123478/S01234678', [0, 1, 2, 3, 4, 7, 8], [0, 1, 2, 3, 4, 6, 7, 8]
     ),
     ASSIMILATION: new GameOfLifeRule(
-        'Assimilation', 'A very stable rule that forms permanent diamond-shaped patterns with partially filled interiors. Like in 2×2, patterns made of blocks will permanently remain made of blocks.', 'B345/S4567', [3, 4, 5], [4, 5, 6, 7]
+        'Assimilation', 'A very stable rule that forms permanent diamond-shaped patterns with partially filled interiors. Like in 2x2, patterns made of blocks will permanently remain made of blocks.', 'B345/S4567', [3, 4, 5], [4, 5, 6, 7]
     ),
     BACTERIA: new GameOfLifeRule(
         'Bacteria', '', 'B34/S456', [3, 4], [4, 5, 6]
