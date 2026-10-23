@@ -13,6 +13,30 @@ export class AutomataDialog {
     #golRule = document.getElementById('app-gol-rule')
     #golRulePreset = document.getElementById('app-gol-rule-preset')
 
+    #elementarCells = {
+        cell7: document.getElementById('app-elementar-cell-7'),
+        cell6: document.getElementById('app-elementar-cell-6'),
+        cell5: document.getElementById('app-elementar-cell-5'),
+        cell4: document.getElementById('app-elementar-cell-4'),
+        cell3: document.getElementById('app-elementar-cell-3'),
+        cell2: document.getElementById('app-elementar-cell-2'),
+        cell1: document.getElementById('app-elementar-cell-1'),
+        cell0: document.getElementById('app-elementar-cell-0'),
+    }
+
+    #elementarCellTexts = {
+        cell7: document.getElementById('app-elementar-cell-7-text'),
+        cell6: document.getElementById('app-elementar-cell-6-text'),
+        cell5: document.getElementById('app-elementar-cell-5-text'),
+        cell4: document.getElementById('app-elementar-cell-4-text'),
+        cell3: document.getElementById('app-elementar-cell-3-text'),
+        cell2: document.getElementById('app-elementar-cell-2-text'),
+        cell1: document.getElementById('app-elementar-cell-1-text'),
+        cell0: document.getElementById('app-elementar-cell-0-text'),
+    }
+
+    #elementerRuleInput = document.getElementById('app-elementar-rule')
+
     /** @type {GameOfLifeRule?} */
     #selectedGolRule = null
 
@@ -46,6 +70,9 @@ export class AutomataDialog {
         this.#golBornBtns.forEach(btn => btn.addEventListener('click', evt => this.#handleGolBornBtns(evt)))
         this.#golSurviveBtns.forEach(btn => btn.addEventListener('click', evt => this.#handleGolSurviveBtns(evt)))
         this.#automataSelectBtn.addEventListener('click', () => this.#handleAutomataSelectBtn())
+        this.#elementerRuleInput.addEventListener('input', evt => this.#handleElementarRuleInput(evt))
+
+        document.querySelectorAll('.app-elementar-table').forEach(table => table.addEventListener('click', evt => this.#handleElementarTableClick(evt)))
     }
 
     #handleAutomataSelectBtn() {
@@ -131,5 +158,51 @@ export class AutomataDialog {
                 this.#app.disableElement(btn)
             })
         }
+    }
+
+    #handleElementarRuleInput(evt) {
+        this.#parseElementarRule(evt.target.value)
+    }
+
+    #parseElementarRule(value) {
+        const byte = parseInt(value).toString(2).padStart(8, '0')
+        Object.values(this.#elementarCells).forEach(cell => cell.classList.remove('active'))
+        Object.values(this.#elementarCellTexts).forEach(cell => cell.innerHTML = '')
+        byte[0] === '1' && this.#elementarCells.cell7.classList.add('active')
+        byte[1] === '1' && this.#elementarCells.cell6.classList.add('active')
+        byte[2] === '1' && this.#elementarCells.cell5.classList.add('active')
+        byte[3] === '1' && this.#elementarCells.cell4.classList.add('active')
+        byte[4] === '1' && this.#elementarCells.cell3.classList.add('active')
+        byte[5] === '1' && this.#elementarCells.cell2.classList.add('active')
+        byte[6] === '1' && this.#elementarCells.cell1.classList.add('active')
+        byte[7] === '1' && this.#elementarCells.cell0.classList.add('active')
+        this.#elementarCellTexts.cell7.innerHTML = byte[0] === '1' ? '1' : '0'
+        this.#elementarCellTexts.cell6.innerHTML = byte[1] === '1' ? '1' : '0'
+        this.#elementarCellTexts.cell5.innerHTML = byte[2] === '1' ? '1' : '0'
+        this.#elementarCellTexts.cell4.innerHTML = byte[3] === '1' ? '1' : '0'
+        this.#elementarCellTexts.cell3.innerHTML = byte[4] === '1' ? '1' : '0'
+        this.#elementarCellTexts.cell2.innerHTML = byte[5] === '1' ? '1' : '0'
+        this.#elementarCellTexts.cell1.innerHTML = byte[6] === '1' ? '1' : '0'
+        this.#elementarCellTexts.cell0.innerHTML = byte[7] === '1' ? '1' : '0'
+    }
+
+    /**
+     * @param {Event} evt 
+     */
+    #handleElementarTableClick(evt) {
+        const el = evt.currentTarget.querySelector('.elementar-bit')
+        el.innerHTML = el.innerHTML === '0' ? '1' : '0'
+        let byte = ''
+        byte += this.#elementarCellTexts.cell7.innerHTML
+        byte += this.#elementarCellTexts.cell6.innerHTML
+        byte += this.#elementarCellTexts.cell5.innerHTML
+        byte += this.#elementarCellTexts.cell4.innerHTML
+        byte += this.#elementarCellTexts.cell3.innerHTML
+        byte += this.#elementarCellTexts.cell2.innerHTML
+        byte += this.#elementarCellTexts.cell1.innerHTML
+        byte += this.#elementarCellTexts.cell0.innerHTML
+        const int = parseInt(byte, 2)
+        this.#elementerRuleInput.value = int
+        this.#elementerRuleInput.dispatchEvent(new Event('input', { bubbles: true }))
     }
 }

@@ -27,17 +27,17 @@ export class ElementarRule {
     }
 
     #generateMap() {
-        const binary = this.#number.toString(2).padStart(8, '0')
-        this.#binary = binary
+        const byte = this.#number.toString(2).padStart(8, '0')
+        this.#binary = byte
         this.#map = new Map()
-        this.#map.set('000', binary[7] === '1' ? 1 : 0)
-        this.#map.set('001', binary[6] === '1' ? 1 : 0)
-        this.#map.set('010', binary[5] === '1' ? 1 : 0)
-        this.#map.set('011', binary[4] === '1' ? 1 : 0)
-        this.#map.set('100', binary[3] === '1' ? 1 : 0)
-        this.#map.set('101', binary[2] === '1' ? 1 : 0)
-        this.#map.set('110', binary[1] === '1' ? 1 : 0)
-        this.#map.set('111', binary[0] === '1' ? 1 : 0)
+        this.#map.set('000', byte[7] === '1' ? 1 : 0)
+        this.#map.set('001', byte[6] === '1' ? 1 : 0)
+        this.#map.set('010', byte[5] === '1' ? 1 : 0)
+        this.#map.set('011', byte[4] === '1' ? 1 : 0)
+        this.#map.set('100', byte[3] === '1' ? 1 : 0)
+        this.#map.set('101', byte[2] === '1' ? 1 : 0)
+        this.#map.set('110', byte[1] === '1' ? 1 : 0)
+        this.#map.set('111', byte[0] === '1' ? 1 : 0)
     }
 
     get number() {

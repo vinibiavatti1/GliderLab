@@ -23,3 +23,26 @@
 .btn-solid:disabled.active {
     opacity: 1;
 }
+
+.app-elementar-table {
+    border-spacing: 3px;
+    border-collapse: separate;
+    cursor: pointer;
+}
+
+.app-elementar-table:hover {
+    opacity: .75;
+}
+
+.app-elementar-table:active {
+    opacity: .50;
+}
+
+.app-elementar-table tbody tr td {
+    width: 20px;
+    height: 20px;
+}
+
+.app-elementar-table tbody tr td.active {
+    background-color: white !important;
+}
