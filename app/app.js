@@ -1,6 +1,7 @@
 import { AppError } from "./app-error.js"
 import { Display } from "./display.js"
 import { BucketTool } from "./tools/bucket-tool.js"
+import { EraserTool } from "./tools/eraser-tool.js"
 import { LineTool } from "./tools/line-tool.js"
 import { PencilTool } from "./tools/pencil-tool.js"
 import { RectFillTool } from "./tools/rect-fill-tool.js"
@@ -28,6 +29,7 @@ export class App {
         rect: new RectTool(this),
         rectFill: new RectFillTool(this),
         bucket: new BucketTool(this),
+        eraser: new EraserTool(this),
     }
 
     #buttons = {
@@ -142,7 +144,7 @@ export class App {
         if (!this.#automata) {
             throw new AppError('Automata not set')
         }
-        if (!this.#currentState !== App.STATE_STOPPED) {
+        if (this.#currentState !== App.STATE_STOPPED) {
             return
         }
         console.log('snapshot saved')
@@ -151,8 +153,8 @@ export class App {
         if (this.#undoSnapshots.length > this.#undoStanshotsMaxSize) {
             this.#undoSnapshots.shift()
         }
-        this.#buttons.redoBtn.setAttribute('disabled', '')
-        this.#buttons.undoBtn.removeAttribute('disabled')
+        this.#disableButton(this.#buttons.redoBtn)
+        this.#enableButton(this.#buttons.undoBtn)
     }
 
     #restoreLastUndoSnapshot() {
@@ -161,7 +163,7 @@ export class App {
         }
         const previousData = this.#undoSnapshots.pop()
         if (this.#undoSnapshots.length === 0) {
-            this.#buttons.undoBtn.setAttribute('disabled', '')
+            this.#disableButton(this.#buttons.undoBtn)
         }
         if (previousData.length === 0 || previousData[0].length === 0) {
             return
@@ -172,7 +174,7 @@ export class App {
             this.#display.resize(this.#rows, this.#cols)
         }
         this.#redoSnapshots.push(structuredClone(this.#automata.data))
-        this.#buttons.redoBtn.removeAttribute('disabled')
+        this.#enableButton(this.#buttons.redoBtn)
         this.#automata.restoreSnapshot(this.#rows, this.#cols, previousData)
     }
 
@@ -182,7 +184,7 @@ export class App {
         }
         const subsequentData = this.#redoSnapshots.pop()
         if (this.#redoSnapshots.length === 0) {
-            this.#buttons.redoBtn.setAttribute('disabled', '')
+            this.#disableButton(this.#buttons.redoBtn)
         }
         if (subsequentData.length === 0 || subsequentData[0].length === 0) {
             return
@@ -193,7 +195,7 @@ export class App {
             this.#display.resize(this.#rows, this.#cols)
         }
         this.#undoSnapshots.push(structuredClone(this.#automata.data))
-        this.#buttons.undoBtn.removeAttribute('disabled')
+        this.#enableButton(this.#buttons.undoBtn)
         this.#automata.restoreSnapshot(this.#rows, this.#cols, subsequentData)
     }
 
@@ -202,13 +204,15 @@ export class App {
         this.#buttons.pauseBtn.addEventListener('click', () => this.#handlePauseBtn())
         this.#buttons.stopBtn.addEventListener('click', () => this.#handleStopBtn())
         this.#buttons.stepBtn.addEventListener('click', () => this.#handleStepBtn())
+        this.#buttons.undoBtn.addEventListener('click', () => this.#handleUndoBtn())
+        this.#buttons.redoBtn.addEventListener('click', () => this.#handleRedoBtn())
+
         this.#toolButtons.pencilBtn.addEventListener('click', evt => this.#handleToolBtn(evt, this.#tools.pencil))
         this.#toolButtons.lineBtn.addEventListener('click', evt => this.#handleToolBtn(evt, this.#tools.line))
         this.#toolButtons.rectBtn.addEventListener('click', evt => this.#handleToolBtn(evt, this.#tools.rect))
         this.#toolButtons.rectFillBtn.addEventListener('click', evt => this.#handleToolBtn(evt, this.#tools.rectFill))
         this.#toolButtons.bucketBtn.addEventListener('click', evt => this.#handleToolBtn(evt, this.#tools.bucket))
-        this.#buttons.undoBtn.addEventListener('click', () => this.#handleUndoBtn())
-        this.#buttons.redoBtn.addEventListener('click', () => this.#handleRedoBtn())
+        this.#toolButtons.eraserBtn.addEventListener('click', evt => this.#handleToolBtn(evt, this.#tools.eraser))
     }
 
     #handlePlayBtn() {
@@ -223,6 +227,9 @@ export class App {
         this.#enableButton(this.#buttons.pauseBtn)
         this.#enableButton(this.#buttons.stopBtn)
         this.#enableButton(this.#buttons.stepBtn)
+
+        this.#disableButton(this.#buttons.undoBtn)
+        this.#disableButton(this.#buttons.redoBtn)
     }
 
     #handlePauseBtn() {
@@ -244,6 +251,13 @@ export class App {
         this.#disableButton(this.#buttons.pauseBtn)
         this.#disableButton(this.#buttons.stopBtn)
         this.#enableButton(this.#buttons.stepBtn)
+
+        if (this.#undoSnapshots.length > 0) {
+            this.#enableButton(this.#buttons.undoBtn)
+        }
+        if (this.#redoSnapshots.length > 0) {
+            this.#enableButton(this.#buttons.redoBtn)
+        }
     }
 
     #handleStepBtn() {
