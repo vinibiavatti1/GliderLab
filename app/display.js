@@ -129,6 +129,7 @@ export class Display {
         if (this.#mouseLeave) {
             return
         }
+
         this.#displayBufferContext.fillStyle = this.#cursorColor
         this.#displayBufferContext.fillRect(this.#currentMouseCol, this.#currentMouseRow, this.#app.tileSize, this.#app.tileSize)
     }

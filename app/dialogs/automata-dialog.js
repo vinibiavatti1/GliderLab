@@ -7,11 +7,11 @@ export class AutomataDialog {
     /** @type {App} */
     #app
 
+    #automataSelectBtn = document.getElementById('app-automata-select-btn')
     #golBornBtns = document.querySelectorAll('.app-gol-born-btn')
     #golSurviveBtns = document.querySelectorAll('.app-gol-survive-btn')
     #golRule = document.getElementById('app-gol-rule')
     #golRulePreset = document.getElementById('app-gol-rule-preset')
-    #automataSelectBtn = document.getElementById('app-automata-select-btn')
 
     /** @type {GameOfLifeRule?} */
     #selectedGolRule = null
@@ -35,6 +35,7 @@ export class AutomataDialog {
         Object.entries(GameOfLifeRegistry).forEach(([k, v]) => {
             const option = document.createElement('option')
             option.setAttribute('value', k)
+            option.style.color = v.colors[1]
             option.innerHTML = `${v.name} (${v.notation})`
             this.#golRule.appendChild(option)
         })

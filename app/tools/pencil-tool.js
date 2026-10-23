@@ -37,6 +37,7 @@ export class PencilTool extends Tool {
      */
     onMouseReleased(row, col) {
         this.#mousePressed = false
+        this.app.automata.setValue(row, col, this.app.currentCellValue)
     }
 
     onMouseLeave() {

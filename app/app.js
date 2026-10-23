@@ -346,6 +346,8 @@ export class App {
         this.#automata = automata
         this.#colors = automata.colors
         this.#automata.resize(this.#rows, this.#cols)
+        this.#buttons.automataBtn.innerHTML = this.#automata.name
+        this.#buttons.automataBtn.style.color = this.getValueColor(1)
     }
 
     set colors(colors) {
