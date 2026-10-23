@@ -18,164 +18,143 @@
 
 
 <body class="bg-1">
-    <nav class="navbar md:navbar-expand bg-1">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">
-                <span class="me-2" style="vertical-align: text-bottom;">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                        class="bi bi-dice-glider" viewBox="0 0 16 16">
-                        <path
-                            d="M13 1a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2zM3 0a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V3a3 3 0 0 0-3-3z" />
-                        <path d="M9.5 4a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0" />
-                        <path d="M13.5 8a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0" />
-                        <path d="M5.5 12a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0" />
-                        <path d="M9.5 12a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0" />
-                        <path d="M13.5 12a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0" />
-                    </svg>
-                </span>
-                Glider Lab
-            </a>
-            <ul class="nav navbar-nav me-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="#">
-                        <i class="bi bi-question-circle"></i>
-                        About
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" aria-current="page" href="#">
-                        <i class="bi bi-github"></i>
-                        Github
-                    </a>
-                </li>
-            </ul>
+
+    <div class="bg-2">
+        <div class="p-1">
+            <div class="btn-group" role="group">
+                <div id="app-btn-settings" class="px-4 fw-bold">
+                    <span>Glider Lab</span>
+                </div>
+            </div>
+
+            <div class="app-divider border-start border-body border-1"></div>
+            <div class="btn-group" role="group">
+                <button id="app-btn-open" class="btn-icon border-0">
+                    <i class="bi bi-file-earmark"></i>
+                </button>
+                <button id="app-btn-open" class="btn-icon border-0">
+                    <i class="bi bi-folder2-open"></i>
+                </button>
+                <button id="app-btn-save" class="btn-icon border-0">
+                    <i class="bi bi-floppy"></i>
+                </button>
+            </div>
+
+            <div class="app-divider border-start border-body border-1"></div>
+            <div class="btn-group" role="group">
+                <button id="app-btn-undo" type="button" class="btn-icon border-0" disabled>
+                    <i class="bi bi-arrow-counterclockwise"></i>
+                </button>
+                <button id="app-btn-redo" type="button" class="btn-icon border-0" disabled>
+                    <i class="bi bi-arrow-clockwise"></i>
+                </button>
+            </div>
+
+            <div class="app-divider border-start border-body border-1"></div>
+            <div class="btn-group" role="group">
+                <button id="app-btn-settings" type="button" class="btn-icon border-0">
+                    <i class="bi bi-gear"></i>
+                </button>
+            </div>
+
+            <div class="app-divider border-start border-body border-1"></div>
+            <div class="btn-group" role="group">
+                <button id="app-btn-redo" type="button" class="btn-icon border-0">
+                    <i class="bi bi-question-circle"></i>
+                </button>
+                <button id="app-btn-undo" type="button" class="btn-icon border-0">
+                    <i class="bi bi-github"></i>
+                </button>
+            </div>
         </div>
-    </nav>
-    <div>
-        <div class="card m-4 mt-0 bg-1 rounded-4"
-            style="display: block; position: absolute; top: 56px; left: 0; right: 0; bottom: 0;">
-            <div class="card-body bg-2 p-2 border-bottom">
-                <div class="d-inline-block">
+        <div class="p-1 border-1 border-bottom border-body">
+            <div class="btn-group" role="group">
+                <button id="app-btn-automata" class="btn border-0">
+                    Game of Life - 23/3
+                </button>
+            </div>
 
-                    <div class="btn-group" role="group">
-                        <button id="app-btn-settings" type="button" class="btn-icon border-0 border-0">
-                            <i class="bi bi-gear"></i>
-                        </button>
-                    </div>
-
-                    <div class="app-divider border-start border-body border-1"></div>
-                    <div class="btn-group" role="group">
-                        <button id="app-btn-automata" class="btn border-0">Game of Life - 23/3</button>
-                    </div>
-
-                    <div class="app-divider border-start border-body border-1"></div>
-                    <div class="btn-group" role="group">
-                        <button id="app-btn-open" class="btn-icon border-0">
-                            <i class="bi bi-file-earmark"></i>
-                        </button>
-                        <button id="app-btn-open" class="btn-icon border-0">
-                            <i class="bi bi-folder2-open"></i>
-                        </button>
-                        <button id="app-btn-save" class="btn-icon border-0">
-                            <i class="bi bi-floppy"></i>
-                        </button>
-                    </div>
-
-                    <div class="app-divider border-start border-body border-1"></div>
-                    <div class="btn-group" role="group">
-                        <button id="app-btn-undo" type="button" class="btn-icon border-0 border-0">
-                            <i class="bi bi-arrow-counterclockwise"></i>
-                        </button>
-                        <button id="app-btn-redo" type="button" class="btn-icon border-0 border-0">
-                            <i class="bi bi-arrow-clockwise"></i>
-                        </button>
-                    </div>
-                </div>
-
-                <div class="d-inline-block">
-                    <div class="btn-group" role="group">
-                        <button id="app-btn-play" class="btn-icon border-0 fg-success">
-                            <i class="bi bi-play"></i>
-                        </button>
-                        <button id="app-btn-pause" class="btn-icon border-0 fg-warning" disabled>
-                            <i class="bi bi-pause"></i>
-                        </button>
-                        <button id="app-btn-stop" class="btn-icon border-0 fg-danger" disabled>
-                            <i class="bi bi-stop"></i>
-                        </button>
-                        <button id="app-btn-step" class="btn-icon border-0">
-                            <i class="bi bi-skip-end"></i>
-                        </button>
-
-                    </div>
-
-                    <div class="app-divider border-start border-body border-1"></div>
-                    <div class="btn-group" role="group">
-                        <button id="app-btn-1x" type="button" class="btn-icon border-0 border-0 active">
-                            1x
-                        </button>
-                        <button id="app-btn-2x" type="button" class="btn-icon border-0 border-0">
-                            2x
-                        </button>
-                        <button id="app-btn-4x" type="button" class="btn-icon border-0 border-0">
-                            4x
-                        </button>
-                        <button id="app-btn-8x" type="button" class="btn-icon border-0 border-0">
-                            8x
-                        </button>
-                        <button id="app-btn-16x" type="button" class="btn-icon border-0 border-0">
-                            16x
-                        </button>
-                    </div>
-
-                    <div class="app-divider border-start border-body border-1"></div>
-                    <div class="btn-group" role="group">
-                        <button id="app-btn-pencil" type="button" class="btn-icon border-0 border-0 active">
-                            <i class="bi bi-pencil"></i>
-                        </button>
-                        <button id="app-btn-line" type="button" class="btn-icon border-0 border-0">
-                            <i class="bi bi-dash-lg"></i>
-                        </button>
-                        <button id="app-btn-rect" type="button" class="btn-icon border-0 border-0">
-                            <i class="bi bi-square"></i>
-                        </button>
-                        <button id="app-btn-rect-fill" type="button" class="btn-icon border-0 border-0">
-                            <i class="bi bi-square-fill"></i>
-                        </button>
-                        <button id="app-btn-bucket" type="button" class="btn-icon border-0 border-0">
-                            <i class="bi bi-paint-bucket"></i>
-                        </button>
-                        <button id="app-btn-selection" type="button" class="btn-icon border-0 border-0">
-                            <i class="bi bi-bounding-box-circles"></i>
-                        </button>
-                        <button id="app-btn-eraser" type="button" class="btn-icon border-0 border-0">
-                            <i class="bi bi-eraser"></i>
-                        </button>
-                    </div>
-
-                    <div class="app-divider border-start border-body border-1"></div>
-                    <div class="btn-group" role="group">
-                        <button id="app-btn-settings" type="button" class="btn-icon border-0 border-0 active">
-                            <i class="bi bi-plug"></i>
-                        </button>
-                        <button id="app-btn-settings" type="button" class="btn-icon border-0 border-0">
-                            <i class="bi bi-lightning"></i>
-                        </button>
-                    </div>
-                </div>
+            <div class="app-divider border-start border-body border-1"></div>
+            <div class="btn-group" role="group">
+                <button id="app-btn-play" class="btn-icon border-0 fg-success">
+                    <i class="bi bi-play"></i>
+                </button>
+                <button id="app-btn-pause" class="btn-icon border-0 fg-warning" disabled>
+                    <i class="bi bi-pause"></i>
+                </button>
+                <button id="app-btn-stop" class="btn-icon border-0 fg-danger" disabled>
+                    <i class="bi bi-stop"></i>
+                </button>
+                <button id="app-btn-step" class="btn-icon border-0">
+                    <i class="bi bi-skip-end"></i>
+                </button>
 
             </div>
-            <div class="p-2" style="position: absolute; top:100px;bottom:0px;left:0;right:0; overflow: scroll;">
+
+            <div class="app-divider border-start border-body border-1"></div>
+            <div class="btn-group" role="group">
+                <button id="app-btn-1x" type="button" class="btn-icon border-0 active">
+                    1x
+                </button>
+                <button id="app-btn-2x" type="button" class="btn-icon border-0">
+                    2x
+                </button>
+                <button id="app-btn-4x" type="button" class="btn-icon border-0">
+                    4x
+                </button>
+                <button id="app-btn-8x" type="button" class="btn-icon border-0">
+                    8x
+                </button>
+                <button id="app-btn-16x" type="button" class="btn-icon border-0">
+                    16x
+                </button>
+            </div>
+
+            <div class="app-divider border-start border-body border-1"></div>
+            <div class="btn-group" role="group">
+                <button id="app-btn-pencil" type="button" class="btn-icon border-0 active">
+                    <i class="bi bi-pencil"></i>
+                </button>
+                <button id="app-btn-line" type="button" class="btn-icon border-0">
+                    <i class="bi bi-dash-lg"></i>
+                </button>
+                <button id="app-btn-rect" type="button" class="btn-icon border-0">
+                    <i class="bi bi-square"></i>
+                </button>
+                <button id="app-btn-rect-fill" type="button" class="btn-icon border-0">
+                    <i class="bi bi-square-fill"></i>
+                </button>
+                <button id="app-btn-bucket" type="button" class="btn-icon border-0">
+                    <i class="bi bi-paint-bucket"></i>
+                </button>
+                <button id="app-btn-selection" type="button" class="btn-icon border-0">
+                    <i class="bi bi-bounding-box-circles"></i>
+                </button>
+                <button id="app-btn-eraser" type="button" class="btn-icon border-0">
+                    <i class="bi bi-eraser"></i>
+                </button>
+            </div>
+
+            <div class="app-divider border-start border-body border-1"></div>
+            <div class="btn-group" role="group">
+                <button id="app-btn-settings" type="button" class="btn-icon border-0 active">
+                    <i class="bi bi-plug"></i>
+                </button>
+                <button id="app-btn-settings" type="button" class="btn-icon border-0">
+                    <i class="bi bi-lightning"></i>
+                </button>
+            </div>
+        </div>
+        <div>
+            <div class="app-canvas-container p-2">
                 <canvas id="canvas" width="1000" height="500"></canvas>
             </div>
-            <div class="p-2 fg-secondary fs-sm" style="position: absolute; bottom:10px;left:0;right:0;">
-                <span id="app-status"></span>
-            </div>
+
+        </div>
+        <div class="p-2 fg-secondary fs-sm" style="position: absolute; bottom:10px;left:0;right:0;">
+            <span id="app-status"></span>
         </div>
     </div>
-
-
-
     <script type="module" src="./main.js" defer></script>
 </body>
 

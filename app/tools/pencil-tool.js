@@ -16,6 +16,7 @@ export class PencilTool extends Tool {
      * @param {number} col 
      */
     onMousePressed(row, col) {
+        this.app.saveSnapshot()
         this.#mousePressed = true
     }
 

@@ -68,6 +68,12 @@ export class App {
     #tileSize = 10
     #colors = ['rgb(0, 0, 0)', 'rgb(255, 255, 255)']
     #defaultColor = 'rgb(255, 255, 255)'
+    #undoStanshotsMaxSize = 20
+
+    /** @type {number[][][]} */
+    #undoSnapshots = []
+    /** @type {number[][][]} */
+    #redoSnapshots = []
 
     /**
      * @param {number} rows 
@@ -132,6 +138,65 @@ export class App {
         return Math.floor(pos / this.#tileSize)
     }
 
+    saveSnapshot() {
+        if (!this.#automata) {
+            throw new AppError('Automata not set')
+        }
+        if (!this.#currentState !== App.STATE_STOPPED) {
+            return
+        }
+        console.log('snapshot saved')
+        this.#undoSnapshots.push(structuredClone(this.#automata.data))
+        this.#redoSnapshots = []
+        if (this.#undoSnapshots.length > this.#undoStanshotsMaxSize) {
+            this.#undoSnapshots.shift()
+        }
+        this.#buttons.redoBtn.setAttribute('disabled', '')
+        this.#buttons.undoBtn.removeAttribute('disabled')
+    }
+
+    #restoreLastUndoSnapshot() {
+        if (this.#undoSnapshots.length == 0) {
+            return
+        }
+        const previousData = this.#undoSnapshots.pop()
+        if (this.#undoSnapshots.length === 0) {
+            this.#buttons.undoBtn.setAttribute('disabled', '')
+        }
+        if (previousData.length === 0 || previousData[0].length === 0) {
+            return
+        }
+        if (previousData.length !== this.#rows || previousData[0].length !== this.#cols) {
+            this.#rows = previousData.length
+            this.#cols = previousData[0]?.length
+            this.#display.resize(this.#rows, this.#cols)
+        }
+        this.#redoSnapshots.push(structuredClone(this.#automata.data))
+        this.#buttons.redoBtn.removeAttribute('disabled')
+        this.#automata.restoreSnapshot(this.#rows, this.#cols, previousData)
+    }
+
+    #restoreLastRedoSnapshot() {
+        if (this.#redoSnapshots.length == 0) {
+            return
+        }
+        const subsequentData = this.#redoSnapshots.pop()
+        if (this.#redoSnapshots.length === 0) {
+            this.#buttons.redoBtn.setAttribute('disabled', '')
+        }
+        if (subsequentData.length === 0 || subsequentData[0].length === 0) {
+            return
+        }
+        if (subsequentData.length !== this.#rows || subsequentData[0].length !== this.#cols) {
+            this.#rows = subsequentData.length
+            this.#cols = subsequentData[0]?.length
+            this.#display.resize(this.#rows, this.#cols)
+        }
+        this.#undoSnapshots.push(structuredClone(this.#automata.data))
+        this.#buttons.undoBtn.removeAttribute('disabled')
+        this.#automata.restoreSnapshot(this.#rows, this.#cols, subsequentData)
+    }
+
     #setupListeners() {
         this.#buttons.playBtn.addEventListener('click', () => this.#handlePlayBtn())
         this.#buttons.pauseBtn.addEventListener('click', () => this.#handlePauseBtn())
@@ -142,46 +207,43 @@ export class App {
         this.#toolButtons.rectBtn.addEventListener('click', evt => this.#handleToolBtn(evt, this.#tools.rect))
         this.#toolButtons.rectFillBtn.addEventListener('click', evt => this.#handleToolBtn(evt, this.#tools.rectFill))
         this.#toolButtons.bucketBtn.addEventListener('click', evt => this.#handleToolBtn(evt, this.#tools.bucket))
-    }
-
-    #disableButtons() {
-        Object.values(this.#buttons)
-            .filter(btn => btn && !btn.hasAttribute('disabled'))
-            .map(btn => btn.setAttribute('disabled', ''))
-    }
-
-    #enableButtons() {
-        Object.values(this.#buttons)
-            .filter(btn => btn && btn.hasAttribute('disabled'))
-            .map(btn => btn.removeAttribute('disabled'))
+        this.#buttons.undoBtn.addEventListener('click', () => this.#handleUndoBtn())
+        this.#buttons.redoBtn.addEventListener('click', () => this.#handleRedoBtn())
     }
 
     #handlePlayBtn() {
         if (!this.automata) {
             throw new AppError('Automata not set')
         }
-        this.#disableButtons()
+
         this.#currentState = App.STATE_RUNNING
         this.startAutoGeneration(this.#generationDelay)
-        this.#buttons.stopBtn.removeAttribute('disabled')
-        this.#buttons.pauseBtn.removeAttribute('disabled')
-        this.#buttons.stepBtn.removeAttribute('disabled')
+
+        this.#disableButton(this.#buttons.playBtn)
+        this.#enableButton(this.#buttons.pauseBtn)
+        this.#enableButton(this.#buttons.stopBtn)
+        this.#enableButton(this.#buttons.stepBtn)
     }
 
     #handlePauseBtn() {
         this.#currentState = App.STATE_PAUSED
         this.stopAutoGeneration()
-        this.#buttons.playBtn.removeAttribute('disabled')
-        this.#buttons.pauseBtn.setAttribute('disabled', '')
+
+        this.#enableButton(this.#buttons.playBtn)
+        this.#disableButton(this.#buttons.pauseBtn)
+        this.#enableButton(this.#buttons.stopBtn)
+        this.#enableButton(this.#buttons.stepBtn)
     }
 
     #handleStopBtn() {
         this.#currentState = App.STATE_STOPPED
         this.stopAutoGeneration()
         this.resetGeneration()
-        this.#enableButtons()
-        this.#buttons.stopBtn.setAttribute('disabled', '')
-        this.#buttons.pauseBtn.setAttribute('disabled', '')
+
+        this.#enableButton(this.#buttons.playBtn)
+        this.#disableButton(this.#buttons.pauseBtn)
+        this.#disableButton(this.#buttons.stopBtn)
+        this.#enableButton(this.#buttons.stepBtn)
     }
 
     #handleStepBtn() {
@@ -189,17 +251,41 @@ export class App {
             this.nextGeneration()
             return
         }
+
         this.#currentState = App.STATE_STEPPING
         this.stopAutoGeneration()
         this.nextGeneration()
-        this.#disableButtons()
-        this.#buttons.stepBtn.removeAttribute('disabled')
-        this.#buttons.stopBtn.removeAttribute('disabled')
-        this.#buttons.playBtn.removeAttribute('disabled')
+
+        this.#enableButton(this.#buttons.playBtn)
+        this.#disableButton(this.#buttons.pauseBtn)
+        this.#enableButton(this.#buttons.stopBtn)
+        this.#enableButton(this.#buttons.stepBtn)
+    }
+
+    #handleUndoBtn() {
+        this.#restoreLastUndoSnapshot()
+    }
+
+    #handleRedoBtn() {
+        this.#restoreLastRedoSnapshot()
     }
 
     #inactiveToolButtons() {
         Object.values(this.#toolButtons).map(btn => btn.classList.remove('active'))
+    }
+
+    /**
+     * @param {HTMLElement} button 
+     */
+    #disableButton(button) {
+        button.setAttribute('disabled', '')
+    }
+
+    /**
+     * @param {HTMLElement} button 
+     */
+    #enableButton(button) {
+        button.removeAttribute('disabled')
     }
 
     /**
@@ -253,5 +339,9 @@ export class App {
 
     get currentCellValue() {
         return this.#currentCellValue
+    }
+
+    get display() {
+        return this.#display
     }
 }

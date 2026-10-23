@@ -18,10 +18,38 @@ export class BucketTool extends Tool {
         if (value !== 0) {
             return
         }
+        this.#floodFill(row, col)
+    }
 
-        // Floodfill Algorithm
+    /**
+     * @param {number} row 
+     * @param {number} col 
+     */
+    onMouseMove(row, col) { }
+
+    /**
+     * @param {number} row 
+     * @param {number} col 
+     */
+    onMouseReleased(row, col) { }
+
+    onMouseLeave() { }
+
+    /**
+     * @param {CanvasRenderingContext2D} displayBufferContext
+     */
+    renderPreview(displayBufferContext) { }
+
+    /**
+     * Floodfill Algorithm
+     * @param {number} row 
+     * @param {number} col 
+     * @returns {boolean}
+     */
+    #floodFill(row, col) {
         const stack = [[row, col]]
         const visited = new Set()
+        let saved = false
         while (stack.length != 0) {
             const [r, c] = stack.pop()
 
@@ -40,6 +68,11 @@ export class BucketTool extends Tool {
             }
 
             visited.add(key)
+
+            if (!saved) {
+                saved = true
+                this.app.saveSnapshot()
+            }
             this.app.automata.setValue(r, c, this.app.currentCellValue)
 
             stack.push([r - 1, c])
@@ -47,32 +80,5 @@ export class BucketTool extends Tool {
             stack.push([r, c - 1])
             stack.push([r, c + 1])
         }
-    }
-
-    /**
-     * @param {number} row 
-     * @param {number} col 
-     */
-    onMouseMove(row, col) {
-
-    }
-
-    /**
-     * @param {number} row 
-     * @param {number} col 
-     */
-    onMouseReleased(row, col) {
-
-    }
-
-    onMouseLeave() {
-
-    }
-
-    /**
-     * @param {CanvasRenderingContext2D} displayBufferContext
-     */
-    renderPreview(displayBufferContext) {
-
     }
 }

@@ -51,6 +51,7 @@ export class RectFillTool extends Tool {
      */
     onMouseReleased(row, col) {
         this.#mousePressed = false
+        this.app.saveSnapshot()
         const cells = this.#getRectFillCells(this.#mouseSrcRow, this.#mouseSrcCol, this.#mouseDstRow, this.#mouseDstCol);
         for (const [col, row] of cells) {
             this.app.automata.setValue(row, col, this.app.currentCellValue)

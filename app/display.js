@@ -50,11 +50,10 @@ export class Display {
     /**
      * @param {number} rows 
      * @param {number} cols 
-     * @param {number} tileSize 
      */
-    resize(rows, cols, tileSize) {
-        this.#width = cols * tileSize
-        this.#height = rows * tileSize
+    resize(rows, cols) {
+        this.#width = cols * this.#app.tileSize
+        this.#height = rows * this.#app.tileSize
         this.#display.setAttribute('width', this.#width)
         this.#display.setAttribute('height', this.#height)
         this.#displayBuffer.setAttribute('width', this.#width)
@@ -89,14 +88,14 @@ export class Display {
     }
 
     #renderGrid() {
-        for (let col = 0; col < this.#width; col += this.#app.tileSize) {
+        for (let col = 0; col <= this.#width; col += this.#app.tileSize) {
             this.#displayBufferContext.strokeStyle = col % this.#gridStep == 0 ? this.#gridStepColor : this.#gridColor
             this.#displayBufferContext.beginPath()
             this.#displayBufferContext.moveTo(col, 0)
             this.#displayBufferContext.lineTo(col, this.#height)
             this.#displayBufferContext.stroke()
         }
-        for (let row = 0; row < this.#height; row += this.#app.tileSize) {
+        for (let row = 0; row <= this.#height; row += this.#app.tileSize) {
             this.#displayBufferContext.strokeStyle = row % this.#gridStep == 0 ? this.#gridStepColor : this.#gridColor
             this.#displayBufferContext.beginPath()
             this.#displayBufferContext.moveTo(0, row)

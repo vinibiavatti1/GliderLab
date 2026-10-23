@@ -52,7 +52,7 @@ export class AbstractAutomata {
 
     resetGeneration() {
         this.#generationCount = 0n
-        this.#data = structuredClone(this.#initialData)
+        this.#restoreInitialData()
     }
 
     flush() {
@@ -156,6 +156,17 @@ export class AbstractAutomata {
         count += this.getValueNormalized(row + 1, col + 0) === state ? 1 : 0
         count += this.getValueNormalized(row + 1, col + 1) === state ? 1 : 0
         return count
+    }
+
+    /**
+     * @param {number[][]} dataSnapshot 
+     */
+    restoreSnapshot(rows, cols, dataSnapshot) {
+        this.#data = structuredClone(dataSnapshot)
+        this.#rows = rows
+        this.#cols = cols
+        this.#buffer = structuredClone(this.#data)
+        this.#initialData = structuredClone(this.#data)
     }
 
     #recreateData() {
