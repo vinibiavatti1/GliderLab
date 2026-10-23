@@ -9,7 +9,7 @@ export class ElementarRule {
     #map
 
     /**
-     * @param {string} number 
+     * @param {number} number 
      */
     constructor(number) {
         this.#number = number

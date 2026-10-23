@@ -148,8 +148,9 @@
             </div>
 
         </div>
-        <div class="p-2 fg-secondary fs-sm" style="position: absolute; bottom:10px;left:0;right:0;">
+        <div class="p-2 fg-secondary fs-sm d-flex justify-content-between" style="position: absolute; bottom:10px;left:0;right:15px;">
             <span id="app-status"></span>
+            <span id="credits">Made by: vinibiavatti1 - <a href="https://github.com/vinibiavatti1/GliderLab">Github Repo</a></span>
         </div>
     </div>
 
@@ -161,18 +162,27 @@
         <div class="p-4 border-bottom border-body">
             <ul class="nav">
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#">Game of Life</a>
+                    <a id="app-gol-tab-btn" class="nav-link active" data-bs-toggle="tab" data-bs-target="#app-gol-tab" href="#">Game of Life</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Elementar</a>
+                    <a id="app-elementar-tab-btn" class="nav-link" data-bs-toggle="tab" data-bs-target="#app-elementar-tab" href="#">Elementar</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Wire World</a>
+                    <a id="app-wire-world-tab-btn" class="nav-link" data-bs-toggle="tab" data-bs-target="#app-wire-world-tab" href="#">Wire World</a>
                 </li>
             </ul>
         </div>
-        <div class="dialog-body">
-            <div id="gof-panel" style="display: none;">
+        <div class="dialog-body tab-content">
+            <div id="app-gol-tab" class="tab-pane show active">
+                <div class="d-flex w-100 mb-4">
+                    <div class="border rounded-4 border-body p-3 me-5">
+                        <canvas class="d-block" id="app-gol-preview" width="90" height="90"></canvas>
+                    </div>
+                    <div>
+                        <div class="mb-3"><b>Game of Life</b></div>
+                        <p class="fg-secondary fs-sm">An outer-totalistic cellular automaton played on a 2D grid, created by John Conway in 1970. Cells evolve through generations based on their 8 immediate neighbors using simple rules of birth, survival, and overpopulation, producing complex, emergent behaviors like gliders and oscillators.</p>
+                    </div>
+                </div>
                 <div class="form-field mb-3">
                     <label for="app-gol-rule" class="form-label">Rule:</label>
                     <select id="app-gol-rule" class="form-control">
@@ -183,40 +193,39 @@
                     <label for="app-gol-rule-preset" class="form-label">Preset:</label>
                     <select id="app-gol-rule-preset" class="form-control">
                         <option value="empty" selected>(Empty)</option>
-                        <option value="1">Unicorn</option>
                     </select>
                 </div>
                 <div class="form-field mb-3">
-                    <label for="fieldSelect" class="form-label">Born:</label>
+                    <label class="form-label">Born:</label>
                     <div class="btn-group" role="group" aria-label="Basic example">
-                        <button type="button" class="btn-solid app-gol-born-btn" data-value="1">1</button>
-                        <button type="button" class="btn-solid app-gol-born-btn" data-value="2">2</button>
-                        <button type="button" class="btn-solid app-gol-born-btn" data-value="3">3</button>
-                        <button type="button" class="btn-solid app-gol-born-btn" data-value="4">4</button>
-                        <button type="button" class="btn-solid app-gol-born-btn" data-value="5">5</button>
-                        <button type="button" class="btn-solid app-gol-born-btn" data-value="6">6</button>
-                        <button type="button" class="btn-solid app-gol-born-btn" data-value="7">7</button>
-                        <button type="button" class="btn-solid app-gol-born-btn" data-value="8">8</button>
-                        <button type="button" class="btn-solid app-gol-born-btn" data-value="9">9</button>
+                        <button type="button" class="btn-solid app-gol-born-btn" data-value="1" disabled>1</button>
+                        <button type="button" class="btn-solid app-gol-born-btn" data-value="2" disabled>2</button>
+                        <button type="button" class="btn-solid app-gol-born-btn" data-value="3" disabled>3</button>
+                        <button type="button" class="btn-solid app-gol-born-btn" data-value="4" disabled>4</button>
+                        <button type="button" class="btn-solid app-gol-born-btn" data-value="5" disabled>5</button>
+                        <button type="button" class="btn-solid app-gol-born-btn" data-value="6" disabled>6</button>
+                        <button type="button" class="btn-solid app-gol-born-btn" data-value="7" disabled>7</button>
+                        <button type="button" class="btn-solid app-gol-born-btn" data-value="8" disabled>8</button>
+                        <button type="button" class="btn-solid app-gol-born-btn" data-value="9" disabled>9</button>
                     </div>
                 </div>
                 <div class="form-field">
-                    <label for="fieldSelect" class="form-label">Survive:</label>
+                    <label class="form-label">Survive:</label>
                     <div class="btn-group" role="group" aria-label="Basic example">
-                        <button type="button" class="btn-solid app-gol-survive-btn" data-value="1">1</button>
-                        <button type="button" class="btn-solid app-gol-survive-btn" data-value="2">2</button>
-                        <button type="button" class="btn-solid app-gol-survive-btn" data-value="3">3</button>
-                        <button type="button" class="btn-solid app-gol-survive-btn" data-value="4">4</button>
-                        <button type="button" class="btn-solid app-gol-survive-btn" data-value="5">5</button>
-                        <button type="button" class="btn-solid app-gol-survive-btn" data-value="6">6</button>
-                        <button type="button" class="btn-solid app-gol-survive-btn" data-value="7">7</button>
-                        <button type="button" class="btn-solid app-gol-survive-btn" data-value="8">8</button>
-                        <button type="button" class="btn-solid app-gol-survive-btn" data-value="9">9</button>
+                        <button type="button" class="btn-solid app-gol-survive-btn" data-value="1" disabled>1</button>
+                        <button type="button" class="btn-solid app-gol-survive-btn" data-value="2" disabled>2</button>
+                        <button type="button" class="btn-solid app-gol-survive-btn" data-value="3" disabled>3</button>
+                        <button type="button" class="btn-solid app-gol-survive-btn" data-value="4" disabled>4</button>
+                        <button type="button" class="btn-solid app-gol-survive-btn" data-value="5" disabled>5</button>
+                        <button type="button" class="btn-solid app-gol-survive-btn" data-value="6" disabled>6</button>
+                        <button type="button" class="btn-solid app-gol-survive-btn" data-value="7" disabled>7</button>
+                        <button type="button" class="btn-solid app-gol-survive-btn" data-value="8" disabled>8</button>
+                        <button type="button" class="btn-solid app-gol-survive-btn" data-value="9" disabled>9</button>
                     </div>
                 </div>
             </div>
 
-            <div id="elementar-panel">
+            <div id="app-elementar-tab" class="tab-pane">
                 <div class="d-flex w-100 mb-4">
                     <div class="border rounded-4 border-body p-3 me-5">
                         <canvas class="d-block" id="app-elementar-preview" width="90" height="90"></canvas>

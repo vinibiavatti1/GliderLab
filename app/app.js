@@ -159,7 +159,6 @@ export class App {
         if (this.#currentState !== App.STATE_STOPPED) {
             return
         }
-        console.log('snapshot saved')
         this.#undoSnapshots.push(structuredClone(this.#automata.data))
         this.#redoSnapshots = []
         if (this.#undoSnapshots.length > this.#undoStanshotsMaxSize) {

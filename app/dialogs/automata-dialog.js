@@ -15,6 +15,12 @@ export class AutomataDialog {
     #golRule = document.getElementById('app-gol-rule')
     #golRulePreset = document.getElementById('app-gol-rule-preset')
 
+    #tabs = {
+        appGolTab: document.getElementById('app-gol-tab'),
+        appElementarTab: document.getElementById('app-elementar-tab'),
+        appWireWorldTab: document.getElementById('app-wire-world-tab'),
+    }
+
     #elementarCells = {
         cell7: document.getElementById('app-elementar-cell-7'),
         cell6: document.getElementById('app-elementar-cell-6'),
@@ -40,7 +46,7 @@ export class AutomataDialog {
     #elementerRuleInput = document.getElementById('app-elementar-rule')
 
     /** @type {GameOfLifeRule?} */
-    #selectedGolRule = null
+    #selectedGolRule = GameOfLifeRegistry.GOL
 
     /** @type {number[]} */
     #customGolBorn = []
@@ -56,11 +62,15 @@ export class AutomataDialog {
         this.#setupGameOfLifeRuleList()
         this.#setupListeners()
         this.#initElementarPreview()
+        this.#initGameOfLifePreview()
     }
 
     #setupGameOfLifeRuleList() {
         Object.entries(GameOfLifeRegistry).forEach(([k, v]) => {
             const option = document.createElement('option')
+            if (k === 'GOL') {
+                option.setAttribute('selected', '')
+            }
             option.setAttribute('value', k)
             option.style.color = v.colors[1]
             option.innerHTML = `${v.name} (${v.notation})`
@@ -79,21 +89,27 @@ export class AutomataDialog {
     }
 
     #handleAutomataSelectBtn() {
-        if (!this.#selectedGolRule) {
-            const notation = `B${this.#customGolBorn.join('')}/S${this.#customGolSurvive.join('')}`
-            this.#selectedGolRule = new GameOfLifeRule('Custom', '', notation, this.#customGolBorn, this.#customGolSurvive, 'rgb(255, 255, 255)')
+        if (this.#tabs.appGolTab.classList.contains('active')) {
+            if (!this.#selectedGolRule) {
+                const notation = `B${this.#customGolBorn.join('')}/S${this.#customGolSurvive.join('')}`
+                const colors = ['rgb(0, 0, 0)', 'rgb(255, 255, 255)']
+                this.#selectedGolRule = new GameOfLifeRule('Custom', '', notation, this.#customGolBorn, this.#customGolSurvive, colors)
+            }
+            const automata = new GameOfLife(this.#app.rows, this.#app.cols, this.#selectedGolRule)
+            this.#app.automata = automata
+        } else if (this.#tabs.appElementarTab.classList.contains('active')) {
+            const rule = new ElementarRule(parseInt(this.#elementerRuleInput.value))
+            const automata = new Elementar(this.#app.rows, this.#app.cols, rule)
+            automata.setValue(0, Math.floor(this.#app.cols / 2), Elementar.ALIVE)
+            this.#app.automata = automata
         }
-        const automata = new GameOfLife(this.#app.rows, this.#app.cols, this.#selectedGolRule)
-        this.#app.automata = automata
     }
 
     /**
      * @param {PointerEvent} evt 
      */
     #handleGolBornBtns(evt) {
-        if (this.#selectedGolRule) {
-            return
-        }
+        this.#selectedGolRule = null
         const value = parseInt(evt.target.getAttribute('data-value'))
         if (!evt.target.classList.contains('active')) {
             evt.target.classList.add('active')
@@ -108,9 +124,7 @@ export class AutomataDialog {
      * @param {PointerEvent} evt 
      */
     #handleGolSurviveBtns(evt) {
-        if (this.#selectedGolRule) {
-            return
-        }
+        this.#selectedGolRule = null
         const value = parseInt(evt.target.getAttribute('data-value'))
         if (!evt.target.classList.contains('active')) {
             evt.target.classList.add('active')
@@ -147,6 +161,7 @@ export class AutomataDialog {
             }
             this.#selectedGolRule = GameOfLifeRegistry[value]
             this.#golBornBtns.forEach(btn => {
+                btn.classList.remove('active')
                 const btnValue = parseInt(btn.getAttribute('data-value'))
                 if (this.#selectedGolRule.born.includes(btnValue)) {
                     btn.classList.add('active')
@@ -154,6 +169,7 @@ export class AutomataDialog {
                 this.#app.disableElement(btn)
             })
             this.#golSurviveBtns.forEach(btn => {
+                btn.classList.remove('active')
                 const btnValue = parseInt(btn.getAttribute('data-value'))
                 if (this.#selectedGolRule.survive.includes(btnValue)) {
                     btn.classList.add('active')
@@ -220,6 +236,25 @@ export class AutomataDialog {
             automata.render(context, 10)
             automata.nextGeneration()
             if (automata.generationCount >= 10) {
+                automata.resetGeneration()
+            }
+        }, 100)
+    }
+
+    #initGameOfLifePreview() {
+        const canvas = document.getElementById('app-gol-preview')
+        const context = canvas.getContext('2d')
+        context.fillRe
+        const automata = new GameOfLife(9, 9, GameOfLifeRegistry.GOL)
+        automata.setValue(0, 1, GameOfLife.ALIVE)
+        automata.setValue(1, 2, GameOfLife.ALIVE)
+        automata.setValue(2, 0, GameOfLife.ALIVE)
+        automata.setValue(2, 1, GameOfLife.ALIVE)
+        automata.setValue(2, 2, GameOfLife.ALIVE)
+        setInterval(() => {
+            automata.render(context, 10)
+            automata.nextGeneration()
+            if (automata.generationCount >= 25) {
                 automata.resetGeneration()
             }
         }, 100)
