@@ -28,7 +28,7 @@ export class AbstractAutomata {
      * @param {string} name
      * @param {number} rows 
      * @param {number} cols 
-     * @param {string[]} cols 
+     * @param {string[]} colors 
      */
     constructor(name, rows, cols, colors) {
         if (rows < 0 || cols < 0) {
@@ -174,6 +174,20 @@ export class AbstractAutomata {
         this.#cols = cols
         this.#buffer = structuredClone(this.#data)
         this.#initialData = structuredClone(this.#data)
+    }
+
+    /**
+     * @param {CanvasRenderingContext2D} context 
+     * @param {number} tileSize 
+     */
+    render(context, tileSize) {
+        for (let row = 0; row < this.#rows; row++) {
+            for (let col = 0; col < this.#cols; col++) {
+                const color = this.#colors[this.#data[row][col]]
+                context.fillStyle = color
+                context.fillRect(col * tileSize, row * tileSize, tileSize, tileSize)
+            }
+        }
     }
 
     #recreateData() {

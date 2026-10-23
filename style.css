@@ -46,3 +46,8 @@
 .app-elementar-table tbody tr td.active {
     background-color: white !important;
 }
+
+.app-elementar-icon tbody tr td {
+    width: 8px;
+    height: 8px;
+}

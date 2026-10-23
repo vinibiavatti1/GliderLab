@@ -1,4 +1,6 @@
 import { App } from '../app.js'
+import { ElementarRule } from '../automata/elementar/elementar-rule.js'
+import { Elementar } from '../automata/elementar/elementar.js'
 import { GameOfLifeRegistry } from '../automata/game-of-life/game-of-life-registry.js'
 import { GameOfLifeRule } from '../automata/game-of-life/game-of-life-rule.js'
 import { GameOfLife } from '../automata/game-of-life/game-of-life.js'
@@ -53,6 +55,7 @@ export class AutomataDialog {
         this.#app = app
         this.#setupGameOfLifeRuleList()
         this.#setupListeners()
+        this.#initElementarPreview()
     }
 
     #setupGameOfLifeRuleList() {
@@ -204,5 +207,21 @@ export class AutomataDialog {
         const int = parseInt(byte, 2)
         this.#elementerRuleInput.value = int
         this.#elementerRuleInput.dispatchEvent(new Event('input', { bubbles: true }))
+    }
+
+    #initElementarPreview() {
+        const canvas = document.getElementById('app-elementar-preview')
+        const context = canvas.getContext('2d')
+        context.fillRe
+        const rule = new ElementarRule(30)
+        const automata = new Elementar(9, 9, rule)
+        automata.setValue(0, 4, Elementar.ALIVE)
+        setInterval(() => {
+            automata.render(context, 10)
+            automata.nextGeneration()
+            if (automata.generationCount >= 10) {
+                automata.resetGeneration()
+            }
+        }, 100)
     }
 }

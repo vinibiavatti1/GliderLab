@@ -217,6 +217,15 @@
             </div>
 
             <div id="elementar-panel">
+                <div class="d-flex w-100 mb-4">
+                    <div class="border rounded-4 border-body p-3 me-5">
+                        <canvas class="d-block" id="app-elementar-preview" width="90" height="90"></canvas>
+                    </div>
+                    <div>
+                        <div class="mb-3"><b>Elementar Cellular Automata</b></div>
+                        <p class="fg-secondary fs-sm">An elementary cellular automaton is a 1D grid of binary cells that evolves over time based on its immediate neighbors. Using one of 256 simple rules, it can generate surprisingly complex, fractal, or chaotic patterns.</p>
+                    </div>
+                </div>
                 <div class="form-field mb-6">
                     <label for="app-elementar-rule" class="form-label">Rule:</label>
                     <input id="app-elementar-rule" type="number" min="0" max="255" step="1" class="form-control" value="0">
