@@ -4,15 +4,32 @@
 <head>
     <meta charset="UTF-8">
 
-    <title>Document</title>
+    <title>Glider Lab - Interactive Cellular Automata Playground</title>
+
     <link rel="stylesheet" href="./style.css" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@6.0.0-alpha.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-B/GM4XqrwHnWXNOWMbloTmrYXZg10cakYGmpfsR/bbzQ6JAJI4ihuyADKLnBgrCe" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.2/font/bootstrap-icons.min.css">
     <script type="module" src="https://cdn.jsdelivr.net/npm/bootstrap@6.0.0-alpha.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-1a/pXj49ZQ1aHEmrJ+gMw1otqoVsYwlEnlD8mIfY2TV03r20Y0CN7uqx1tQogjPL" crossorigin="anonymous"></script>
+
+    <meta name="description" content="A cellular automata editor and digital playground built with vanilla JavaScript. Explore Conway's Game of Life, WireWorld, and Elementary Cellular Automata.">
+    <meta name="keywords" content="cellular automata, game of life, wireworld, elementary cellular automata, javascript simulation, interactive grid, open source">
+    <meta name="author" content="Vinícius Reif Biavatti">
+
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:site_name" content="Glider Lab">
+    <meta property="og:title" content="Glider Lab - Interactive Cellular Automata Playground">
+    <meta property="og:description" content="Explore and simulate Conway's Game of Life, WireWorld, and Elementary Cellular Automata in a vanilla JavaScript editor.">
+    <meta property="og:url" content="https://vinibiavatti1.github.io/glider-lab/">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Glider Lab - Interactive Cellular Automata Playground">
+    <meta name="twitter:description" content="Explore and simulate Conway's Game of Life, WireWorld, and Elementary Cellular Automata in a vanilla JavaScript editor.">
+
+    <link rel="canonical" href="https://vinibiavatti1.github.io/glider-lab/" />
 </head>
-
-
-
 
 <body class="bg-1">
 
@@ -56,10 +73,10 @@
 
             <div class="app-divider border-start border-body border-1"></div>
             <div class="btn-group" role="group">
-                <button id="app-btn-redo" type="button" class="btn-icon border-0">
+                <button id="app-btn-about" type="button" class="btn-icon border-0" data-bs-toggle="dialog" data-bs-target="#about-dialog" data-bs-backdrop="static">
                     <i class="bi bi-question-circle"></i>
                 </button>
-                <button id="app-btn-undo" type="button" class="btn-icon border-0">
+                <button id="app-btn-github" type="button" class="btn-icon border-0">
                     <i class="bi bi-github"></i>
                 </button>
             </div>
@@ -131,16 +148,24 @@
                     <i class="bi bi-eraser"></i>
                 </button>
             </div>
-            <div id="app-wire-world-tools" style="display: none;">
+
+            <div id="app-wireworld-tools" style="display: none;">
                 <div class="app-divider border-start border-body border-1"></div>
                 <div class="btn-group" role="group">
-                    <button id="app-btn-wire-world-conductor" type="button" class="btn-icon border-0 active">
+                    <button id="app-btn-wireworld-conductor" type="button" class="btn-icon border-0 active">
                         <i class="bi bi-plug"></i>
                     </button>
-                    <button id="app-btn-wire-world-electron" type="button" class="btn-icon border-0">
+                    <button id="app-btn-wireworld-electron" type="button" class="btn-icon border-0">
                         <i class="bi bi-lightning"></i>
                     </button>
                 </div>
+            </div>
+
+            <div class="app-divider border-start border-body border-1"></div>
+            <div class="btn-group" role="group">
+                <button id="app-btn-grid-toggle" type="button" class="btn-icon border-0">
+                    <i id="app-grid-icon" class="bi bi-grid"></i>
+                </button>
             </div>
         </div>
         <div>
@@ -166,10 +191,10 @@
                     <a id="app-gol-tab-btn" class="nav-link active" data-bs-toggle="tab" data-bs-target="#app-gol-tab" href="#">Game of Life</a>
                 </li>
                 <li class="nav-item">
-                    <a id="app-elementar-tab-btn" class="nav-link" data-bs-toggle="tab" data-bs-target="#app-elementar-tab" href="#">Elementar</a>
+                    <a id="app-elementary-tab-btn" class="nav-link" data-bs-toggle="tab" data-bs-target="#app-elementary-tab" href="#">Elementary</a>
                 </li>
                 <li class="nav-item">
-                    <a id="app-wire-world-tab-btn" class="nav-link" data-bs-toggle="tab" data-bs-target="#app-wire-world-tab" href="#">Wire World</a>
+                    <a id="app-wireworld-tab-btn" class="nav-link" data-bs-toggle="tab" data-bs-target="#app-wireworld-tab" href="#">Wireworld</a>
                 </li>
             </ul>
         </div>
@@ -181,7 +206,7 @@
                     </div>
                     <div>
                         <div class="mb-3"><b>Game of Life</b></div>
-                        <p class="fg-secondary fs-sm">An outer-totalistic cellular automaton played on a 2D grid, created by John Conway in 1970. Cells evolve through generations based on their 8 immediate neighbors using simple rules of birth, survival, and overpopulation, producing complex, emergent behaviors like gliders and oscillators.</p>
+                        <p class="fg-secondary fs-sm"><a href="https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life" target="_blank">Game of Life</a> is an outer-totalistic cellular automaton played on a 2D grid, created by John Conway in 1970. Cells evolve through generations based on their 8 immediate neighbors using simple rules of birth, survival, and overpopulation, producing complex, emergent behaviors like gliders and oscillators.</p>
                     </div>
                 </div>
                 <div class="form-field mb-3">
@@ -226,22 +251,22 @@
                 </div>
             </div>
 
-            <div id="app-elementar-tab" class="tab-pane">
+            <div id="app-elementary-tab" class="tab-pane">
                 <div class="d-flex w-100 mb-4">
                     <div class="border rounded-4 border-body p-3 me-5">
-                        <canvas class="d-block" id="app-elementar-preview" width="90" height="90"></canvas>
+                        <canvas class="d-block" id="app-elementary-preview" width="90" height="90"></canvas>
                     </div>
                     <div>
-                        <div class="mb-3"><b>Elementar Cellular Automata</b></div>
-                        <p class="fg-secondary fs-sm">An elementary cellular automaton is a 1D grid of binary cells that evolves over time based on its immediate neighbors. Using one of 256 simple rules, it can generate surprisingly complex, fractal, or chaotic patterns.</p>
+                        <div class="mb-3"><b>Elementary Cellular Automata</b></div>
+                        <p class="fg-secondary fs-sm">An <a href="https://en.wikipedia.org/wiki/Elementary_cellular_automaton" target="_blank">Elementary Cellular Automaton</a> is a 1D grid of binary cells that evolves over time based on its immediate neighbors. Using one of 256 simple rules, it can generate surprisingly complex, fractal, or chaotic patterns.</p>
                     </div>
                 </div>
                 <div class="form-field mb-6">
-                    <label for="app-elementar-rule" class="form-label">Rule:</label>
-                    <input id="app-elementar-rule" type="number" min="0" max="255" step="1" class="form-control" value="30">
+                    <label for="app-elementary-rule" class="form-label">Rule:</label>
+                    <input id="app-elementary-rule" type="number" min="0" max="255" step="1" class="form-control" value="30">
                 </div>
                 <div class="d-flex align-items-center w-100 justify-content-center gap-3 flex-wrap">
-                    <table class="app-elementar-table">
+                    <table class="app-elementary-table">
                         <tbody>
                             <tr>
                                 <td class="rounded-4 bg-3 p-2 active"></td>
@@ -250,15 +275,15 @@
                             </tr>
                             <tr>
                                 <td class="rounded-4 bg-0 p-2"></td>
-                                <td id="app-elementar-cell-7" class="rounded-4 bg-3 p-2"></td>
+                                <td id="app-elementary-cell-7" class="rounded-4 bg-3 p-2"></td>
                                 <td class="rounded-4 bg-0 p-2"></td>
                             </tr>
                             <tr>
-                                <td id="app-elementar-cell-7-text" colspan="3" class="text-center elementar-bit">0</td>
+                                <td id="app-elementary-cell-7-text" colspan="3" class="text-center elementary-bit">0</td>
                             </tr>
                         </tbody>
                     </table>
-                    <table class="app-elementar-table">
+                    <table class="app-elementary-table">
                         <tbody>
                             <tr>
                                 <td class="rounded-4 bg-3 p-2 active"></td>
@@ -267,15 +292,15 @@
                             </tr>
                             <tr>
                                 <td class="rounded-4 bg-0 p-2"></td>
-                                <td id="app-elementar-cell-6" class="rounded-4 bg-3 p-2"></td>
+                                <td id="app-elementary-cell-6" class="rounded-4 bg-3 p-2"></td>
                                 <td class="rounded-4 bg-0 p-2"></td>
                             </tr>
                             <tr>
-                                <td id="app-elementar-cell-6-text" colspan="3" class="text-center elementar-bit">0</td>
+                                <td id="app-elementary-cell-6-text" colspan="3" class="text-center elementary-bit">0</td>
                             </tr>
                         </tbody>
                     </table>
-                    <table class="app-elementar-table">
+                    <table class="app-elementary-table">
                         <tbody>
                             <tr>
                                 <td class="rounded-4 bg-3 p-2 active"></td>
@@ -284,15 +309,15 @@
                             </tr>
                             <tr>
                                 <td class="rounded-4 bg-0 p-2"></td>
-                                <td id="app-elementar-cell-5" class="rounded-4 bg-3 p-2"></td>
+                                <td id="app-elementary-cell-5" class="rounded-4 bg-3 p-2"></td>
                                 <td class="rounded-4 bg-0 p-2"></td>
                             </tr>
                             <tr>
-                                <td id="app-elementar-cell-5-text" colspan="3" class="text-center elementar-bit">0</td>
+                                <td id="app-elementary-cell-5-text" colspan="3" class="text-center elementary-bit">0</td>
                             </tr>
                         </tbody>
                     </table>
-                    <table class="app-elementar-table">
+                    <table class="app-elementary-table">
                         <tbody>
                             <tr>
                                 <td class="rounded-4 bg-3 p-2 active"></td>
@@ -301,15 +326,15 @@
                             </tr>
                             <tr>
                                 <td class="rounded-4 bg-0 p-2"></td>
-                                <td id="app-elementar-cell-4" class="rounded-4 bg-3 p-2 active"></td>
+                                <td id="app-elementary-cell-4" class="rounded-4 bg-3 p-2 active"></td>
                                 <td class="rounded-4 bg-0 p-2"></td>
                             </tr>
                             <tr>
-                                <td id="app-elementar-cell-4-text" colspan="3" class="text-center elementar-bit">1</td>
+                                <td id="app-elementary-cell-4-text" colspan="3" class="text-center elementary-bit">1</td>
                             </tr>
                         </tbody>
                     </table>
-                    <table class="app-elementar-table">
+                    <table class="app-elementary-table">
                         <tbody>
                             <tr>
                                 <td class="rounded-4 bg-3 p-2"></td>
@@ -318,15 +343,15 @@
                             </tr>
                             <tr>
                                 <td class="rounded-4 bg-0 p-2"></td>
-                                <td id="app-elementar-cell-3" class="rounded-4 bg-3 p-2 active"></td>
+                                <td id="app-elementary-cell-3" class="rounded-4 bg-3 p-2 active"></td>
                                 <td class="rounded-4 bg-0 p-2"></td>
                             </tr>
                             <tr>
-                                <td id="app-elementar-cell-3-text" colspan="3" class="text-center elementar-bit">1</td>
+                                <td id="app-elementary-cell-3-text" colspan="3" class="text-center elementary-bit">1</td>
                             </tr>
                         </tbody>
                     </table>
-                    <table class="app-elementar-table">
+                    <table class="app-elementary-table">
                         <tbody>
                             <tr>
                                 <td class="rounded-4 bg-3 p-2"></td>
@@ -335,15 +360,15 @@
                             </tr>
                             <tr>
                                 <td class="rounded-4 bg-0 p-2"></td>
-                                <td id="app-elementar-cell-2" class="rounded-4 bg-3 p-2 active"></td>
+                                <td id="app-elementary-cell-2" class="rounded-4 bg-3 p-2 active"></td>
                                 <td class="rounded-4 bg-0 p-2"></td>
                             </tr>
                             <tr>
-                                <td id="app-elementar-cell-2-text" colspan="3" class="text-center elementar-bit">1</td>
+                                <td id="app-elementary-cell-2-text" colspan="3" class="text-center elementary-bit">1</td>
                             </tr>
                         </tbody>
                     </table>
-                    <table class="app-elementar-table">
+                    <table class="app-elementary-table">
                         <tbody>
                             <tr>
                                 <td class="rounded-4 bg-3 p-2"></td>
@@ -352,15 +377,15 @@
                             </tr>
                             <tr>
                                 <td class="rounded-4 bg-0 p-2"></td>
-                                <td id="app-elementar-cell-1" class="rounded-4 bg-3 p-2 active"></td>
+                                <td id="app-elementary-cell-1" class="rounded-4 bg-3 p-2 active"></td>
                                 <td class="rounded-4 bg-0 p-2"></td>
                             </tr>
                             <tr>
-                                <td id="app-elementar-cell-1-text" colspan="3" class="text-center elementar-bit">1</td>
+                                <td id="app-elementary-cell-1-text" colspan="3" class="text-center elementary-bit">1</td>
                             </tr>
                         </tbody>
                     </table>
-                    <table class="app-elementar-table">
+                    <table class="app-elementary-table">
                         <tbody>
                             <tr>
                                 <td class="rounded-4 bg-3 p-2"></td>
@@ -369,29 +394,29 @@
                             </tr>
                             <tr>
                                 <td class="rounded-4 bg-0 p-2"></td>
-                                <td id="app-elementar-cell-0" class="rounded-4 bg-3 p-2"></td>
+                                <td id="app-elementary-cell-0" class="rounded-4 bg-3 p-2"></td>
                                 <td class="rounded-4 bg-0 p-2"></td>
                             </tr>
                             <tr>
-                                <td id="app-elementar-cell-0-text" colspan="3" class="text-center elementar-bit">0</td>
+                                <td id="app-elementary-cell-0-text" colspan="3" class="text-center elementary-bit">0</td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
-            <div id="app-wire-world-tab" class="tab-pane">
+            <div id="app-wireworld-tab" class="tab-pane">
                 <div class="d-flex w-100 mb-4">
                     <div class="border rounded-4 border-body p-3 me-5">
-                        <canvas class="d-block" id="app-wire-world-preview" width="90" height="90"></canvas>
+                        <canvas class="d-block" id="app-wireworld-preview" width="90" height="90"></canvas>
                     </div>
                     <div>
-                        <div class="mb-3"><b>Wire World</b></div>
-                        <p class="fg-secondary fs-sm">A cellular automaton created by Brian Silverman in 1987 to simulate electronic circuits. Using four cell states (empty, electron head, electron tail, and conductor), it easily models logic gates, transistors, and digital architecture.</p>
+                        <div class="mb-3"><b>Wireworld</b></div>
+                        <p class="fg-secondary fs-sm"><a href="https://en.wikipedia.org/wiki/Wireworld" target="_blank">Wireworld</a> is a cellular automaton created by Brian Silverman in 1987 to simulate electronic circuits. Using four cell states (empty, electron head, electron tail, and conductor), it easily models logic gates, transistors, and digital architecture.</p>
                     </div>
                 </div>
                 <div class="form-field mb-3">
-                    <label for="app-wire-world-rule-preset" class="form-label">Preset:</label>
-                    <select id="app-wire-world-rule-preset" class="form-control">
+                    <label for="app-wireworld-rule-preset" class="form-label">Preset:</label>
+                    <select id="app-wireworld-rule-preset" class="form-control">
                         <option value="empty" selected>(Empty)</option>
                     </select>
                 </div>
@@ -403,15 +428,64 @@
         </div>
     </dialog>
 
+    <dialog class="dialog dialog-slide-down dialog-xl" id="about-dialog">
+        <div class="dialog-header">
+            <h1 class="dialog-title">Glider Lab v<span id="app-version"></span></h1>
+        </div>
+        <div class="dialog-body">
+            <div class="container-fluid p-0">
+                <div class="row p-0">
+                    <div class="col-12">
+                        <p class="fg-secondary">
+                            Welcome to <b>Glider Lab</b>, a digital playground born out of pure curiosity, a love for clean code, and a fascination with the elegant complexity of cellular automata.
+                        </p>
+                        <p class="fg-secondary">
+                            Created as a personal open-source project by <i>Vinícius Reif Biavatti</i> (<a href="https://github.com/vinibiavatti1">vinibiavatti1</a>), Glider Lab is an exploration of how simple, local rules can give rise to mesmerizing,
+                            unpredictable, and life-like emergent behaviors. Whether you're experimenting with timeless chaos, designing logic circuits, or discovering hidden patterns across different grid universes, this project is designed to
+                            bring these mathematical simulations to life right in your browser.
+                        </p>
+                    </div>
+                    <div class="xs:col-12 sm:col-12 md:col-12 lg:col-4">
+                        <b>Github: </b>
+                        <p class="fg-secondary">
+                            <a href="https://github.com/vinibiavatti1/GliderLab">https://github.com/vinibiavatti1/GliderLab</a>
+                        </p>
+                    </div>
+                    <div class="xs:col-12 sm:col-12 md:col-12 lg:col-4">
+                        <b>LifeWiki: </b>
+                        <p class="fg-secondary">
+                            <a href="https://conwaylife.com/wiki/Main_Page">https://conwaylife.com/wiki/Main_Page</a>
+                        </p>
+                    </div>
+                    <div class="xs:col-12 sm:col-12 md:col-12 lg:col-4">
+                        <b>Techstack: </b>
+                        <p class="fg-secondary">
+                            HTML5, CSS3, JavaScript (ESM), <a href="https://getbootstrap.com/">Bootstrap v6.0</a>
+                        </p>
+                    </div>
+                </div>
+                <p class="fg-secondary"><b class="fg-danger">Warning!</b> This simulation contains flashing lights and rapid visual patterns that may trigger seizures or discomfort for individuals with photosensitive epilepsy.</p>
+            </div>
+            <div class="border rounded-4 border-body p-3 overflow-hidden d-none md:d-block" style="max-height: 200px;">
+                <canvas class="d-block" style="margin-left: -50px; margin-top: -50px;" id="app-gol-about-display" width="1500" height="500"></canvas>
+            </div>
+        </div>
+        <div class="dialog-footer justify-content-end md:justify-content-between">
+            <button id="easter-egg-btn" type="button" class="btn-subtle theme-danger d-none md:d-block" style="opacity: 0;">Click to Chaos!</button>
+            <button id="app-go-btn" type="button" class="btn-solid theme-primary" data-bs-dismiss="dialog">Go to Playground!</button>
+        </div>
+    </dialog>
+
+    <template id="app-gol-preview-display">
+        <div class="bg-1 border border-subtle rounded-4 overflow-hidden" style="width: 102px;">
+            <canvas class="d-block" id="{{app-canvas-id}}" width="100" height="90"></canvas>
+            <div id="app-title" class="d-flex align-items-center justify-content-center gap-2 p-3 border-top border-subtle fs-xs">
+                {{title}}
+            </div>
+        </div>
+    </template>
+
     <script type="module" src="./main.js" defer></script>
 </body>
-<template id="app-gol-preview-display">
-    <div class="bg-1 border border-subtle rounded-4 overflow-hidden" style="width: 102px;">
-        <canvas class="d-block" id="{{app-canvas-id}}" width="100" height="90"></canvas>
-        <div id="app-title" class="d-flex align-items-center justify-content-center gap-2 p-3 border-top border-subtle fs-xs">
-            {{title}}
-        </div>
-    </div>
-</template>
 
 </html>

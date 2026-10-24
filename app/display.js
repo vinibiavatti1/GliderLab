@@ -2,9 +2,9 @@ import { App } from "./app.js"
 
 export class Display {
     static GRID_STRIP = 25
-    static GRID_STRIP_COLOR = 'rgba(255, 255, 255, .4)'
-    static GRID_COLOR = 'rgba(255, 255, 255, .2)'
-    static CURSOR_COLOR = 'rgba(255, 255, 255, .5)'
+    static GRID_STRIP_COLOR = 'rgba(255, 255, 255, .2)'
+    static GRID_COLOR = 'rgba(255, 255, 255, .1)'
+    static CURSOR_COLOR = 'rgba(255, 255, 255, .4)'
     static RENDER_DELAY = 60
 
     /** @type {App} */
@@ -17,10 +17,10 @@ export class Display {
     #displayBuffer = document.createElement('canvas')
 
     /** @type {CanvasRenderingContext2D} */
-    #displayContext = this.#display.getContext('2d')
+    #displayContext
 
     /** @type {CanvasRenderingContext2D} */
-    #displayBufferContext = this.#displayBuffer.getContext('2d')
+    #displayBufferContext
 
     /** @type {number} */
     #width
@@ -36,12 +36,15 @@ export class Display {
 
     #statusLabel = document.getElementById('app-status')
     #mouseLeave = true
+    #showGrid = true
 
     /**
      * @param {App} app
      */
     constructor(app) {
         this.#app = app
+        this.#displayContext = this.#display.getContext('2d')
+        this.#displayBufferContext = this.#displayBuffer.getContext('2d')
         this.resize(this.#app.rows, this.#app.cols, this.#app.tileSize)
         this.#startRenderInterval()
         this.#setupListeners()
@@ -72,10 +75,7 @@ export class Display {
         this.#renderGrid()
         this.#renderStatus()
         this.#renderCursor()
-        if (this.#app.currentTool) {
-            this.#displayBufferContext.fillStyle = Display.CURSOR_COLOR
-            this.#app.currentTool.renderPreview(this.#displayBufferContext)
-        }
+        this.#renderTool()
         this.#flush()
     }
 
@@ -87,7 +87,18 @@ export class Display {
         this.#displayBufferContext.clearRect(0, 0, this.#width, this.#height)
     }
 
+    #renderTool() {
+        if (!this.#app.currentTool) {
+            return
+        }
+        this.#displayBufferContext.fillStyle = Display.CURSOR_COLOR
+        this.#app.currentTool.renderPreview(this.#displayBufferContext)
+    }
+
     #renderGrid() {
+        if (!this.#showGrid) {
+            return
+        }
         for (let col = 0; col <= this.#width; col += this.#app.tileSize) {
             this.#displayBufferContext.strokeStyle = col % Display.GRID_STRIP == 0 ? Display.GRID_STRIP_COLOR : Display.GRID_COLOR
             this.#displayBufferContext.beginPath()
@@ -109,16 +120,6 @@ export class Display {
             return
         }
         this.#app.automata.render(this.#displayBufferContext, this.#app.tileSize)
-        /*for (let row = 0; row < this.#app.rows; row++) {
-            for (let col = 0; col < this.#app.cols; col++) {
-                const color = this.#app.automata.getValueColor(row, col)
-                this.#displayBufferContext.fillStyle = color
-                this.#displayBufferContext.fillRect(
-                    col * this.#app.tileSize, row * this.#app.tileSize,
-                    this.#app.tileSize, this.#app.tileSize
-                )
-            }
-        }*/
     }
 
     #renderCursor() {
@@ -193,5 +194,13 @@ export class Display {
         this.#display.addEventListener('mousedown', evt => this.#handleMouseDown(evt))
         this.#display.addEventListener('mouseup', evt => this.#handleMouseUp(evt))
         this.#display.addEventListener('mouseleave', () => this.#handleMouseLeave())
+    }
+
+    get showGrid() {
+        return this.#showGrid
+    }
+
+    set showGrid(show) {
+        this.#showGrid = show
     }
 }

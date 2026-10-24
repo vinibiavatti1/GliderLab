@@ -1,38 +1,39 @@
 import { App } from '../app.js'
-import { ElementarRule } from '../automata/elementar/elementar-rule.js'
-import { Elementar } from '../automata/elementar/elementar.js'
+import { ElementaryRule } from '../automata/elementary/elementary-rule.js'
+import { Elementary } from '../automata/elementary/elementary.js'
 import { GameOfLifeRegistry } from '../automata/game-of-life/game-of-life-registry.js'
 import { GameOfLifeRule } from '../automata/game-of-life/game-of-life-rule.js'
+import { GameOfLifeSpaceshipFactory } from '../automata/game-of-life/game-of-life-spaceship-factory.js'
 import { GameOfLife } from '../automata/game-of-life/game-of-life.js'
-import { WireWorld } from '../automata/wire-world/wire-world.js'
+import { WireWorld } from '../automata/wireworld/wireworld.js'
 
 export class AutomataDialog {
     #tabs = {
         gameOfLifeTab: document.getElementById('app-gol-tab'),
-        elementarTab: document.getElementById('app-elementar-tab'),
-        wireWorldTab: document.getElementById('app-wire-world-tab'),
+        elementaryTab: document.getElementById('app-elementary-tab'),
+        wireWorldTab: document.getElementById('app-wireworld-tab'),
     }
 
-    #elementarCells = {
-        cell7: document.getElementById('app-elementar-cell-7'),
-        cell6: document.getElementById('app-elementar-cell-6'),
-        cell5: document.getElementById('app-elementar-cell-5'),
-        cell4: document.getElementById('app-elementar-cell-4'),
-        cell3: document.getElementById('app-elementar-cell-3'),
-        cell2: document.getElementById('app-elementar-cell-2'),
-        cell1: document.getElementById('app-elementar-cell-1'),
-        cell0: document.getElementById('app-elementar-cell-0'),
+    #elementaryCells = {
+        cell7: document.getElementById('app-elementary-cell-7'),
+        cell6: document.getElementById('app-elementary-cell-6'),
+        cell5: document.getElementById('app-elementary-cell-5'),
+        cell4: document.getElementById('app-elementary-cell-4'),
+        cell3: document.getElementById('app-elementary-cell-3'),
+        cell2: document.getElementById('app-elementary-cell-2'),
+        cell1: document.getElementById('app-elementary-cell-1'),
+        cell0: document.getElementById('app-elementary-cell-0'),
     }
 
-    #elementarCellTexts = {
-        cell7: document.getElementById('app-elementar-cell-7-text'),
-        cell6: document.getElementById('app-elementar-cell-6-text'),
-        cell5: document.getElementById('app-elementar-cell-5-text'),
-        cell4: document.getElementById('app-elementar-cell-4-text'),
-        cell3: document.getElementById('app-elementar-cell-3-text'),
-        cell2: document.getElementById('app-elementar-cell-2-text'),
-        cell1: document.getElementById('app-elementar-cell-1-text'),
-        cell0: document.getElementById('app-elementar-cell-0-text'),
+    #elementaryCellTexts = {
+        cell7: document.getElementById('app-elementary-cell-7-text'),
+        cell6: document.getElementById('app-elementary-cell-6-text'),
+        cell5: document.getElementById('app-elementary-cell-5-text'),
+        cell4: document.getElementById('app-elementary-cell-4-text'),
+        cell3: document.getElementById('app-elementary-cell-3-text'),
+        cell2: document.getElementById('app-elementary-cell-2-text'),
+        cell1: document.getElementById('app-elementary-cell-1-text'),
+        cell0: document.getElementById('app-elementary-cell-0-text'),
     }
 
     /** @type {App} */
@@ -52,8 +53,8 @@ export class AutomataDialog {
     #golSurviveBtns = document.querySelectorAll('.app-gol-survive-btn')
     #golRule = document.getElementById('app-gol-rule')
     #golRulePreset = document.getElementById('app-gol-rule-preset')
-    #elementerRuleInput = document.getElementById('app-elementar-rule')
-    #wireWorldToolsContainer = document.getElementById('app-wire-world-tools')
+    #elementerRuleInput = document.getElementById('app-elementary-rule')
+    #wireWorldToolsContainer = document.getElementById('app-wireworld-tools')
 
     /**
      * @param {App} app 
@@ -62,7 +63,7 @@ export class AutomataDialog {
         this.#app = app
         this.#setupGameOfLifeRuleList()
         this.#setupListeners()
-        this.#initElementarPreview()
+        this.#initElementaryPreview()
         this.#initGameOfLifePreview()
         this.#initWireWorldPreview()
     }
@@ -85,16 +86,16 @@ export class AutomataDialog {
         this.#golBornBtns.forEach(btn => btn.addEventListener('click', evt => this.#handleGolBornBtns(evt)))
         this.#golSurviveBtns.forEach(btn => btn.addEventListener('click', evt => this.#handleGolSurviveBtns(evt)))
         this.#automataSelectBtn.addEventListener('click', () => this.#handleAutomataSelectBtn())
-        this.#elementerRuleInput.addEventListener('input', evt => this.#handleElementarRuleInput(evt))
+        this.#elementerRuleInput.addEventListener('input', evt => this.#handleElementaryRuleInput(evt))
 
-        document.querySelectorAll('.app-elementar-table').forEach(table => table.addEventListener('click', evt => this.#handleElementarTableClick(evt)))
+        document.querySelectorAll('.app-elementary-table').forEach(table => table.addEventListener('click', evt => this.#handleElementaryTableClick(evt)))
     }
 
     #handleAutomataSelectBtn() {
         if (this.#isTabActive(this.#tabs.gameOfLifeTab)) {
             this.#loadGameOfLife()
-        } else if (this.#isTabActive(this.#tabs.elementarTab)) {
-            this.#loadElementar()
+        } else if (this.#isTabActive(this.#tabs.elementaryTab)) {
+            this.#loadElementary()
         } else if (this.#isTabActive(this.#tabs.wireWorldTab)) {
             this.#loadWireWorld()
         }
@@ -111,10 +112,10 @@ export class AutomataDialog {
         this.#hideElement(this.#wireWorldToolsContainer)
     }
 
-    #loadElementar() {
-        const rule = new ElementarRule(parseInt(this.#elementerRuleInput.value))
-        const automata = new Elementar(this.#app.rows, this.#app.cols, rule)
-        automata.setValue(0, Math.floor(this.#app.cols / 2), Elementar.ALIVE)
+    #loadElementary() {
+        const rule = new ElementaryRule(parseInt(this.#elementerRuleInput.value))
+        const automata = new Elementary(this.#app.rows, this.#app.cols, rule)
+        automata.setValue(0, Math.floor(this.#app.cols / 2), Elementary.ALIVE)
         this.#app.automata = automata
         this.#hideElement(this.#wireWorldToolsContainer)
     }
@@ -123,7 +124,7 @@ export class AutomataDialog {
         const automata = new WireWorld(this.#app.rows, this.#app.cols)
         this.#app.automata = automata
         this.#showElement(this.#wireWorldToolsContainer)
-        document.getElementById('app-btn-wire-world-conductor').dispatchEvent(new Event('click', { bubbles: true }))
+        document.getElementById('app-btn-wireworld-conductor').dispatchEvent(new Event('click', { bubbles: true }))
     }
 
     /**
@@ -222,76 +223,57 @@ export class AutomataDialog {
         }
     }
 
-    #handleElementarRuleInput(evt) {
-        this.#parseElementarRule(evt.target.value)
+    #handleElementaryRuleInput(evt) {
+        this.#parseElementaryRule(evt.target.value)
     }
 
-    #parseElementarRule(value) {
+    #parseElementaryRule(value) {
         const byte = parseInt(value).toString(2).padStart(8, '0')
-        Object.values(this.#elementarCells).forEach(cell => cell.classList.remove('active'))
-        Object.values(this.#elementarCellTexts).forEach(cell => cell.innerHTML = '')
-        byte[0] === '1' && this.#elementarCells.cell7.classList.add('active')
-        byte[1] === '1' && this.#elementarCells.cell6.classList.add('active')
-        byte[2] === '1' && this.#elementarCells.cell5.classList.add('active')
-        byte[3] === '1' && this.#elementarCells.cell4.classList.add('active')
-        byte[4] === '1' && this.#elementarCells.cell3.classList.add('active')
-        byte[5] === '1' && this.#elementarCells.cell2.classList.add('active')
-        byte[6] === '1' && this.#elementarCells.cell1.classList.add('active')
-        byte[7] === '1' && this.#elementarCells.cell0.classList.add('active')
-        this.#elementarCellTexts.cell7.innerHTML = byte[0] === '1' ? '1' : '0'
-        this.#elementarCellTexts.cell6.innerHTML = byte[1] === '1' ? '1' : '0'
-        this.#elementarCellTexts.cell5.innerHTML = byte[2] === '1' ? '1' : '0'
-        this.#elementarCellTexts.cell4.innerHTML = byte[3] === '1' ? '1' : '0'
-        this.#elementarCellTexts.cell3.innerHTML = byte[4] === '1' ? '1' : '0'
-        this.#elementarCellTexts.cell2.innerHTML = byte[5] === '1' ? '1' : '0'
-        this.#elementarCellTexts.cell1.innerHTML = byte[6] === '1' ? '1' : '0'
-        this.#elementarCellTexts.cell0.innerHTML = byte[7] === '1' ? '1' : '0'
+        Object.values(this.#elementaryCells).forEach(cell => cell.classList.remove('active'))
+        Object.values(this.#elementaryCellTexts).forEach(cell => cell.innerHTML = '')
+        byte[0] === '1' && this.#elementaryCells.cell7.classList.add('active')
+        byte[1] === '1' && this.#elementaryCells.cell6.classList.add('active')
+        byte[2] === '1' && this.#elementaryCells.cell5.classList.add('active')
+        byte[3] === '1' && this.#elementaryCells.cell4.classList.add('active')
+        byte[4] === '1' && this.#elementaryCells.cell3.classList.add('active')
+        byte[5] === '1' && this.#elementaryCells.cell2.classList.add('active')
+        byte[6] === '1' && this.#elementaryCells.cell1.classList.add('active')
+        byte[7] === '1' && this.#elementaryCells.cell0.classList.add('active')
+        this.#elementaryCellTexts.cell7.innerHTML = byte[0] === '1' ? '1' : '0'
+        this.#elementaryCellTexts.cell6.innerHTML = byte[1] === '1' ? '1' : '0'
+        this.#elementaryCellTexts.cell5.innerHTML = byte[2] === '1' ? '1' : '0'
+        this.#elementaryCellTexts.cell4.innerHTML = byte[3] === '1' ? '1' : '0'
+        this.#elementaryCellTexts.cell3.innerHTML = byte[4] === '1' ? '1' : '0'
+        this.#elementaryCellTexts.cell2.innerHTML = byte[5] === '1' ? '1' : '0'
+        this.#elementaryCellTexts.cell1.innerHTML = byte[6] === '1' ? '1' : '0'
+        this.#elementaryCellTexts.cell0.innerHTML = byte[7] === '1' ? '1' : '0'
     }
 
     /**
      * @param {Event} evt 
      */
-    #handleElementarTableClick(evt) {
-        const el = evt.currentTarget.querySelector('.elementar-bit')
+    #handleElementaryTableClick(evt) {
+        const el = evt.currentTarget.querySelector('.elementary-bit')
         el.innerHTML = el.innerHTML === '0' ? '1' : '0'
         let byte = ''
-        byte += this.#elementarCellTexts.cell7.innerHTML
-        byte += this.#elementarCellTexts.cell6.innerHTML
-        byte += this.#elementarCellTexts.cell5.innerHTML
-        byte += this.#elementarCellTexts.cell4.innerHTML
-        byte += this.#elementarCellTexts.cell3.innerHTML
-        byte += this.#elementarCellTexts.cell2.innerHTML
-        byte += this.#elementarCellTexts.cell1.innerHTML
-        byte += this.#elementarCellTexts.cell0.innerHTML
+        byte += this.#elementaryCellTexts.cell7.innerHTML
+        byte += this.#elementaryCellTexts.cell6.innerHTML
+        byte += this.#elementaryCellTexts.cell5.innerHTML
+        byte += this.#elementaryCellTexts.cell4.innerHTML
+        byte += this.#elementaryCellTexts.cell3.innerHTML
+        byte += this.#elementaryCellTexts.cell2.innerHTML
+        byte += this.#elementaryCellTexts.cell1.innerHTML
+        byte += this.#elementaryCellTexts.cell0.innerHTML
         const int = parseInt(byte, 2)
         this.#elementerRuleInput.value = int
         this.#elementerRuleInput.dispatchEvent(new Event('input', { bubbles: true }))
-    }
-
-    #initElementarPreview() {
-        const canvas = document.getElementById('app-elementar-preview')
-        const context = canvas.getContext('2d')
-        const rule = new ElementarRule(30)
-        const automata = new Elementar(9, 9, rule)
-        automata.setValue(0, 4, Elementar.ALIVE)
-        setInterval(() => {
-            automata.render(context, 10)
-            automata.nextGeneration()
-            if (automata.generationCount >= 10) {
-                automata.resetGeneration()
-            }
-        }, 100)
     }
 
     #initGameOfLifePreview() {
         const canvas = document.getElementById('app-gol-preview')
         const context = canvas.getContext('2d')
         const automata = new GameOfLife(9, 9, GameOfLifeRegistry.GOL)
-        automata.setValue(0, 1, GameOfLife.ALIVE)
-        automata.setValue(1, 2, GameOfLife.ALIVE)
-        automata.setValue(2, 0, GameOfLife.ALIVE)
-        automata.setValue(2, 1, GameOfLife.ALIVE)
-        automata.setValue(2, 2, GameOfLife.ALIVE)
+        GameOfLifeSpaceshipFactory.buildGlider(automata, 0, 0)
         setInterval(() => {
             automata.render(context, 10)
             automata.nextGeneration()
@@ -301,8 +283,23 @@ export class AutomataDialog {
         }, 100)
     }
 
+    #initElementaryPreview() {
+        const canvas = document.getElementById('app-elementary-preview')
+        const context = canvas.getContext('2d')
+        const rule = new ElementaryRule(30)
+        const automata = new Elementary(9, 9, rule)
+        automata.setValue(0, 4, Elementary.ALIVE)
+        setInterval(() => {
+            automata.render(context, 10)
+            automata.nextGeneration()
+            if (automata.generationCount >= 10) {
+                automata.resetGeneration()
+            }
+        }, 100)
+    }
+
     #initWireWorldPreview() {
-        const canvas = document.getElementById('app-wire-world-preview')
+        const canvas = document.getElementById('app-wireworld-preview')
         const context = canvas.getContext('2d')
         const automata = new WireWorld(9, 9)
         automata.setValue(2, 0, WireWorld.CONDUCTOR)

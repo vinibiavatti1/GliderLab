@@ -1,15 +1,15 @@
 import { Automata } from "../automata.js"
 import { SimulationGrid } from "../simulation-grid.js"
-import { ElementarRule } from "./elementar-rule.js"
+import { ElementaryRule } from "./elementary-rule.js"
 
 /** @implements {Automata} */
-export class Elementar extends Automata {
+export class Elementary extends Automata {
     static DEAD = 0
     static ALIVE = 1
     static DEAD_COLOR = 'rgb(0, 0, 0)'
     static ALIVE_COLOR = 'rgb(255, 255, 255)'
 
-    /** @type {ElementarRule} */
+    /** @type {ElementaryRule} */
     #rule
 
     /** @type {SimulationGrid} */
@@ -20,7 +20,7 @@ export class Elementar extends Automata {
     /**
      * @param {number} rows 
      * @param {number} cols 
-     * @param {ElementarRule} rule
+     * @param {ElementaryRule} rule
      */
     constructor(rows, cols, rule) {
         super()
@@ -55,9 +55,9 @@ export class Elementar extends Automata {
     getValueColor(row, col) {
         const value = this.#simulationGrid.getValue(row, col)
         if (value === 1) {
-            return Elementar.ALIVE_COLOR
+            return Elementary.ALIVE_COLOR
         }
-        return Elementar.DEAD_COLOR
+        return Elementary.DEAD_COLOR
     }
 
     clear() {
@@ -87,7 +87,7 @@ export class Elementar extends Automata {
     }
 
     get name() {
-        return `Elementar (${this.#rule.number})`
+        return `Elementary (${this.#rule.number})`
     }
 
     get generationCount() {
@@ -99,7 +99,7 @@ export class Elementar extends Automata {
     }
 
     get representativeColor() {
-        return Elementar.ALIVE_COLOR
+        return Elementary.ALIVE_COLOR
     }
 
     #processGeneration() {
@@ -113,8 +113,8 @@ export class Elementar extends Automata {
         for (let col = 0; col < this.#simulationGrid.cols; col++) {
             const [left, middle, right] = this.#getTopCells(row, col)
             const value = this.#rule.evaluate(left, middle, right)
-            if (value === Elementar.ALIVE) {
-                this.#simulationGrid.setValue(row, col, Elementar.ALIVE)
+            if (value === Elementary.ALIVE) {
+                this.#simulationGrid.setValue(row, col, Elementary.ALIVE)
             }
         }
     }

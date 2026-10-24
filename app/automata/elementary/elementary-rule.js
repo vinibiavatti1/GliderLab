@@ -1,4 +1,4 @@
-export class ElementarRule {
+export class ElementaryRule {
     /** @type {number} */
     #number
 

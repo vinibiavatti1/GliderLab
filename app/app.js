@@ -1,6 +1,7 @@
 import { AppError } from "./app-error.js"
 import { Automata } from "./automata/automata.js"
-import { WireWorld } from "./automata/wire-world/wire-world.js"
+import { WireWorld } from "./automata/wireworld/wireworld.js"
+import { AboutDialog } from "./dialogs/about-dialog.js"
 import { AutomataDialog } from "./dialogs/automata-dialog.js"
 import { Display } from "./display.js"
 import { BucketTool } from "./tools/bucket-tool.js"
@@ -44,6 +45,7 @@ export class App {
         redoBtn: document.getElementById('app-btn-redo'),
         settingsBtn: document.getElementById('app-btn-settings'),
         themeBtn: document.getElementById('app-btn-theme'),
+        gridBtn: document.getElementById('app-btn-grid-toggle')
     }
 
     #toolButtons = {
@@ -57,8 +59,8 @@ export class App {
     }
 
     #wireWorldButtons = {
-        conductorBtn: document.getElementById('app-btn-wire-world-conductor'),
-        electronBtn: document.getElementById('app-btn-wire-world-electron')
+        conductorBtn: document.getElementById('app-btn-wireworld-conductor'),
+        electronBtn: document.getElementById('app-btn-wireworld-electron')
     }
 
     /** @type {Automata} */
@@ -72,6 +74,9 @@ export class App {
 
     /** @type {AutomataDialog} */
     #automataDialog
+
+    /** @type {AboutDialog} */
+    #aboutDialog
 
     /** @type {number[][][]} */
     #undoSnapshots = []
@@ -98,6 +103,7 @@ export class App {
         this.#cols = cols
         this.#display = new Display(this)
         this.#automataDialog = new AutomataDialog(this)
+        this.#aboutDialog = new AboutDialog()
         this.#setupListeners()
     }
 
@@ -236,6 +242,7 @@ export class App {
         this.#buttons.stepBtn.addEventListener('click', () => this.#handleStepBtn())
         this.#buttons.undoBtn.addEventListener('click', () => this.#handleUndoBtn())
         this.#buttons.redoBtn.addEventListener('click', () => this.#handleRedoBtn())
+        this.#buttons.gridBtn.addEventListener('click', () => this.#handleBtnGrid())
 
         this.#toolButtons.pencilBtn.addEventListener('click', evt => this.#handleToolBtn(evt, this.#tools.pencil))
         this.#toolButtons.lineBtn.addEventListener('click', evt => this.#handleToolBtn(evt, this.#tools.line))
@@ -350,6 +357,18 @@ export class App {
         this.#currentCellValue = tool
     }
 
+    #handleBtnGrid() {
+        this.#display.showGrid = !this.#display.showGrid
+        const icon = document.getElementById('app-grid-icon')
+        if (this.#display.showGrid) {
+            icon.classList.add('bi-grid')
+            icon.classList.remove('bi-grid-fill')
+        } else {
+            icon.classList.remove('bi-grid')
+            icon.classList.add('bi-grid-fill')
+        }
+    }
+
     #disableToolButtons() {
         Object.values(this.#toolButtons).forEach(btn => this.disableElement(btn))
     }
@@ -421,5 +440,9 @@ export class App {
 
     get automataDialog() {
         return this.#automataDialog
+    }
+
+    get aboutDialog() {
+        return this.#aboutDialog
     }
 }

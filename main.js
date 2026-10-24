@@ -6,11 +6,11 @@ const DEFAULT_ROWS = 50
 const DEFAULT_COLS = 100
 
 window.addEventListener('DOMContentLoaded', () => {
+
     const app = new App(DEFAULT_ROWS, DEFAULT_COLS)
 
     const rule = GameOfLifeRegistry.GOL
     const automata = new GameOfLife(DEFAULT_ROWS, DEFAULT_COLS, rule)
-
     const offsetRows = 21;
     const offsetCols = 46;
     automata.setValue(0 + offsetRows, 1 + offsetCols, GameOfLife.ALIVE);
@@ -20,9 +20,6 @@ window.addEventListener('DOMContentLoaded', () => {
     automata.setValue(2 + offsetRows, 4 + offsetCols, GameOfLife.ALIVE);
     automata.setValue(2 + offsetRows, 5 + offsetCols, GameOfLife.ALIVE);
     automata.setValue(2 + offsetRows, 6 + offsetCols, GameOfLife.ALIVE);
-
-    /*const automata = new Elementar(DEFAULT_ROWS, DEFAULT_COLS, new ElementarRule(30))
-    automata.setValue(0, Math.round(DEFAULT_COLS / 2), Elementar.ALIVE)*/
 
     app.automata = automata
 })

@@ -24,30 +24,42 @@
     opacity: 1;
 }
 
-.app-elementar-table {
+.app-elementary-table {
     border-spacing: 3px;
     border-collapse: separate;
     cursor: pointer;
 }
 
-.app-elementar-table:hover {
+.app-elementary-table:hover {
     opacity: .75;
 }
 
-.app-elementar-table:active {
+.app-elementary-table:active {
     opacity: .50;
 }
 
-.app-elementar-table tbody tr td {
+.app-elementary-table tbody tr td {
     width: 20px;
     height: 20px;
 }
 
-.app-elementar-table tbody tr td.active {
+.app-elementary-table tbody tr td.active {
     background-color: white !important;
 }
 
-.app-elementar-icon tbody tr td {
+.app-elementary-icon tbody tr td {
     width: 8px;
     height: 8px;
+}
+
+#easter-egg-btn:hover {
+    opacity: 1 !important;
+}
+
+#easter-egg-btn:active {
+    opacity: .75 !important;
+}
+
+button:active {
+    opacity: .75
 }

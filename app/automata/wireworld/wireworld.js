@@ -177,7 +177,7 @@ export class WireWorld extends Automata {
     }
 
     get name() {
-        return `Wire World`
+        return 'Wireworld'
     }
 
     get generationCount() {
