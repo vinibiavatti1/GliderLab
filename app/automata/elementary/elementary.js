@@ -82,24 +82,8 @@ export class Elementary extends Automata {
         this.#simulationGrid.restoreSnapshot(rows, cols, dataSnapshot)
     }
 
-    get simulationGrid() {
-        return this.#simulationGrid
-    }
-
-    get name() {
-        return `Elementary (${this.#rule.number})`
-    }
-
-    get generationCount() {
-        return this.#generationCount
-    }
-
-    get populationCount() {
-        return null
-    }
-
-    get representativeColor() {
-        return Elementary.ALIVE_COLOR
+    requestPause() {
+        return this.#generationCount == this.#simulationGrid.rows
     }
 
     #processGeneration() {
@@ -129,5 +113,29 @@ export class Elementary extends Automata {
         const middle = this.getValue(row - 1, col + 0)
         const right = this.getValue(row - 1, col + 1)
         return [left ?? 0, middle ?? 0, right ?? 0]
+    }
+
+    get simulationGrid() {
+        return this.#simulationGrid
+    }
+
+    get name() {
+        return `Elementary (${this.#rule.number})`
+    }
+
+    get generationCount() {
+        return this.#generationCount
+    }
+
+    get representativeColor() {
+        return Elementary.ALIVE_COLOR
+    }
+
+    get defaultValue() {
+        return Elementary.ALIVE
+    }
+
+    get additionalStatusInfo() {
+        return null
     }
 }

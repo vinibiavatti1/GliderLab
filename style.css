@@ -10,14 +10,17 @@
 
 .app-canvas-container {
     display: flex;
-    align-items: center;
-    justify-content: center;
     position: absolute;
-    top: 92px;
-    bottom: 0px;
+    top: 93px;
+    bottom: 0;
     left: 0;
     right: 0;
     overflow: scroll;
+    padding: 35px;
+}
+
+#canvas {
+    margin: auto;
 }
 
 .btn-solid:disabled.active {

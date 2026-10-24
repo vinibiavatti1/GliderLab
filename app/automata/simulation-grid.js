@@ -76,19 +76,29 @@ export class SimulationGrid {
      * @returns {number?}
      */
     getValueWrapped(row, col) {
+        [row, col] = this.wrapCoordinates(row, col)
+        return this.#data[row][col]
+    }
+
+    /**
+     * @param {number} row 
+     * @param {number} col 
+     * @returns {[number, number]}
+     */
+    wrapCoordinates(row, col) {
         if (row < 0) {
-            row = this.#rows + row
+            row = this.rows + row
         }
-        if (row >= this.#rows) {
-            row = row - this.#rows
+        if (row >= this.rows) {
+            row = row - this.rows
         }
         if (col < 0) {
-            col = this.#cols + col
+            col = this.cols + col
         }
-        if (col >= this.#cols) {
-            col = col - this.#cols
+        if (col >= this.cols) {
+            col = col - this.cols
         }
-        return this.#data[row][col]
+        return [row, col]
     }
 
     clear() {

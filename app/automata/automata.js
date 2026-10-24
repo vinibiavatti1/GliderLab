@@ -80,6 +80,13 @@ export class Automata {
     }
 
     /**
+     * @type {boolean}
+     */
+    requestPause() {
+        throw new AppError('Not implemented')
+    }
+
+    /**
      * @abstract
      * @returns {SimulationGrid}
      */
@@ -105,17 +112,24 @@ export class Automata {
 
     /**
      * @abstract
-     * @returns {number?}
+     * @returns {string}
      */
-    get populationCount() {
+    get representativeColor() {
         throw new AppError('Not implemented')
     }
 
     /**
      * @abstract
-     * @returns {string}
+     * @returns {number}
      */
-    get representativeColor() {
+    get defaultValue() {
+        throw new AppError('Not implemented')
+    }
+
+    /**
+     * @returns {string?}
+     */
+    get additionalStatusInfo() {
         throw new AppError('Not implemented')
     }
 }

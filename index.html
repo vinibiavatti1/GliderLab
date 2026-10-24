@@ -66,7 +66,7 @@
 
             <div class="app-divider border-start border-body border-1"></div>
             <div class="btn-group" role="group">
-                <button id="app-btn-settings" type="button" class="btn-icon border-0">
+                <button id="app-btn-settings" type="button" class="btn-icon border-0" data-bs-toggle="dialog" data-bs-target="#app-settings-dialog" data-bs-backdrop="static">
                     <i class="bi bi-gear"></i>
                 </button>
             </div>
@@ -76,15 +76,15 @@
                 <button id="app-btn-about" type="button" class="btn-icon border-0" data-bs-toggle="dialog" data-bs-target="#about-dialog" data-bs-backdrop="static">
                     <i class="bi bi-question-circle"></i>
                 </button>
-                <button id="app-btn-github" type="button" class="btn-icon border-0">
+                <a href="https://github.com/vinibiavatti1/GliderLab" id="app-btn-github" type="button" class="btn-icon border-0">
                     <i class="bi bi-github"></i>
-                </button>
+                </a>
             </div>
         </div>
         <div class="p-1 border-1 border-bottom border-body">
             <div class="btn-group" role="group">
-                <button id="app-btn-automata" class="btn border-0" data-bs-toggle="dialog" data-bs-target="#automata-dialog" data-bs-backdrop="static">
-                    Automata
+                <button id="app-btn-automata" class="btn border-0" data-bs-toggle="dialog" data-bs-target="#app-automata-dialog" data-bs-backdrop="static">
+                    Select Automata
                 </button>
             </div>
 
@@ -168,19 +168,21 @@
                 </button>
             </div>
         </div>
-        <div>
-            <div class="app-canvas-container p-2">
-                <canvas id="canvas" width="1000" height="500"></canvas>
-            </div>
 
+        <!-- Display -->
+        <div class="app-canvas-container">
+            <canvas id="canvas" class="d-block" width="1000" height="500"></canvas>
         </div>
+
+        <!-- Status Bar -->
         <div class="p-2 fg-secondary fs-sm d-flex justify-content-between" style="position: absolute; bottom:10px;left:0;right:15px;">
             <span id="app-status"></span>
             <span id="credits">Made by: vinibiavatti1 - <a href="https://github.com/vinibiavatti1/GliderLab">Github</a></span>
         </div>
     </div>
 
-    <dialog class="dialog dialog-slide-down dialog-lg" id="automata-dialog">
+    <!-- Select Automata Modal -->
+    <dialog class="dialog dialog-slide-down dialog-lg" id="app-automata-dialog">
         <div class="dialog-header">
             <h1 class="dialog-title">Select Automata</h1>
             <button type="button" class="btn-close" data-bs-dismiss="dialog" aria-label="Close"></button>
@@ -196,17 +198,25 @@
                 <li class="nav-item">
                     <a id="app-wireworld-tab-btn" class="nav-link" data-bs-toggle="tab" data-bs-target="#app-wireworld-tab" href="#">Wireworld</a>
                 </li>
+                <li class="nav-item">
+                    <a id="app-entombed-tab-btn" class="nav-link" data-bs-toggle="tab" data-bs-target="#app-entombed-tab" href="#">Entombed</a>
+                </li>
+                <li class="nav-item">
+                    <a id="app-langton-ant-tab-btn" class="nav-link" data-bs-toggle="tab" data-bs-target="#app-langton-ant-tab" href="#">Langton's Ant</a>
+                </li>
             </ul>
         </div>
         <div class="dialog-body tab-content">
+
+            <!-- Game of Life Tab -->
             <div id="app-gol-tab" class="tab-pane show active">
-                <div class="d-flex w-100 mb-4">
+                <div class="d-flex w-100 mb-4 align-items-center">
                     <div class="border rounded-4 border-body p-3 me-5">
                         <canvas class="d-block" id="app-gol-preview" width="90" height="90"></canvas>
                     </div>
                     <div>
-                        <div class="mb-3"><b>Game of Life</b></div>
-                        <p class="fg-secondary fs-sm"><a href="https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life" target="_blank">Game of Life</a> is an outer-totalistic cellular automaton played on a 2D grid, created by John Conway in 1970. Cells evolve through generations based on their 8 immediate neighbors using simple rules of birth, survival, and overpopulation, producing complex, emergent behaviors like gliders and oscillators.</p>
+                        <div class=""><b>Game of Life</b></div>
+                        <p class=" fg-secondary fs-sm mb-0"><a href="https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life" target="_blank">Game of Life</a> is an outer-totalistic cellular automaton played on a 2D grid, created by John Conway in 1970. Cells evolve through generations based on their 8 immediate neighbors using simple rules of birth, survival, and overpopulation, producing complex, emergent behaviors like gliders and oscillators.</p>
                     </div>
                 </div>
                 <div class="form-field mb-3">
@@ -251,14 +261,15 @@
                 </div>
             </div>
 
+            <!-- Elementary Tab -->
             <div id="app-elementary-tab" class="tab-pane">
-                <div class="d-flex w-100 mb-4">
+                <div class="d-flex w-100 mb-4 align-items-center">
                     <div class="border rounded-4 border-body p-3 me-5">
                         <canvas class="d-block" id="app-elementary-preview" width="90" height="90"></canvas>
                     </div>
                     <div>
-                        <div class="mb-3"><b>Elementary Cellular Automata</b></div>
-                        <p class="fg-secondary fs-sm">An <a href="https://en.wikipedia.org/wiki/Elementary_cellular_automaton" target="_blank">Elementary Cellular Automaton</a> is a 1D grid of binary cells that evolves over time based on its immediate neighbors. Using one of 256 simple rules, it can generate surprisingly complex, fractal, or chaotic patterns.</p>
+                        <div class=""><b>Elementary Cellular Automata</b></div>
+                        <p class="fg-secondary fs-sm mb-0">An <a href="https://en.wikipedia.org/wiki/Elementary_cellular_automaton" target="_blank">Elementary Cellular Automaton</a> is a 1D grid of binary cells that evolves over time based on its immediate neighbors. Using one of 256 simple rules, it can generate surprisingly complex, fractal, or chaotic patterns.</p>
                     </div>
                 </div>
                 <div class="form-field mb-6">
@@ -404,14 +415,16 @@
                     </table>
                 </div>
             </div>
+
+            <!-- Wirerworld Tab -->
             <div id="app-wireworld-tab" class="tab-pane">
-                <div class="d-flex w-100 mb-4">
+                <div class="d-flex w-100 mb-4 align-items-center">
                     <div class="border rounded-4 border-body p-3 me-5">
                         <canvas class="d-block" id="app-wireworld-preview" width="90" height="90"></canvas>
                     </div>
                     <div>
-                        <div class="mb-3"><b>Wireworld</b></div>
-                        <p class="fg-secondary fs-sm"><a href="https://en.wikipedia.org/wiki/Wireworld" target="_blank">Wireworld</a> is a cellular automaton created by Brian Silverman in 1987 to simulate electronic circuits. Using four cell states (empty, electron head, electron tail, and conductor), it easily models logic gates, transistors, and digital architecture.</p>
+                        <div class=""><b>Wireworld</b></div>
+                        <p class="fg-secondary fs-sm mb-0"><a href="https://en.wikipedia.org/wiki/Wireworld" target="_blank">Wireworld</a> is a cellular automaton created by Brian Silverman in 1987 to simulate electronic circuits. Using four cell states (empty, electron head, electron tail, and conductor), it easily models logic gates, transistors, and digital architecture.</p>
                     </div>
                 </div>
                 <div class="form-field mb-3">
@@ -421,6 +434,33 @@
                     </select>
                 </div>
             </div>
+
+            <!-- Entombed Tab -->
+            <div id="app-entombed-tab" class="tab-pane">
+                <div class="d-flex w-100 mb-4 align-items-center">
+                    <div class="border rounded-4 border-body p-3 me-5">
+                        <canvas class="d-block" id="app-entombed-preview" width="90" height="90"></canvas>
+                    </div>
+                    <div>
+                        <div class=""><b>Entombed</b></div>
+                        <p class="fg-secondary fs-sm mb-0"><a href="https://en.wikipedia.org/wiki/Entombed_(1983_video_game)" target="_blank">Entombed</a> is a classic 1982 Atari 2600 game famous for its legendary procedural maze-generation algorithm. Operating under extreme hardware limits, the game uses a "Mystery Table" lookup to generate complex, playable vertical labyrinths on the fly.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Langton Ant Tab -->
+            <div id="app-langton-ant-tab" class="tab-pane">
+                <div class="d-flex w-100 mb-4 align-items-center">
+                    <div class="border rounded-4 border-body p-3 me-5">
+                        <canvas class="d-block" id="app-langton-ant-preview" width="90" height="90"></canvas>
+                    </div>
+                    <div>
+                        <div class=""><b>Langton's Ant</b></div>
+                        <p class="fg-secondary fs-sm mb-0"><a href="https://en.wikipedia.org/wiki/Langton%27s_ant" target="_blank">Langton's Ant</a> is a cellular automaton created by Chris Langton in 1986 that simulates an ant moving on a grid. Following simple local rules based on cell colors, it builds chaotic paths for about 10,000 steps before spontaneously constructing a repetitive "highway" starting at cycle <b>9,977</b>.</p>
+                    </div>
+                </div>
+            </div>
+
         </div>
         <div class="dialog-footer">
             <button type="button" class="btn-solid theme-secondary" data-bs-dismiss="dialog">Close</button>
@@ -428,6 +468,7 @@
         </div>
     </dialog>
 
+    <!-- About Dialog -->
     <dialog class="dialog dialog-slide-down dialog-xl" id="about-dialog">
         <div class="dialog-header">
             <h1 class="dialog-title">Glider Lab v<span id="app-version"></span></h1>
@@ -464,7 +505,8 @@
                         </p>
                     </div>
                 </div>
-                <p class="fg-secondary"><b class="fg-danger">Warning!</b> This simulation contains flashing lights and rapid visual patterns that may trigger seizures or discomfort for individuals with photosensitive epilepsy.</p>
+                <p class="fg-secondary"><b class="fg-danger">Warning!</b> This simulation contains flashing lights and rapid visual patterns that may trigger seizures or
+                    discomfort for individuals with photosensitivity.</p>
             </div>
             <div class="border rounded-4 border-body p-3 overflow-hidden d-none md:d-block" style="max-height: 200px;">
                 <canvas class="d-block" style="margin-left: -50px; margin-top: -50px;" id="app-gol-about-display" width="1500" height="500"></canvas>
@@ -476,14 +518,26 @@
         </div>
     </dialog>
 
-    <template id="app-gol-preview-display">
-        <div class="bg-1 border border-subtle rounded-4 overflow-hidden" style="width: 102px;">
-            <canvas class="d-block" id="{{app-canvas-id}}" width="100" height="90"></canvas>
-            <div id="app-title" class="d-flex align-items-center justify-content-center gap-2 p-3 border-top border-subtle fs-xs">
-                {{title}}
+    <!-- Settings Dialog -->
+    <dialog class="dialog dialog-slide-down" id="app-settings-dialog">
+        <div class="dialog-header">
+            <h1 class="dialog-title">Settings</h1>
+        </div>
+        <div class="dialog-body">
+            <div class="form-field mb-6">
+                <label for="app-settings-grid-rows" class="form-label">Rows:</label>
+                <input id="app-settings-grid-rows" type="number" min="10" max="300" step="1" class="form-control" value="50">
+            </div>
+            <div class="form-field mb-6">
+                <label for="app-settings-grid-cols" class="form-label">Columns:</label>
+                <input id="app-settings-grid-cols" type="number" min="10" max="300" step="1" class="form-control" value="100">
             </div>
         </div>
-    </template>
+        <div class="dialog-footer justify-content-end md:justify-content-between">
+            <button id="app-settings-cancel-btn" type="button" class="btn-solid theme-secondary" data-bs-dismiss="dialog">Cancel</button>
+            <button id="app-settings-save-btn" type="button" class="btn-solid theme-primary" data-bs-dismiss="dialog">Save</button>
+        </div>
+    </dialog>
 
     <script type="module" src="./main.js" defer></script>
 </body>

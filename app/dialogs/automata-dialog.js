@@ -1,10 +1,12 @@
 import { App } from '../app.js'
 import { ElementaryRule } from '../automata/elementary/elementary-rule.js'
 import { Elementary } from '../automata/elementary/elementary.js'
+import { Entombed } from '../automata/entombed/entombed.js'
 import { GameOfLifeRegistry } from '../automata/game-of-life/game-of-life-registry.js'
 import { GameOfLifeRule } from '../automata/game-of-life/game-of-life-rule.js'
 import { GameOfLifeSpaceshipFactory } from '../automata/game-of-life/game-of-life-spaceship-factory.js'
 import { GameOfLife } from '../automata/game-of-life/game-of-life.js'
+import { LangtonAnt } from '../automata/langton-ant/langton-ant.js'
 import { WireWorld } from '../automata/wireworld/wireworld.js'
 
 export class AutomataDialog {
@@ -12,6 +14,8 @@ export class AutomataDialog {
         gameOfLifeTab: document.getElementById('app-gol-tab'),
         elementaryTab: document.getElementById('app-elementary-tab'),
         wireWorldTab: document.getElementById('app-wireworld-tab'),
+        entombedTab: document.getElementById('app-entombed-tab'),
+        langtonAntTab: document.getElementById('app-langton-ant-tab'),
     }
 
     #elementaryCells = {
@@ -66,6 +70,22 @@ export class AutomataDialog {
         this.#initElementaryPreview()
         this.#initGameOfLifePreview()
         this.#initWireWorldPreview()
+        this.#initEntombedPreview()
+        this.#initLangtonAntPreview()
+    }
+
+    #loadAutomata() {
+        if (this.#isTabActive(this.#tabs.gameOfLifeTab)) {
+            this.#loadGameOfLife()
+        } else if (this.#isTabActive(this.#tabs.elementaryTab)) {
+            this.#loadElementary()
+        } else if (this.#isTabActive(this.#tabs.wireWorldTab)) {
+            this.#loadWireWorld()
+        } else if (this.#isTabActive(this.#tabs.entombedTab)) {
+            this.#loadEntombed()
+        } else if (this.#isTabActive(this.#tabs.langtonAntTab)) {
+            this.#loadLangtonAnt()
+        }
     }
 
     #setupGameOfLifeRuleList() {
@@ -92,12 +112,11 @@ export class AutomataDialog {
     }
 
     #handleAutomataSelectBtn() {
-        if (this.#isTabActive(this.#tabs.gameOfLifeTab)) {
-            this.#loadGameOfLife()
-        } else if (this.#isTabActive(this.#tabs.elementaryTab)) {
-            this.#loadElementary()
-        } else if (this.#isTabActive(this.#tabs.wireWorldTab)) {
-            this.#loadWireWorld()
+        this.#loadAutomata()
+        if (this.#isTabActive(this.#tabs.wireWorldTab)) {
+            this.#showElement(this.#wireWorldToolsContainer)
+        } else {
+            this.#hideElement(this.#wireWorldToolsContainer)
         }
     }
 
@@ -109,7 +128,6 @@ export class AutomataDialog {
         }
         const automata = new GameOfLife(this.#app.rows, this.#app.cols, this.#selectedGolRule)
         this.#app.automata = automata
-        this.#hideElement(this.#wireWorldToolsContainer)
     }
 
     #loadElementary() {
@@ -117,14 +135,23 @@ export class AutomataDialog {
         const automata = new Elementary(this.#app.rows, this.#app.cols, rule)
         automata.setValue(0, Math.floor(this.#app.cols / 2), Elementary.ALIVE)
         this.#app.automata = automata
-        this.#hideElement(this.#wireWorldToolsContainer)
     }
 
     #loadWireWorld() {
         const automata = new WireWorld(this.#app.rows, this.#app.cols)
         this.#app.automata = automata
-        this.#showElement(this.#wireWorldToolsContainer)
         document.getElementById('app-btn-wireworld-conductor').dispatchEvent(new Event('click', { bubbles: true }))
+    }
+
+    #loadEntombed() {
+        const automata = new Entombed(this.#app.rows, this.#app.cols)
+        this.#app.automata = automata
+    }
+
+    #loadLangtonAnt() {
+        const automata = new LangtonAnt(this.#app.rows, this.#app.cols)
+        automata.setValue(Math.floor(this.#app.rows / 2), Math.floor(this.#app.cols / 2), LangtonAnt.ANT)
+        this.#app.automata = automata
     }
 
     /**
@@ -332,6 +359,33 @@ export class AutomataDialog {
             automata.render(context, 10)
             automata.nextGeneration()
             if (automata.generationCount >= 12) {
+                automata.resetGeneration()
+            }
+        }, 100)
+    }
+
+    #initEntombedPreview() {
+        const canvas = document.getElementById('app-entombed-preview')
+        const context = canvas.getContext('2d')
+        const automata = new Entombed(9, 9)
+        setInterval(() => {
+            automata.render(context, 10)
+            automata.nextGeneration()
+            if (automata.generationCount >= 11) {
+                automata.resetGeneration()
+            }
+        }, 100)
+    }
+
+    #initLangtonAntPreview() {
+        const canvas = document.getElementById('app-langton-ant-preview')
+        const context = canvas.getContext('2d')
+        const automata = new LangtonAnt(9, 9)
+        automata.setValue(4, 4, LangtonAnt.ANT)
+        setInterval(() => {
+            automata.render(context, 10)
+            automata.nextGeneration()
+            if (automata.generationCount >= 100) {
                 automata.resetGeneration()
             }
         }, 100)

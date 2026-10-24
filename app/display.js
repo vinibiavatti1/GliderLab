@@ -85,6 +85,7 @@ export class Display {
 
     #clear() {
         this.#displayBufferContext.clearRect(0, 0, this.#width, this.#height)
+        this.#displayContext.clearRect(0, 0, this.#width, this.#height)
     }
 
     #renderTool() {
@@ -135,13 +136,16 @@ export class Display {
     }
 
     #renderStatus() {
+        if (!this.#app.automata) {
+            return
+        }
         let text = ''
         text += `Automata: ${this.#app.automata.name} | `
         text += `State: ${this.#app.currentStateName} | `
         text += `Generation: ${this.#app.automata.generationCount}`
-        const populationCount = this.#app.automata.populationCount
-        if (populationCount !== null) {
-            text += ` | Population: ${populationCount}`
+        const additionalStatusInfo = this.#app.automata.additionalStatusInfo
+        if (additionalStatusInfo !== null) {
+            text += ' | ' + additionalStatusInfo
         }
         this.#statusLabel.innerHTML = text
     }

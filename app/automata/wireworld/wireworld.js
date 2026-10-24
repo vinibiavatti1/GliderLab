@@ -131,6 +131,10 @@ export class WireWorld extends Automata {
         keysToDelete.forEach(key => this.#coordsToProcess.delete(key))
     }
 
+    requestPause() {
+        return false
+    }
+
     /**
      * @param {number} row 
      * @param {number} col 
@@ -184,11 +188,15 @@ export class WireWorld extends Automata {
         return this.#generationCount
     }
 
-    get populationCount() {
-        return null
-    }
-
     get representativeColor() {
         return WireWorld.CONDUCTOR_COLOR
+    }
+
+    get defaultValue() {
+        return WireWorld.CONDUCTOR
+    }
+
+    get additionalStatusInfo() {
+        return null
     }
 }

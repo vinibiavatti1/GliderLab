@@ -3,6 +3,7 @@ import { Automata } from "./automata/automata.js"
 import { WireWorld } from "./automata/wireworld/wireworld.js"
 import { AboutDialog } from "./dialogs/about-dialog.js"
 import { AutomataDialog } from "./dialogs/automata-dialog.js"
+import { SettingsDialog } from "./dialogs/settings-dialog.js"
 import { Display } from "./display.js"
 import { BucketTool } from "./tools/bucket-tool.js"
 import { EraserTool } from "./tools/eraser-tool.js"
@@ -64,7 +65,7 @@ export class App {
     }
 
     /** @type {Automata} */
-    #automata = null
+    #automata
 
     /** @type {number?} */
     #generationInterval = null
@@ -77,6 +78,9 @@ export class App {
 
     /** @type {AboutDialog} */
     #aboutDialog
+
+    /** @type {SettingsDialog} */
+    #settingsDialog
 
     /** @type {number[][][]} */
     #undoSnapshots = []
@@ -97,13 +101,16 @@ export class App {
     /**
      * @param {number} rows 
      * @param {number} cols 
+     * @param {Automata} automata
      */
-    constructor(rows, cols) {
+    constructor(rows, cols, automata) {
         this.#rows = rows
         this.#cols = cols
         this.#display = new Display(this)
         this.#automataDialog = new AutomataDialog(this)
         this.#aboutDialog = new AboutDialog()
+        this.#settingsDialog = new SettingsDialog(this)
+        this.automata = automata
         this.#setupListeners()
     }
 
@@ -112,14 +119,27 @@ export class App {
      */
     set automata(automata) {
         this.#automata = automata
-        this.#automata.resize(this.#rows, this.#cols)
+        this.#rows = this.#automata.simulationGrid.rows
+        this.#cols = this.#automata.simulationGrid.cols
+        this.#display.resize(this.#rows, this.#cols)
         this.#buttons.automataBtn.innerHTML = this.#automata.name
-        this.#buttons.automataBtn.style.color = this.#automata.representativeColor
-        this.#currentCellValue = 1
+        this.#buttons.automataBtn.style.color = this.#automata.representativeColor ?? 'rgb(255, 255, 255)'
+        this.#currentCellValue = this.#automata.defaultValue
         this.#enableToolButtons()
         if (this.#currentState !== App.STATE_STOPPED) {
             this.#handleStopBtn()
         }
+    }
+
+    /**
+     * @param {number} rows 
+     * @param {number} cols 
+     */
+    resize(rows, cols) {
+        this.#rows = rows
+        this.#cols = cols
+        this.#automata.resize(this.#rows, this.#cols)
+        this.#display.resize(this.#rows, this.#cols)
     }
 
     /**
@@ -132,6 +152,9 @@ export class App {
         this.stopAutoGeneration()
         this.#generationInterval = setInterval(() => {
             this.#automata.nextGeneration()
+            if (this.#automata.requestPause()) {
+                this.#click(this.#buttons.pauseBtn)
+            }
         }, delay)
     }
 
@@ -193,6 +216,26 @@ export class App {
         el.removeAttribute('disabled')
     }
 
+    #setupListeners() {
+        this.#buttons.playBtn.addEventListener('click', () => this.#handlePlayBtn())
+        this.#buttons.pauseBtn.addEventListener('click', () => this.#handlePauseBtn())
+        this.#buttons.stopBtn.addEventListener('click', () => this.#handleStopBtn())
+        this.#buttons.stepBtn.addEventListener('click', () => this.#handleStepBtn())
+        this.#buttons.undoBtn.addEventListener('click', () => this.#handleUndoBtn())
+        this.#buttons.redoBtn.addEventListener('click', () => this.#handleRedoBtn())
+        this.#buttons.gridBtn.addEventListener('click', () => this.#handleBtnGrid())
+
+        this.#toolButtons.pencilBtn.addEventListener('click', evt => this.#handleToolBtn(evt, this.#tools.pencil))
+        this.#toolButtons.lineBtn.addEventListener('click', evt => this.#handleToolBtn(evt, this.#tools.line))
+        this.#toolButtons.rectBtn.addEventListener('click', evt => this.#handleToolBtn(evt, this.#tools.rect))
+        this.#toolButtons.rectFillBtn.addEventListener('click', evt => this.#handleToolBtn(evt, this.#tools.rectFill))
+        this.#toolButtons.bucketBtn.addEventListener('click', evt => this.#handleToolBtn(evt, this.#tools.bucket))
+        this.#toolButtons.eraserBtn.addEventListener('click', evt => this.#handleToolBtn(evt, this.#tools.eraser))
+
+        this.#wireWorldButtons.conductorBtn.addEventListener('click', evt => this.#handleWireWorldToolBtn(evt, WireWorld.CONDUCTOR))
+        this.#wireWorldButtons.electronBtn.addEventListener('click', evt => this.#handleWireWorldToolBtn(evt, WireWorld.ELECTRON_HEAD))
+    }
+
     #restoreLastUndoSnapshot() {
         if (this.#undoSnapshots.length === 0) {
             return
@@ -233,26 +276,6 @@ export class App {
         this.#undoSnapshots.push(structuredClone(this.#automata.simulationGrid.data))
         this.enableElement(this.#buttons.undoBtn)
         this.#automata.restoreSnapshot(this.#rows, this.#cols, subsequentData)
-    }
-
-    #setupListeners() {
-        this.#buttons.playBtn.addEventListener('click', () => this.#handlePlayBtn())
-        this.#buttons.pauseBtn.addEventListener('click', () => this.#handlePauseBtn())
-        this.#buttons.stopBtn.addEventListener('click', () => this.#handleStopBtn())
-        this.#buttons.stepBtn.addEventListener('click', () => this.#handleStepBtn())
-        this.#buttons.undoBtn.addEventListener('click', () => this.#handleUndoBtn())
-        this.#buttons.redoBtn.addEventListener('click', () => this.#handleRedoBtn())
-        this.#buttons.gridBtn.addEventListener('click', () => this.#handleBtnGrid())
-
-        this.#toolButtons.pencilBtn.addEventListener('click', evt => this.#handleToolBtn(evt, this.#tools.pencil))
-        this.#toolButtons.lineBtn.addEventListener('click', evt => this.#handleToolBtn(evt, this.#tools.line))
-        this.#toolButtons.rectBtn.addEventListener('click', evt => this.#handleToolBtn(evt, this.#tools.rect))
-        this.#toolButtons.rectFillBtn.addEventListener('click', evt => this.#handleToolBtn(evt, this.#tools.rectFill))
-        this.#toolButtons.bucketBtn.addEventListener('click', evt => this.#handleToolBtn(evt, this.#tools.bucket))
-        this.#toolButtons.eraserBtn.addEventListener('click', evt => this.#handleToolBtn(evt, this.#tools.eraser))
-
-        this.#wireWorldButtons.conductorBtn.addEventListener('click', evt => this.#handleWireWorldToolBtn(evt, WireWorld.CONDUCTOR))
-        this.#wireWorldButtons.electronBtn.addEventListener('click', evt => this.#handleWireWorldToolBtn(evt, WireWorld.ELECTRON_HEAD))
     }
 
     #handlePlayBtn() {
@@ -369,14 +392,6 @@ export class App {
         }
     }
 
-    #disableToolButtons() {
-        Object.values(this.#toolButtons).forEach(btn => this.disableElement(btn))
-    }
-
-    #enableToolButtons() {
-        Object.values(this.#toolButtons).forEach(btn => this.enableElement(btn))
-    }
-
     #configureWireWorldPlayState() {
         if (this.#automata instanceof WireWorld) {
             this.#disableToolButtons()
@@ -391,6 +406,14 @@ export class App {
             this.#enableToolButtons()
             this.enableElement(this.#wireWorldButtons.conductorBtn)
         }
+    }
+
+    #disableToolButtons() {
+        Object.values(this.#toolButtons).forEach(btn => this.disableElement(btn))
+    }
+
+    #enableToolButtons() {
+        Object.values(this.#toolButtons).forEach(btn => this.enableElement(btn))
     }
 
     /**
@@ -444,5 +467,9 @@ export class App {
 
     get aboutDialog() {
         return this.#aboutDialog
+    }
+
+    get SettingsDialog() {
+        return this.#settingsDialog
     }
 }

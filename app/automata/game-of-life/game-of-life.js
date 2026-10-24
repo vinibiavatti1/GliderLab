@@ -81,24 +81,12 @@ export class GameOfLife extends Automata {
         this.#simulationGrid.restoreSnapshot(rows, cols, dataSnapshot)
     }
 
-    get simulationGrid() {
-        return this.#simulationGrid
+    additionalStatusInfo() {
+        return null
     }
 
-    get name() {
-        return `${this.#rule.name} (${this.#rule.notation})`
-    }
-
-    get generationCount() {
-        return this.#generationCount
-    }
-
-    get populationCount() {
-        return this.#populationCount
-    }
-
-    get representativeColor() {
-        return this.#rule.aliveColor
+    requestPause() {
+        return false
     }
 
     #processGeneration() {
@@ -140,5 +128,29 @@ export class GameOfLife extends Automata {
         count += this.#simulationGrid.getValueWrapped(row + 1, col + 0) === value ? 1 : 0
         count += this.#simulationGrid.getValueWrapped(row + 1, col + 1) === value ? 1 : 0
         return count
+    }
+
+    get simulationGrid() {
+        return this.#simulationGrid
+    }
+
+    get name() {
+        return `${this.#rule.name} (${this.#rule.notation})`
+    }
+
+    get generationCount() {
+        return this.#generationCount
+    }
+
+    get representativeColor() {
+        return this.#rule.aliveColor
+    }
+
+    get defaultValue() {
+        return GameOfLife.ALIVE
+    }
+
+    get additionalStatusInfo() {
+        return `Population: ${this.#populationCount}`
     }
 }
