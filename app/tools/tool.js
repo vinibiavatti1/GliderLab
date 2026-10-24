@@ -13,42 +13,40 @@ export class Tool {
     }
 
     /**
-     * @abstract
+     * @virtual
      * @param {number} row 
      * @param {number} col 
      */
     onMousePressed(row, col) {
-        throw new AppError('Not implemented')
     }
 
     /**
-     * @abstract
+     * @virtual
      * @param {number} row 
      * @param {number} col 
      */
     onMouseMove(row, col) {
-        throw new AppError('Not implemented')
     }
 
     /**
-     * @abstract
+     * @virtual
      * @param {number} row 
      * @param {number} col 
      */
     onMouseReleased(row, col) {
-        throw new AppError('Not implemented')
-    }
-
-    onMouseLeave() {
-        throw new AppError('Not implemented')
     }
 
     /**
-     * @abstract
+     * @virtual
+     */
+    onMouseLeave() {
+    }
+
+    /**
+     * @virtual
      * @param {CanvasRenderingContext2D} displayBufferContext
      */
     renderPreview(displayBufferContext) {
-        throw new AppError('Not implemented')
     }
 
     get app() {

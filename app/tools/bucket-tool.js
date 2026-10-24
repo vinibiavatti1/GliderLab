@@ -22,25 +22,6 @@ export class BucketTool extends Tool {
     }
 
     /**
-     * @param {number} row 
-     * @param {number} col 
-     */
-    onMouseMove(row, col) { }
-
-    /**
-     * @param {number} row 
-     * @param {number} col 
-     */
-    onMouseReleased(row, col) { }
-
-    onMouseLeave() { }
-
-    /**
-     * @param {CanvasRenderingContext2D} displayBufferContext
-     */
-    renderPreview(displayBufferContext) { }
-
-    /**
      * Floodfill Algorithm
      * @param {number} row 
      * @param {number} col 

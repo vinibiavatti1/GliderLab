@@ -1,6 +1,4 @@
 import { App } from './app/app.js'
-import { ElementarRule } from './app/automata/elementar/elementar-rule.js'
-import { Elementar } from './app/automata/elementar/elementar.js'
 import { GameOfLifeRegistry } from './app/automata/game-of-life/game-of-life-registry.js'
 import { GameOfLife } from './app/automata/game-of-life/game-of-life.js'
 
@@ -10,7 +8,8 @@ const DEFAULT_COLS = 100
 window.addEventListener('DOMContentLoaded', () => {
     const app = new App(DEFAULT_ROWS, DEFAULT_COLS)
 
-    const automata = new GameOfLife(DEFAULT_ROWS, DEFAULT_COLS, GameOfLifeRegistry.GOL)
+    const rule = GameOfLifeRegistry.GOL
+    const automata = new GameOfLife(DEFAULT_ROWS, DEFAULT_COLS, rule)
 
     const offsetRows = 21;
     const offsetCols = 46;

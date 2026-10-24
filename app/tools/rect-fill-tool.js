@@ -62,10 +62,6 @@ export class RectFillTool extends Tool {
         this.#mouseDstCol = null
     }
 
-    onMouseLeave() {
-
-    }
-
     /**
      * @param {CanvasRenderingContext2D} displayBufferContext
      */

@@ -1,4 +1,5 @@
 import { AppError } from "./app-error.js"
+import { AbstractAutomata } from "./automata/abstract-automata.js"
 import { AutomataDialog } from "./dialogs/automata-dialog.js"
 import { Display } from "./display.js"
 import { BucketTool } from "./tools/bucket-tool.js"
@@ -14,18 +15,7 @@ export class App {
     static STATE_RUNNING = 1
     static STATE_PAUSED = 2
     static STATE_STEPPING = 3
-
-    /** @type {AbstractAutomata} */
-    #automata = null
-
-    /** @type {number?} */
-    #generationInterval = null
-
-    /** @type {Display} */
-    #display
-
-    /** @type {AutomataDialog} */
-    #automataDialog
+    static UNDO_SNAPSHOTS_MAX_SIZE = 20
 
     #tools = {
         pencil: new PencilTool(this),
@@ -65,22 +55,33 @@ export class App {
         eraserBtn: document.getElementById('app-btn-eraser'),
     }
 
-    #currentState = App.STATE_STOPPED
-    #currentTool = this.#tools.pencil
-    #currentCellValue = 1
-    #generationDelay = 60
-    #rows = 50
-    #cols = 100
-    #tileSize = 10
-    #colors = []
-    #defaultColors = ['rgb(0, 0, 0)', 'rgb(255, 255, 255)']
-    #undoStanshotsMaxSize = 20
+    /** @type {AbstractAutomata} */
+    #automata = null
+
+    /** @type {number?} */
+    #generationInterval = null
+
+    /** @type {Display} */
+    #display
+
+    /** @type {AutomataDialog} */
+    #automataDialog
 
     /** @type {number[][][]} */
     #undoSnapshots = []
 
     /** @type {number[][][]} */
     #redoSnapshots = []
+
+    /** @type {Tool} */
+    #currentTool = this.#tools.pencil
+
+    #currentState = App.STATE_STOPPED
+    #currentCellValue = 1
+    #generationDelay = 60
+    #rows = 50
+    #cols = 100
+    #tileSize = 10
 
     /**
      * @param {number} rows 
@@ -92,6 +93,16 @@ export class App {
         this.#display = new Display(this)
         this.#automataDialog = new AutomataDialog(this)
         this.#setupListeners()
+    }
+
+    /**
+     * @param {AbstractAutomata} automata 
+     */
+    set automata(automata) {
+        this.#automata = automata
+        this.#automata.resize(this.#rows, this.#cols)
+        this.#buttons.automataBtn.innerHTML = this.#automata.name
+        this.#buttons.automataBtn.style.color = automata.getValueColor(1)
     }
 
     /**
@@ -128,25 +139,8 @@ export class App {
     }
 
     /**
-     * @param {number} value
-     * @returns {string} 
-     */
-    getValueColor(value) {
-        if (value < this.#colors.length) {
-            return this.#colors[value]
-        }
-        if (value < this.#defaultColors.length) {
-            return this.#defaultColors[value]
-        }
-        if (value === 0) {
-            return 'rgb(0, 0, 0)'
-        }
-        return 'rgb(255, 255, 255)'
-    }
-
-    /**
      * @param {number} pos 
-     * @returns 
+     * @returns {number}
      */
     translateCoordinateToGrid(pos) {
         return Math.floor(pos / this.#tileSize)
@@ -161,7 +155,7 @@ export class App {
         }
         this.#undoSnapshots.push(structuredClone(this.#automata.data))
         this.#redoSnapshots = []
-        if (this.#undoSnapshots.length > this.#undoStanshotsMaxSize) {
+        if (this.#undoSnapshots.length > App.UNDO_SNAPSHOTS_MAX_SIZE) {
             this.#undoSnapshots.shift()
         }
         this.disableElement(this.#buttons.redoBtn)
@@ -339,22 +333,6 @@ export class App {
 
     get automata() {
         return this.#automata
-    }
-
-    set automata(automata) {
-        this.#automata = automata
-        this.#colors = automata.colors
-        this.#automata.resize(this.#rows, this.#cols)
-        this.#buttons.automataBtn.innerHTML = this.#automata.name
-        this.#buttons.automataBtn.style.color = this.getValueColor(1)
-    }
-
-    set colors(colors) {
-        this.#colors = colors
-    }
-
-    get colors() {
-        return this.#colors
     }
 
     get rows() {

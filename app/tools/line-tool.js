@@ -64,9 +64,7 @@ export class LineTool extends Tool {
         this.#mouseDstCol = null
     }
 
-    onMouseLeave() {
 
-    }
 
     /**
      * @param {CanvasRenderingContext2D} displayBufferContext

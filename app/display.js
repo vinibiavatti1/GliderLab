@@ -112,7 +112,7 @@ export class Display {
         for (let row = 0; row < this.#app.rows; row++) {
             for (let col = 0; col < this.#app.cols; col++) {
                 const value = data[row][col]
-                const color = this.#app.getValueColor(value)
+                const color = this.#app.automata.getValueColor(value)
                 this.#displayBufferContext.fillStyle = color
                 this.#displayBufferContext.fillRect(
                     col * this.#app.tileSize, row * this.#app.tileSize,
@@ -147,7 +147,7 @@ export class Display {
 
     /**
      * @param {number} pos
-     * @returns 
+     * @returns {number}
      */
     snapToGrid(pos) {
         return pos - (pos % this.#app.tileSize)

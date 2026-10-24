@@ -1,9 +1,8 @@
 import { AppError } from '../app-error.js'
 
-class AutomataError extends Error { }
-
-
 export class AbstractAutomata {
+    static DEFAULT_COLOR = 'rgb(255, 255, 255)'
+
     /** @type {string} */
     #name
 
@@ -22,7 +21,6 @@ export class AbstractAutomata {
     #generationCount = 0n
     #rows = 0
     #cols = 0
-    #wrap = true
 
     /**
      * @param {string} name
@@ -41,9 +39,7 @@ export class AbstractAutomata {
         this.#recreateData()
     }
 
-    /**
-     * @abstract
-     */
+    /** @abstract */
     processGeneration() {
         throw new AppError('Not implemented')
     }
@@ -97,13 +93,34 @@ export class AbstractAutomata {
      * @returns {number?}
      */
     getValueWrapped(row, col) {
-        [row, col] = this.#wrapCoords(row, col)
+        if (row < 0) {
+            row = this.#rows + row
+        }
+        if (row >= this.#rows) {
+            row = row - this.#rows
+        }
+        if (col < 0) {
+            col = this.#cols + col
+        }
+        if (col >= this.#cols) {
+            col = col - this.#cols
+        }
         return this.#data[row][col]
     }
 
     /**
-     * @returns {void}
+     * @param {number} row 
+     * @param {number} col 
+     * @returns {string}
      */
+    getColor(row, col) {
+        const value = this.#data[row][col]
+        if (this.#colors.length >= value) {
+            return this.#colors[value]
+        }
+        return AbstractAutomata.DEFAULT_COLOR
+    }
+
     clear() {
         for (let row = 0; row < this.#rows; row++) {
             for (let col = 0; col < this.#cols; col++) {
@@ -116,11 +133,10 @@ export class AbstractAutomata {
     /**
      * @param {number} rows 
      * @param {number} cols 
-     * @returns {void}
      */
     resize(rows, cols) {
         if (rows < 0 || cols < 0) {
-            throw new AutomataError(`Invalid rows/cols: ${rows}/${cols}`)
+            throw new AppError(`Invalid rows/cols: ${rows}/${cols}`)
         }
         const newData = []
         for (let row = 0; row < rows; row++) {
@@ -153,15 +169,14 @@ export class AbstractAutomata {
      */
     countSurroundingCells(row, col, state) {
         let count = 0
-        const getFn = this.#wrap ? this.getValueWrapped : this.getValue
-        count += getFn.call(this, row - 1, col - 1) === state ? 1 : 0
-        count += getFn.call(this, row - 1, col + 0) === state ? 1 : 0
-        count += getFn.call(this, row - 1, col + 1) === state ? 1 : 0
-        count += getFn.call(this, row + 0, col - 1) === state ? 1 : 0
-        count += getFn.call(this, row + 0, col + 1) === state ? 1 : 0
-        count += getFn.call(this, row + 1, col - 1) === state ? 1 : 0
-        count += getFn.call(this, row + 1, col + 0) === state ? 1 : 0
-        count += getFn.call(this, row + 1, col + 1) === state ? 1 : 0
+        count += this.getValueWrapped(this, row - 1, col - 1) === state ? 1 : 0
+        count += this.getValueWrapped(this, row - 1, col + 0) === state ? 1 : 0
+        count += this.getValueWrapped(this, row - 1, col + 1) === state ? 1 : 0
+        count += this.getValueWrapped(this, row + 0, col - 1) === state ? 1 : 0
+        count += this.getValueWrapped(this, row + 0, col + 1) === state ? 1 : 0
+        count += this.getValueWrapped(this, row + 1, col - 1) === state ? 1 : 0
+        count += this.getValueWrapped(this, row + 1, col + 0) === state ? 1 : 0
+        count += this.getValueWrapped(this, row + 1, col + 1) === state ? 1 : 0
         return count
     }
 
@@ -206,27 +221,6 @@ export class AbstractAutomata {
     /**
      * @param {number} row 
      * @param {number} col 
-     * @returns {[number, number]}
-     */
-    #wrapCoords(row, col) {
-        if (row < 0) {
-            row = this.#rows + row
-        }
-        if (row >= this.#rows) {
-            row = row - this.#rows
-        }
-        if (col < 0) {
-            col = this.#cols + col
-        }
-        if (col >= this.#cols) {
-            col = col - this.#cols
-        }
-        return [row, col]
-    }
-
-    /**
-     * @param {number} row 
-     * @param {number} col 
      * @returns {boolean}
      */
     #areCoordsInvalid(row, col) {
@@ -239,10 +233,6 @@ export class AbstractAutomata {
 
     #restoreInitialData() {
         this.#data = structuredClone(this.#initialData)
-    }
-
-    set wrap(wrap) {
-        this.#wrap = wrap
     }
 
     get name() {

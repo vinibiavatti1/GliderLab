@@ -6,15 +6,6 @@ import { GameOfLifeRule } from '../automata/game-of-life/game-of-life-rule.js'
 import { GameOfLife } from '../automata/game-of-life/game-of-life.js'
 
 export class AutomataDialog {
-    /** @type {App} */
-    #app
-
-    #automataSelectBtn = document.getElementById('app-automata-select-btn')
-    #golBornBtns = document.querySelectorAll('.app-gol-born-btn')
-    #golSurviveBtns = document.querySelectorAll('.app-gol-survive-btn')
-    #golRule = document.getElementById('app-gol-rule')
-    #golRulePreset = document.getElementById('app-gol-rule-preset')
-
     #tabs = {
         appGolTab: document.getElementById('app-gol-tab'),
         appElementarTab: document.getElementById('app-elementar-tab'),
@@ -43,7 +34,8 @@ export class AutomataDialog {
         cell0: document.getElementById('app-elementar-cell-0-text'),
     }
 
-    #elementerRuleInput = document.getElementById('app-elementar-rule')
+    /** @type {App} */
+    #app
 
     /** @type {GameOfLifeRule?} */
     #selectedGolRule = GameOfLifeRegistry.GOL
@@ -53,6 +45,13 @@ export class AutomataDialog {
 
     /** @type {number[]} */
     #customGolSurvive = []
+
+    #automataSelectBtn = document.getElementById('app-automata-select-btn')
+    #golBornBtns = document.querySelectorAll('.app-gol-born-btn')
+    #golSurviveBtns = document.querySelectorAll('.app-gol-survive-btn')
+    #golRule = document.getElementById('app-gol-rule')
+    #golRulePreset = document.getElementById('app-gol-rule-preset')
+    #elementerRuleInput = document.getElementById('app-elementar-rule')
 
     /**
      * @param {App} app 
@@ -93,7 +92,7 @@ export class AutomataDialog {
             if (!this.#selectedGolRule) {
                 const notation = `B${this.#customGolBorn.join('')}/S${this.#customGolSurvive.join('')}`
                 const colors = ['rgb(0, 0, 0)', 'rgb(255, 255, 255)']
-                this.#selectedGolRule = new GameOfLifeRule('Custom', '', notation, this.#customGolBorn, this.#customGolSurvive, colors)
+                this.#selectedGolRule = new GameOfLifeRule('Custom', 'Custom', notation, this.#customGolBorn, this.#customGolSurvive, colors)
             }
             const automata = new GameOfLife(this.#app.rows, this.#app.cols, this.#selectedGolRule)
             this.#app.automata = automata

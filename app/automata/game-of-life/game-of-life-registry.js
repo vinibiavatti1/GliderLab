@@ -8,9 +8,7 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B3/S23',
         born: [3],
         survive: [2, 3],
-        colors: ['rgb(0, 0, 0)', 'rgb(0, 200, 0)'],
-        previewMaxGenerations: 37n,
-        previewInitialValues: [[0, 2], [1, 3], [2, 1], [2, 2], [2, 3]]
+        colors: ['rgb(0, 0, 0)', 'rgb(0, 200, 0)']
     }),
     THREE_FOUR_LIFE: GameOfLifeRule.new({
         name: '3-4 Life',

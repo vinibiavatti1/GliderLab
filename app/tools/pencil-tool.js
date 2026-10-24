@@ -43,11 +43,4 @@ export class PencilTool extends Tool {
     onMouseLeave() {
         this.#mousePressed = false
     }
-
-    /**
-     * @param {CanvasRenderingContext2D} displayBufferContext
-     */
-    renderPreview(displayBufferContext) {
-
-    }
 }
