@@ -116,6 +116,10 @@ export class Entombed extends Automata {
         return this.#generationCount == this.#simulationGrid.rows
     }
 
+    supportsSnapshots() {
+        return true
+    }
+
     #processGeneration() {
         const row = parseInt(this.#generationCount)
         if (row >= this.rows) {

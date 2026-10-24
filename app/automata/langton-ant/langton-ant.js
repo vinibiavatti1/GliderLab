@@ -110,10 +110,14 @@ export class LangtonAnt extends Automata {
     }
 
     restoreSnapshot(rows, cols, dataSnapshot) {
-        this.#simulationGrid.restoreSnapshot(rows, cols, dataSnapshot)
+
     }
 
     requestPause() {
+        return false
+    }
+
+    supportsSnapshots() {
         return false
     }
 

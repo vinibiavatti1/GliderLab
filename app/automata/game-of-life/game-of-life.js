@@ -89,6 +89,10 @@ export class GameOfLife extends Automata {
         return false
     }
 
+    supportsSnapshots() {
+        return true
+    }
+
     #processGeneration() {
         this.#populationCount = 0
         for (let row = 0; row < this.#simulationGrid.rows; row++) {

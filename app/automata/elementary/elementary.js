@@ -86,6 +86,10 @@ export class Elementary extends Automata {
         return this.#generationCount == this.#simulationGrid.rows
     }
 
+    supportsSnapshots() {
+        return true
+    }
+
     #processGeneration() {
         if (!this.#rule) {
             throw new AppError('Rule not set')

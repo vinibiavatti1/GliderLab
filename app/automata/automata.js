@@ -80,9 +80,18 @@ export class Automata {
     }
 
     /**
-     * @type {boolean}
+     * @abstract
+     * @returns {boolean}
      */
     requestPause() {
+        throw new AppError('Not implemented')
+    }
+
+    /**
+     * @abstract
+     * @returns {boolean}
+     */
+    supportsSnapshots() {
         throw new AppError('Not implemented')
     }
 

@@ -135,6 +135,10 @@ export class WireWorld extends Automata {
         return false
     }
 
+    supportsSnapshots() {
+        return true
+    }
+
     /**
      * @param {number} row 
      * @param {number} col 

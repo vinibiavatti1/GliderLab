@@ -125,6 +125,7 @@ export class App {
         this.#buttons.automataBtn.innerHTML = this.#automata.name
         this.#buttons.automataBtn.style.color = this.#automata.representativeColor ?? 'rgb(255, 255, 255)'
         this.#currentCellValue = this.#automata.defaultValue
+        this.#clearSnapshots()
         this.#enableToolButtons()
         if (this.#currentState !== App.STATE_STOPPED) {
             this.#handleStopBtn()
@@ -190,6 +191,9 @@ export class App {
         if (!this.#automata) {
             throw new AppError('Automata not set')
         }
+        if (!this.#automata.supportsSnapshots()) {
+            return
+        }
         if (this.#currentState !== App.STATE_STOPPED) {
             return
         }
@@ -215,6 +219,8 @@ export class App {
     enableElement(el) {
         el.removeAttribute('disabled')
     }
+
+
 
     #setupListeners() {
         this.#buttons.playBtn.addEventListener('click', () => this.#handlePlayBtn())
@@ -276,6 +282,13 @@ export class App {
         this.#undoSnapshots.push(structuredClone(this.#automata.simulationGrid.data))
         this.enableElement(this.#buttons.undoBtn)
         this.#automata.restoreSnapshot(this.#rows, this.#cols, subsequentData)
+    }
+
+    #clearSnapshots() {
+        this.#undoSnapshots = []
+        this.#redoSnapshots = []
+        this.disableElement(this.#buttons.redoBtn)
+        this.disableElement(this.#buttons.undoBtn)
     }
 
     #handlePlayBtn() {
