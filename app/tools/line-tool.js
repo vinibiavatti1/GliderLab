@@ -51,12 +51,15 @@ export class LineTool extends Tool {
      */
     onMouseReleased(row, col) {
         this.#mousePressed = false
+        if (this.#mouseSrcRow === null || this.#mouseSrcCol === null) {
+            return
+        }
         this.#mouseDstRow = row
         this.#mouseDstCol = col
         this.app.saveSnapshot()
         const cells = this.#getBresenhamLine(this.#mouseSrcRow, this.#mouseSrcCol, this.#mouseDstRow, this.#mouseDstCol);
         for (const [c, r] of cells) {
-            this.app.automata.setValue(r, c, 1)
+            this.app.automata.setValue(r, c, this.app.currentCellValue)
         }
         this.#mouseSrcRow = null
         this.#mouseSrcCol = null

@@ -2,7 +2,7 @@ import { AppError } from "../app-error.js";
 import { SimulationGrid } from "./simulation-grid.js";
 
 /** @interface */
-export class AbstractAutomata {
+export class Automata {
     /**
      * @abstract
      */
@@ -71,6 +71,15 @@ export class AbstractAutomata {
     }
 
     /**
+     * @param {number} rows
+     * @param {number} cols
+     * @param {number[][]} dataSnapshot 
+     */
+    restoreSnapshot(rows, cols, dataSnapshot) {
+        throw new AppError('Not implemented')
+    }
+
+    /**
      * @abstract
      * @returns {SimulationGrid}
      */
@@ -99,6 +108,14 @@ export class AbstractAutomata {
      * @returns {number?}
      */
     get populationCount() {
+        throw new AppError('Not implemented')
+    }
+
+    /**
+     * @abstract
+     * @returns {string}
+     */
+    get representativeColor() {
         throw new AppError('Not implemented')
     }
 }

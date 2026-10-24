@@ -131,15 +131,16 @@
                     <i class="bi bi-eraser"></i>
                 </button>
             </div>
-
-            <div class="app-divider border-start border-body border-1"></div>
-            <div class="btn-group" role="group">
-                <button id="app-btn-settings" type="button" class="btn-icon border-0 active">
-                    <i class="bi bi-plug"></i>
-                </button>
-                <button id="app-btn-settings" type="button" class="btn-icon border-0">
-                    <i class="bi bi-lightning"></i>
-                </button>
+            <div id="app-wire-world-tools" style="display: none;">
+                <div class="app-divider border-start border-body border-1"></div>
+                <div class="btn-group" role="group">
+                    <button id="app-btn-wire-world-conductor" type="button" class="btn-icon border-0 active">
+                        <i class="bi bi-plug"></i>
+                    </button>
+                    <button id="app-btn-wire-world-electron" type="button" class="btn-icon border-0">
+                        <i class="bi bi-lightning"></i>
+                    </button>
+                </div>
             </div>
         </div>
         <div>
@@ -150,7 +151,7 @@
         </div>
         <div class="p-2 fg-secondary fs-sm d-flex justify-content-between" style="position: absolute; bottom:10px;left:0;right:15px;">
             <span id="app-status"></span>
-            <span id="credits">Made by: vinibiavatti1 - <a href="https://github.com/vinibiavatti1/GliderLab">Github Repo</a></span>
+            <span id="credits">Made by: vinibiavatti1 - <a href="https://github.com/vinibiavatti1/GliderLab">Github</a></span>
         </div>
     </div>
 
@@ -237,7 +238,7 @@
                 </div>
                 <div class="form-field mb-6">
                     <label for="app-elementar-rule" class="form-label">Rule:</label>
-                    <input id="app-elementar-rule" type="number" min="0" max="255" step="1" class="form-control" value="0">
+                    <input id="app-elementar-rule" type="number" min="0" max="255" step="1" class="form-control" value="30">
                 </div>
                 <div class="d-flex align-items-center w-100 justify-content-center gap-3 flex-wrap">
                     <table class="app-elementar-table">
@@ -300,11 +301,11 @@
                             </tr>
                             <tr>
                                 <td class="rounded-4 bg-0 p-2"></td>
-                                <td id="app-elementar-cell-4" class="rounded-4 bg-3 p-2"></td>
+                                <td id="app-elementar-cell-4" class="rounded-4 bg-3 p-2 active"></td>
                                 <td class="rounded-4 bg-0 p-2"></td>
                             </tr>
                             <tr>
-                                <td id="app-elementar-cell-4-text" colspan="3" class="text-center elementar-bit">0</td>
+                                <td id="app-elementar-cell-4-text" colspan="3" class="text-center elementar-bit">1</td>
                             </tr>
                         </tbody>
                     </table>
@@ -317,11 +318,11 @@
                             </tr>
                             <tr>
                                 <td class="rounded-4 bg-0 p-2"></td>
-                                <td id="app-elementar-cell-3" class="rounded-4 bg-3 p-2"></td>
+                                <td id="app-elementar-cell-3" class="rounded-4 bg-3 p-2 active"></td>
                                 <td class="rounded-4 bg-0 p-2"></td>
                             </tr>
                             <tr>
-                                <td id="app-elementar-cell-3-text" colspan="3" class="text-center elementar-bit">0</td>
+                                <td id="app-elementar-cell-3-text" colspan="3" class="text-center elementar-bit">1</td>
                             </tr>
                         </tbody>
                     </table>
@@ -334,11 +335,11 @@
                             </tr>
                             <tr>
                                 <td class="rounded-4 bg-0 p-2"></td>
-                                <td id="app-elementar-cell-2" class="rounded-4 bg-3 p-2"></td>
+                                <td id="app-elementar-cell-2" class="rounded-4 bg-3 p-2 active"></td>
                                 <td class="rounded-4 bg-0 p-2"></td>
                             </tr>
                             <tr>
-                                <td id="app-elementar-cell-2-text" colspan="3" class="text-center elementar-bit">0</td>
+                                <td id="app-elementar-cell-2-text" colspan="3" class="text-center elementar-bit">1</td>
                             </tr>
                         </tbody>
                     </table>
@@ -351,11 +352,11 @@
                             </tr>
                             <tr>
                                 <td class="rounded-4 bg-0 p-2"></td>
-                                <td id="app-elementar-cell-1" class="rounded-4 bg-3 p-2"></td>
+                                <td id="app-elementar-cell-1" class="rounded-4 bg-3 p-2 active"></td>
                                 <td class="rounded-4 bg-0 p-2"></td>
                             </tr>
                             <tr>
-                                <td id="app-elementar-cell-1-text" colspan="3" class="text-center elementar-bit">0</td>
+                                <td id="app-elementar-cell-1-text" colspan="3" class="text-center elementar-bit">1</td>
                             </tr>
                         </tbody>
                     </table>
@@ -376,6 +377,23 @@
                             </tr>
                         </tbody>
                     </table>
+                </div>
+            </div>
+            <div id="app-wire-world-tab" class="tab-pane">
+                <div class="d-flex w-100 mb-4">
+                    <div class="border rounded-4 border-body p-3 me-5">
+                        <canvas class="d-block" id="app-wire-world-preview" width="90" height="90"></canvas>
+                    </div>
+                    <div>
+                        <div class="mb-3"><b>Wire World</b></div>
+                        <p class="fg-secondary fs-sm">A cellular automaton created by Brian Silverman in 1987 to simulate electronic circuits. Using four cell states (empty, electron head, electron tail, and conductor), it easily models logic gates, transistors, and digital architecture.</p>
+                    </div>
+                </div>
+                <div class="form-field mb-3">
+                    <label for="app-wire-world-rule-preset" class="form-label">Preset:</label>
+                    <select id="app-wire-world-rule-preset" class="form-control">
+                        <option value="empty" selected>(Empty)</option>
+                    </select>
                 </div>
             </div>
         </div>

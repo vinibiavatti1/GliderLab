@@ -1,10 +1,9 @@
-import { Constants } from "../../constants.js"
-import { AbstractAutomata } from "../abstract-automata.js"
+import { Automata } from "../automata.js"
 import { SimulationGrid } from "../simulation-grid.js"
 import { GameOfLifeRule } from "./game-of-life-rule.js"
 
-/** @implements {AbstractAutomata} */
-export class GameOfLife extends AbstractAutomata {
+/** @implements {Automata} */
+export class GameOfLife extends Automata {
     static DEAD = 0
     static ALIVE = 1
 
@@ -54,16 +53,10 @@ export class GameOfLife extends AbstractAutomata {
 
     getValueColor(row, col) {
         const value = this.#simulationGrid.getValue(row, col)
-        if (value === null) {
-            return Constants.DEFAULT_EMPTY_COLOR
+        if (value === GameOfLife.ALIVE) {
+            return this.#rule.aliveColor
         }
-        if (value < this.#rule.colors.length) {
-            return this.#rule.colors[value]
-        }
-        if (value === 0) {
-            return Constants.DEFAULT_EMPTY_COLOR
-        }
-        return Constants.DEFAULT_COLOR
+        return this.#rule.deadColor
     }
 
     clear() {
@@ -84,6 +77,10 @@ export class GameOfLife extends AbstractAutomata {
         }
     }
 
+    restoreSnapshot(rows, cols, dataSnapshot) {
+        this.#simulationGrid.restoreSnapshot(rows, cols, dataSnapshot)
+    }
+
     get simulationGrid() {
         return this.#simulationGrid
     }
@@ -98,6 +95,10 @@ export class GameOfLife extends AbstractAutomata {
 
     get populationCount() {
         return this.#populationCount
+    }
+
+    get representativeColor() {
+        return this.#rule.aliveColor
     }
 
     #processGeneration() {
@@ -125,19 +126,19 @@ export class GameOfLife extends AbstractAutomata {
     /**
      * @param {number} row 
      * @param {number} col 
-     * @param {number} state 
+     * @param {number} value 
      * @returns {number}
      */
-    #countSurroundingCells(row, col, state) {
+    #countSurroundingCells(row, col, value) {
         let count = 0
-        count += this.#simulationGrid.getValueWrapped(row - 1, col - 1) === state ? 1 : 0
-        count += this.#simulationGrid.getValueWrapped(row - 1, col + 0) === state ? 1 : 0
-        count += this.#simulationGrid.getValueWrapped(row - 1, col + 1) === state ? 1 : 0
-        count += this.#simulationGrid.getValueWrapped(row + 0, col - 1) === state ? 1 : 0
-        count += this.#simulationGrid.getValueWrapped(row + 0, col + 1) === state ? 1 : 0
-        count += this.#simulationGrid.getValueWrapped(row + 1, col - 1) === state ? 1 : 0
-        count += this.#simulationGrid.getValueWrapped(row + 1, col + 0) === state ? 1 : 0
-        count += this.#simulationGrid.getValueWrapped(row + 1, col + 1) === state ? 1 : 0
+        count += this.#simulationGrid.getValueWrapped(row - 1, col - 1) === value ? 1 : 0
+        count += this.#simulationGrid.getValueWrapped(row - 1, col + 0) === value ? 1 : 0
+        count += this.#simulationGrid.getValueWrapped(row - 1, col + 1) === value ? 1 : 0
+        count += this.#simulationGrid.getValueWrapped(row + 0, col - 1) === value ? 1 : 0
+        count += this.#simulationGrid.getValueWrapped(row + 0, col + 1) === value ? 1 : 0
+        count += this.#simulationGrid.getValueWrapped(row + 1, col - 1) === value ? 1 : 0
+        count += this.#simulationGrid.getValueWrapped(row + 1, col + 0) === value ? 1 : 0
+        count += this.#simulationGrid.getValueWrapped(row + 1, col + 1) === value ? 1 : 0
         return count
     }
 }

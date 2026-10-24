@@ -1,12 +1,13 @@
-import { AbstractAutomata } from "../abstract-automata.js"
+import { Automata } from "../automata.js"
 import { SimulationGrid } from "../simulation-grid.js"
 import { ElementarRule } from "./elementar-rule.js"
 
-/** @implements {AbstractAutomata} */
-export class Elementar extends AbstractAutomata {
+/** @implements {Automata} */
+export class Elementar extends Automata {
     static DEAD = 0
     static ALIVE = 1
-    static COLORS = ['rgb(0, 0, 0)', 'rgb(255, 255, 255)']
+    static DEAD_COLOR = 'rgb(0, 0, 0)'
+    static ALIVE_COLOR = 'rgb(255, 255, 255)'
 
     /** @type {ElementarRule} */
     #rule
@@ -53,16 +54,10 @@ export class Elementar extends AbstractAutomata {
 
     getValueColor(row, col) {
         const value = this.#simulationGrid.getValue(row, col)
-        if (value === null) {
-            return Constants.DEFAULT_EMPTY_COLOR
+        if (value === 1) {
+            return Elementar.ALIVE_COLOR
         }
-        if (value < Elementar.COLORS.length) {
-            return Elementar.COLORS[value]
-        }
-        if (value === 0) {
-            return Constants.DEFAULT_EMPTY_COLOR
-        }
-        return Constants.DEFAULT_COLOR
+        return Elementar.DEAD_COLOR
     }
 
     clear() {
@@ -83,6 +78,10 @@ export class Elementar extends AbstractAutomata {
         }
     }
 
+    restoreSnapshot(rows, cols, dataSnapshot) {
+        this.#simulationGrid.restoreSnapshot(rows, cols, dataSnapshot)
+    }
+
     get simulationGrid() {
         return this.#simulationGrid
     }
@@ -97,6 +96,10 @@ export class Elementar extends AbstractAutomata {
 
     get populationCount() {
         return null
+    }
+
+    get representativeColor() {
+        return Elementar.ALIVE_COLOR
     }
 
     #processGeneration() {

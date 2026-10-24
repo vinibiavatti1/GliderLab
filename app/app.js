@@ -1,5 +1,6 @@
 import { AppError } from "./app-error.js"
-import { AbstractAutomata } from "./automata/abstract-automata.js"
+import { Automata } from "./automata/automata.js"
+import { WireWorld } from "./automata/wire-world/wire-world.js"
 import { AutomataDialog } from "./dialogs/automata-dialog.js"
 import { Display } from "./display.js"
 import { BucketTool } from "./tools/bucket-tool.js"
@@ -55,7 +56,12 @@ export class App {
         eraserBtn: document.getElementById('app-btn-eraser'),
     }
 
-    /** @type {AbstractAutomata} */
+    #wireWorldButtons = {
+        conductorBtn: document.getElementById('app-btn-wire-world-conductor'),
+        electronBtn: document.getElementById('app-btn-wire-world-electron')
+    }
+
+    /** @type {Automata} */
     #automata = null
 
     /** @type {number?} */
@@ -96,13 +102,18 @@ export class App {
     }
 
     /**
-     * @param {AbstractAutomata} automata 
+     * @param {Automata} automata 
      */
     set automata(automata) {
         this.#automata = automata
         this.#automata.resize(this.#rows, this.#cols)
         this.#buttons.automataBtn.innerHTML = this.#automata.name
-        this.#buttons.automataBtn.style.color = this.#automata.getValueColor(1)
+        this.#buttons.automataBtn.style.color = this.#automata.representativeColor
+        this.#currentCellValue = 1
+        this.#enableToolButtons()
+        if (this.#currentState !== App.STATE_STOPPED) {
+            this.#handleStopBtn()
+        }
     }
 
     /**
@@ -153,7 +164,7 @@ export class App {
         if (this.#currentState !== App.STATE_STOPPED) {
             return
         }
-        this.#undoSnapshots.push(structuredClone(this.#automata.data))
+        this.#undoSnapshots.push(structuredClone(this.#automata.simulationGrid.data))
         this.#redoSnapshots = []
         if (this.#undoSnapshots.length > App.UNDO_SNAPSHOTS_MAX_SIZE) {
             this.#undoSnapshots.shift()
@@ -177,7 +188,7 @@ export class App {
     }
 
     #restoreLastUndoSnapshot() {
-        if (this.#undoSnapshots.length == 0) {
+        if (this.#undoSnapshots.length === 0) {
             return
         }
         const previousData = this.#undoSnapshots.pop()
@@ -192,13 +203,13 @@ export class App {
             this.#cols = previousData[0]?.length
             this.#display.resize(this.#rows, this.#cols)
         }
-        this.#redoSnapshots.push(structuredClone(this.#automata.data))
+        this.#redoSnapshots.push(structuredClone(this.#automata.simulationGrid.data))
         this.enableElement(this.#buttons.redoBtn)
-        this.#automata.simulationGrid.restoreSnapshot(this.#rows, this.#cols, previousData)
+        this.#automata.restoreSnapshot(this.#rows, this.#cols, previousData)
     }
 
     #restoreLastRedoSnapshot() {
-        if (this.#redoSnapshots.length == 0) {
+        if (this.#redoSnapshots.length === 0) {
             return
         }
         const subsequentData = this.#redoSnapshots.pop()
@@ -213,9 +224,9 @@ export class App {
             this.#cols = subsequentData[0]?.length
             this.#display.resize(this.#rows, this.#cols)
         }
-        this.#undoSnapshots.push(structuredClone(this.#automata.data))
+        this.#undoSnapshots.push(structuredClone(this.#automata.simulationGrid.data))
         this.enableElement(this.#buttons.undoBtn)
-        this.#automata.simulationGrid.restoreSnapshot(this.#rows, this.#cols, subsequentData)
+        this.#automata.restoreSnapshot(this.#rows, this.#cols, subsequentData)
     }
 
     #setupListeners() {
@@ -232,21 +243,26 @@ export class App {
         this.#toolButtons.rectFillBtn.addEventListener('click', evt => this.#handleToolBtn(evt, this.#tools.rectFill))
         this.#toolButtons.bucketBtn.addEventListener('click', evt => this.#handleToolBtn(evt, this.#tools.bucket))
         this.#toolButtons.eraserBtn.addEventListener('click', evt => this.#handleToolBtn(evt, this.#tools.eraser))
+
+        this.#wireWorldButtons.conductorBtn.addEventListener('click', evt => this.#handleWireWorldToolBtn(evt, WireWorld.CONDUCTOR))
+        this.#wireWorldButtons.electronBtn.addEventListener('click', evt => this.#handleWireWorldToolBtn(evt, WireWorld.ELECTRON_HEAD))
     }
 
     #handlePlayBtn() {
-        if (!this.automata) {
+        if (!this.#automata) {
             throw new AppError('Automata not set')
         }
 
         this.#currentState = App.STATE_RUNNING
+
+        this.#configureWireWorldPlayState()
         this.startAutoGeneration(this.#generationDelay)
 
-        this.disableElement(this.#buttons.playBtn)
         this.enableElement(this.#buttons.pauseBtn)
         this.enableElement(this.#buttons.stopBtn)
         this.enableElement(this.#buttons.stepBtn)
 
+        this.disableElement(this.#buttons.playBtn)
         this.disableElement(this.#buttons.undoBtn)
         this.disableElement(this.#buttons.redoBtn)
     }
@@ -256,20 +272,24 @@ export class App {
         this.stopAutoGeneration()
 
         this.enableElement(this.#buttons.playBtn)
-        this.disableElement(this.#buttons.pauseBtn)
         this.enableElement(this.#buttons.stopBtn)
         this.enableElement(this.#buttons.stepBtn)
+
+        this.disableElement(this.#buttons.pauseBtn)
     }
 
     #handleStopBtn() {
         this.#currentState = App.STATE_STOPPED
+
+        this.#configureWireWorldStopState()
         this.stopAutoGeneration()
         this.resetGeneration()
 
         this.enableElement(this.#buttons.playBtn)
+        this.enableElement(this.#buttons.stepBtn)
+
         this.disableElement(this.#buttons.pauseBtn)
         this.disableElement(this.#buttons.stopBtn)
-        this.enableElement(this.#buttons.stepBtn)
 
         if (this.#undoSnapshots.length > 0) {
             this.enableElement(this.#buttons.undoBtn)
@@ -280,6 +300,12 @@ export class App {
     }
 
     #handleStepBtn() {
+        if (this.#automata instanceof WireWorld) {
+            Object.values(this.#toolButtons).forEach(btn => this.disableElement(btn))
+            this.disableElement(this.#wireWorldButtons.conductorBtn)
+            this.#wireWorldButtons.electronBtn.dispatchEvent(new Event('click', { bubbles: true }))
+        }
+
         if (this.#currentState === App.STATE_STEPPING) {
             this.nextGeneration()
             return
@@ -290,9 +316,10 @@ export class App {
         this.nextGeneration()
 
         this.enableElement(this.#buttons.playBtn)
-        this.disableElement(this.#buttons.pauseBtn)
         this.enableElement(this.#buttons.stopBtn)
         this.enableElement(this.#buttons.stepBtn)
+
+        this.disableElement(this.#buttons.pauseBtn)
     }
 
     #handleUndoBtn() {
@@ -303,18 +330,55 @@ export class App {
         this.#restoreLastRedoSnapshot()
     }
 
-    #inactiveToolButtons() {
-        Object.values(this.#toolButtons).map(btn => btn.classList.remove('active'))
-    }
-
     /**
      * @param {PointerEvent} evt 
      * @param {Tool} tool 
      */
     #handleToolBtn(evt, tool) {
-        this.#inactiveToolButtons()
+        Object.values(this.#toolButtons).map(btn => btn.classList.remove('active'))
         evt.currentTarget.classList.add('active')
         this.#currentTool = tool
+    }
+
+    /**
+     * @param {PointerEvent} evt 
+     * @param {number} tool 
+     */
+    #handleWireWorldToolBtn(evt, tool) {
+        Object.values(this.#wireWorldButtons).map(btn => btn.classList.remove('active'))
+        evt.currentTarget.classList.add('active')
+        this.#currentCellValue = tool
+    }
+
+    #disableToolButtons() {
+        Object.values(this.#toolButtons).forEach(btn => this.disableElement(btn))
+    }
+
+    #enableToolButtons() {
+        Object.values(this.#toolButtons).forEach(btn => this.enableElement(btn))
+    }
+
+    #configureWireWorldPlayState() {
+        if (this.#automata instanceof WireWorld) {
+            this.#disableToolButtons()
+            this.disableElement(this.#wireWorldButtons.conductorBtn)
+            this.#click(this.#wireWorldButtons.electronBtn)
+            this.#click(this.#toolButtons.pencilBtn)
+        }
+    }
+
+    #configureWireWorldStopState() {
+        if (this.#automata instanceof WireWorld) {
+            this.#enableToolButtons()
+            this.enableElement(this.#wireWorldButtons.conductorBtn)
+        }
+    }
+
+    /**
+     * @param {HTMLElement} el 
+     */
+    #click(el) {
+        el.dispatchEvent(new Event('click', { bubbles: true }))
     }
 
     get currentStateName() {

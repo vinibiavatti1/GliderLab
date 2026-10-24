@@ -4,12 +4,13 @@ import { Elementar } from '../automata/elementar/elementar.js'
 import { GameOfLifeRegistry } from '../automata/game-of-life/game-of-life-registry.js'
 import { GameOfLifeRule } from '../automata/game-of-life/game-of-life-rule.js'
 import { GameOfLife } from '../automata/game-of-life/game-of-life.js'
+import { WireWorld } from '../automata/wire-world/wire-world.js'
 
 export class AutomataDialog {
     #tabs = {
-        appGolTab: document.getElementById('app-gol-tab'),
-        appElementarTab: document.getElementById('app-elementar-tab'),
-        appWireWorldTab: document.getElementById('app-wire-world-tab'),
+        gameOfLifeTab: document.getElementById('app-gol-tab'),
+        elementarTab: document.getElementById('app-elementar-tab'),
+        wireWorldTab: document.getElementById('app-wire-world-tab'),
     }
 
     #elementarCells = {
@@ -52,6 +53,7 @@ export class AutomataDialog {
     #golRule = document.getElementById('app-gol-rule')
     #golRulePreset = document.getElementById('app-gol-rule-preset')
     #elementerRuleInput = document.getElementById('app-elementar-rule')
+    #wireWorldToolsContainer = document.getElementById('app-wire-world-tools')
 
     /**
      * @param {App} app 
@@ -62,6 +64,7 @@ export class AutomataDialog {
         this.#setupListeners()
         this.#initElementarPreview()
         this.#initGameOfLifePreview()
+        this.#initWireWorldPreview()
     }
 
     #setupGameOfLifeRuleList() {
@@ -71,7 +74,7 @@ export class AutomataDialog {
                 option.setAttribute('selected', '')
             }
             option.setAttribute('value', k)
-            option.style.color = v.colors[1]
+            option.style.color = v.aliveColor
             option.innerHTML = `${v.name} (${v.notation})`
             this.#golRule.appendChild(option)
         })
@@ -88,20 +91,61 @@ export class AutomataDialog {
     }
 
     #handleAutomataSelectBtn() {
-        if (this.#tabs.appGolTab.classList.contains('active')) {
-            if (!this.#selectedGolRule) {
-                const notation = `B${this.#customGolBorn.join('')}/S${this.#customGolSurvive.join('')}`
-                const colors = ['rgb(0, 0, 0)', 'rgb(255, 255, 255)']
-                this.#selectedGolRule = new GameOfLifeRule('Custom', 'Custom', notation, this.#customGolBorn, this.#customGolSurvive, colors)
-            }
-            const automata = new GameOfLife(this.#app.rows, this.#app.cols, this.#selectedGolRule)
-            this.#app.automata = automata
-        } else if (this.#tabs.appElementarTab.classList.contains('active')) {
-            const rule = new ElementarRule(parseInt(this.#elementerRuleInput.value))
-            const automata = new Elementar(this.#app.rows, this.#app.cols, rule)
-            automata.setValue(0, Math.floor(this.#app.cols / 2), Elementar.ALIVE)
-            this.#app.automata = automata
+        if (this.#isTabActive(this.#tabs.gameOfLifeTab)) {
+            this.#loadGameOfLife()
+        } else if (this.#isTabActive(this.#tabs.elementarTab)) {
+            this.#loadElementar()
+        } else if (this.#isTabActive(this.#tabs.wireWorldTab)) {
+            this.#loadWireWorld()
         }
+    }
+
+    #loadGameOfLife() {
+        if (!this.#selectedGolRule) {
+            const notation = `B${this.#customGolBorn.join('')}/S${this.#customGolSurvive.join('')}`
+            const colors = ['rgb(0, 0, 0)', 'rgb(255, 255, 255)']
+            this.#selectedGolRule = new GameOfLifeRule('Custom', 'Custom', notation, this.#customGolBorn, this.#customGolSurvive, colors)
+        }
+        const automata = new GameOfLife(this.#app.rows, this.#app.cols, this.#selectedGolRule)
+        this.#app.automata = automata
+        this.#hideElement(this.#wireWorldToolsContainer)
+    }
+
+    #loadElementar() {
+        const rule = new ElementarRule(parseInt(this.#elementerRuleInput.value))
+        const automata = new Elementar(this.#app.rows, this.#app.cols, rule)
+        automata.setValue(0, Math.floor(this.#app.cols / 2), Elementar.ALIVE)
+        this.#app.automata = automata
+        this.#hideElement(this.#wireWorldToolsContainer)
+    }
+
+    #loadWireWorld() {
+        const automata = new WireWorld(this.#app.rows, this.#app.cols)
+        this.#app.automata = automata
+        this.#showElement(this.#wireWorldToolsContainer)
+        document.getElementById('app-btn-wire-world-conductor').dispatchEvent(new Event('click', { bubbles: true }))
+    }
+
+    /**
+     * @param {HTMLElement} element 
+     */
+    #showElement(element) {
+        element.style.display = 'inline-block'
+    }
+
+    /**
+     * @param {HTMLElement} element 
+     */
+    #hideElement(element) {
+        element.style.display = 'none'
+    }
+
+    /**
+     * @param {HTMLElement} tab 
+     * @returns {boolean}
+     */
+    #isTabActive(tab) {
+        return tab.classList.contains('active')
     }
 
     /**
@@ -252,6 +296,45 @@ export class AutomataDialog {
             automata.render(context, 10)
             automata.nextGeneration()
             if (automata.generationCount >= 25) {
+                automata.resetGeneration()
+            }
+        }, 100)
+    }
+
+    #initWireWorldPreview() {
+        const canvas = document.getElementById('app-wire-world-preview')
+        const context = canvas.getContext('2d')
+        const automata = new WireWorld(9, 9)
+        automata.setValue(2, 0, WireWorld.CONDUCTOR)
+        automata.setValue(2, 1, WireWorld.CONDUCTOR)
+        automata.setValue(2, 2, WireWorld.CONDUCTOR)
+        automata.setValue(2, 3, WireWorld.CONDUCTOR)
+        automata.setValue(2, 4, WireWorld.CONDUCTOR)
+        automata.setValue(2, 6, WireWorld.CONDUCTOR)
+        automata.setValue(2, 7, WireWorld.CONDUCTOR)
+        automata.setValue(2, 8, WireWorld.CONDUCTOR)
+        automata.setValue(1, 4, WireWorld.CONDUCTOR)
+        automata.setValue(1, 5, WireWorld.CONDUCTOR)
+        automata.setValue(3, 4, WireWorld.CONDUCTOR)
+        automata.setValue(3, 5, WireWorld.CONDUCTOR)
+        automata.setValue(2, 0, WireWorld.ELECTRON_HEAD)
+        automata.setValue(6, 0, WireWorld.CONDUCTOR)
+        automata.setValue(6, 1, WireWorld.CONDUCTOR)
+        automata.setValue(6, 2, WireWorld.CONDUCTOR)
+        automata.setValue(6, 3, WireWorld.CONDUCTOR)
+        automata.setValue(6, 5, WireWorld.CONDUCTOR)
+        automata.setValue(6, 6, WireWorld.CONDUCTOR)
+        automata.setValue(6, 7, WireWorld.CONDUCTOR)
+        automata.setValue(6, 8, WireWorld.CONDUCTOR)
+        automata.setValue(5, 3, WireWorld.CONDUCTOR)
+        automata.setValue(5, 4, WireWorld.CONDUCTOR)
+        automata.setValue(7, 3, WireWorld.CONDUCTOR)
+        automata.setValue(7, 4, WireWorld.CONDUCTOR)
+        automata.setValue(6, 8, WireWorld.ELECTRON_HEAD)
+        setInterval(() => {
+            automata.render(context, 10)
+            automata.nextGeneration()
+            if (automata.generationCount >= 12) {
                 automata.resetGeneration()
             }
         }, 100)

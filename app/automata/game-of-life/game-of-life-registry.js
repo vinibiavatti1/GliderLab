@@ -8,7 +8,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B3/S23',
         born: [3],
         survive: [2, 3],
-        colors: ['rgb(0, 0, 0)', 'rgb(0, 200, 0)']
+        aliveColor: 'rgb(0, 200, 0)',
+        deadColor: 'rgb(0, 0, 0)',
     }),
     THREE_FOUR_LIFE: GameOfLifeRule.new({
         name: '3-4 Life',
@@ -16,7 +17,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B34/S34',
         born: [3, 4],
         survive: [3, 4],
-        colors: ['rgb(0, 0, 0)', 'rgb(0, 150, 255)']
+        aliveColor: 'rgb(0, 150, 255)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     AMOEBA: GameOfLifeRule.new({
         name: 'Amoeba',
@@ -24,7 +26,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B357/S1358',
         born: [3, 5, 7],
         survive: [1, 3, 5, 8],
-        colors: ['rgb(0, 0, 0)', 'rgb(255, 100, 100)']
+        aliveColor: 'rgb(255, 100, 100)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     ANTILIFE: GameOfLifeRule.new({
         name: 'AntiLife',
@@ -32,7 +35,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B0123478/S01234678',
         born: [0, 1, 2, 3, 4, 7, 8],
         survive: [0, 1, 2, 3, 4, 6, 7, 8],
-        colors: ['rgb(0, 0, 0)', 'rgb(200, 200, 200)']
+        aliveColor: 'rgb(200, 200, 200)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     ASSIMILATION: GameOfLifeRule.new({
         name: 'Assimilation',
@@ -40,7 +44,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B345/S4567',
         born: [3, 4, 5],
         survive: [4, 5, 6, 7],
-        colors: ['rgb(0, 0, 0)', 'rgb(255, 215, 0)']
+        aliveColor: 'rgb(255, 215, 0)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     BACTERIA: GameOfLifeRule.new({
         name: 'Bacteria',
@@ -48,7 +53,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B34/S456',
         born: [3, 4],
         survive: [4, 5, 6],
-        colors: ['rgb(0, 0, 0)', 'rgb(50, 205, 50)']
+        aliveColor: 'rgb(50, 205, 50)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     BLINKERS: GameOfLifeRule.new({
         name: 'Blinkers',
@@ -56,7 +62,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B345/S2',
         born: [3, 4, 5],
         survive: [2],
-        colors: ['rgb(0, 0, 0)', 'rgb(0, 255, 255)']
+        aliveColor: 'rgb(0, 255, 255)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     BUGS: GameOfLifeRule.new({
         name: 'Bugs',
@@ -64,7 +71,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B3567/S15678',
         born: [3, 5, 6, 7],
         survive: [1, 5, 6, 7, 8],
-        colors: ['rgb(0, 0, 0)', 'rgb(255, 69, 0)']
+        aliveColor: 'rgb(255, 69, 0)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     CASTLES: GameOfLifeRule.new({
         name: 'Castles',
@@ -72,7 +80,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B3678/S135678',
         born: [3, 6, 7, 8],
         survive: [1, 3, 5, 6, 7, 8],
-        colors: ['rgb(0, 0, 0)', 'rgb(138, 43, 226)']
+        aliveColor: 'rgb(138, 43, 226)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     CHEERIOS: GameOfLifeRule.new({
         name: 'Cheerios',
@@ -80,7 +89,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B35678/S34567',
         born: [3, 5, 6, 7, 8],
         survive: [3, 4, 5, 6, 7],
-        colors: ['rgb(0, 0, 0)', 'rgb(255, 140, 0)']
+        aliveColor: 'rgb(255, 140, 0)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     COAGULATIONS: GameOfLifeRule.new({
         name: 'Coagulations',
@@ -88,7 +98,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B378/S235678',
         born: [3, 7, 8],
         survive: [2, 3, 5, 6, 7, 8],
-        colors: ['rgb(0, 0, 0)', 'rgb(128, 0, 128)']
+        aliveColor: 'rgb(128, 0, 128)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     CORAL: GameOfLifeRule.new({
         name: 'Coral',
@@ -96,7 +107,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B3/S45678',
         born: [3],
         survive: [4, 5, 6, 7, 8],
-        colors: ['rgb(0, 0, 0)', 'rgb(255, 127, 80)']
+        aliveColor: 'rgb(255, 127, 80)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     CORROSION_OF_CONFORMITY: GameOfLifeRule.new({
         name: 'Corrosion of Conformity',
@@ -104,7 +116,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B3/S124',
         born: [3],
         survive: [1, 2, 4],
-        colors: ['rgb(0, 0, 0)', 'rgb(112, 128, 144)']
+        aliveColor: 'rgb(112, 128, 144)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     DANCE: GameOfLifeRule.new({
         name: 'Dance',
@@ -112,7 +125,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B34/S35',
         born: [3, 4],
         survive: [3, 5],
-        colors: ['rgb(0, 0, 0)', 'rgb(255, 105, 180)']
+        aliveColor: 'rgb(255, 105, 180)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     DAY_AND_NIGHT: GameOfLifeRule.new({
         name: 'Day & Night',
@@ -120,7 +134,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B3678/S34678',
         born: [3, 6, 7, 8],
         survive: [3, 4, 6, 7, 8],
-        colors: ['rgb(0, 0, 0)', 'rgb(70, 130, 180)']
+        aliveColor: 'rgb(70, 130, 180)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     DIAMOEBA: GameOfLifeRule.new({
         name: 'Diamoeba',
@@ -128,7 +143,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B35678/S5678',
         born: [3, 5, 6, 7, 8],
         survive: [5, 6, 7, 8],
-        colors: ['rgb(0, 0, 0)', 'rgb(0, 191, 255)']
+        aliveColor: 'rgb(0, 191, 255)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     DOT_LIFE: GameOfLifeRule.new({
         name: 'DotLife',
@@ -136,7 +152,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B3/S023',
         born: [3],
         survive: [0, 2, 3],
-        colors: ['rgb(0, 0, 0)', 'rgb(255, 255, 0)']
+        aliveColor: 'rgb(255, 255, 0)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     DRIGH_LIFE: GameOfLifeRule.new({
         name: 'DrighLife',
@@ -144,7 +161,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B367/S23',
         born: [3, 6, 7],
         survive: [2, 3],
-        colors: ['rgb(0, 0, 0)', 'rgb(50, 205, 50)']
+        aliveColor: 'rgb(50, 205, 50)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     DRY_FLOCK: GameOfLifeRule.new({
         name: 'DryFlock',
@@ -152,7 +170,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B37/S12',
         born: [3, 7],
         survive: [1, 2],
-        colors: ['rgb(0, 0, 0)', 'rgb(173, 216, 230)']
+        aliveColor: 'rgb(173, 216, 230)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     DRY_LIFE: GameOfLifeRule.new({
         name: 'DryLife',
@@ -160,7 +179,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B37/S23',
         born: [3, 7],
         survive: [2, 3],
-        colors: ['rgb(0, 0, 0)', 'rgb(0, 200, 200)']
+        aliveColor: 'rgb(0, 200, 200)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     DRY_LIFE_WITHOUT_DEATH: GameOfLifeRule.new({
         name: 'DryLife without Death',
@@ -168,7 +188,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B37/S012345678',
         born: [3, 7],
         survive: [0, 1, 2, 3, 4, 5, 6, 7, 8],
-        colors: ['rgb(0, 0, 0)', 'rgb(210, 105, 30)']
+        aliveColor: 'rgb(210, 105, 30)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     EIGHT_FLOCK: GameOfLifeRule.new({
         name: 'EightFlock',
@@ -176,7 +197,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B3/S128',
         born: [3],
         survive: [1, 2, 8],
-        colors: ['rgb(0, 0, 0)', 'rgb(255, 20, 147)']
+        aliveColor: 'rgb(255, 20, 147)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     EIGHT_LIFE: GameOfLifeRule.new({
         name: 'EightLife',
@@ -184,7 +206,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B3/S238',
         born: [3],
         survive: [2, 3, 8],
-        colors: ['rgb(0, 0, 0)', 'rgb(0, 255, 127)']
+        aliveColor: 'rgb(0, 255, 127)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     ELECTRIFIED_MAZE: GameOfLifeRule.new({
         name: 'Electrified Maze',
@@ -192,7 +215,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B45/S12345',
         born: [4, 5],
         survive: [1, 2, 3, 4, 5],
-        colors: ['rgb(0, 0, 0)', 'rgb(255, 255, 0)']
+        aliveColor: 'rgb(255, 255, 0)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     EPPSTEIN: GameOfLifeRule.new({
         name: 'Eppstein',
@@ -200,7 +224,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B35/S236',
         born: [3, 5],
         survive: [2, 3, 6],
-        colors: ['rgb(0, 0, 0)', 'rgb(135, 206, 250)']
+        aliveColor: 'rgb(135, 206, 250)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     FEUX: GameOfLifeRule.new({
         name: 'Feux',
@@ -208,7 +233,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B1358/S0247',
         born: [1, 3, 5, 8],
         survive: [0, 2, 4, 7],
-        colors: ['rgb(0, 0, 0)', 'rgb(255, 69, 0)']
+        aliveColor: 'rgb(255, 69, 0)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     FLOCK: GameOfLifeRule.new({
         name: 'Flock',
@@ -216,7 +242,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B3/S12',
         born: [3],
         survive: [1, 2],
-        colors: ['rgb(0, 0, 0)', 'rgb(144, 238, 144)']
+        aliveColor: 'rgb(144, 238, 144)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     FORREST_OF_LS: GameOfLifeRule.new({
         name: 'Forrest of Ls',
@@ -224,7 +251,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B168/S236',
         born: [1, 6, 8],
         survive: [2, 3, 6],
-        colors: ['rgb(0, 0, 0)', 'rgb(34, 139, 34)']
+        aliveColor: 'rgb(34, 139, 34)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     FREDKIN: GameOfLifeRule.new({
         name: 'Fredkin',
@@ -232,7 +260,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B1357/S02468',
         born: [1, 3, 5, 7],
         survive: [0, 2, 4, 6, 8],
-        colors: ['rgb(0, 0, 0)', 'rgb(255, 105, 180)']
+        aliveColor: 'rgb(255, 105, 180)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     FUZZ: GameOfLifeRule.new({
         name: 'Fuzz',
@@ -240,7 +269,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B1/S014567',
         born: [1],
         survive: [0, 1, 4, 5, 6, 7],
-        colors: ['rgb(0, 0, 0)', 'rgb(240, 230, 140)']
+        aliveColor: 'rgb(240, 230, 140)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     GEMS: GameOfLifeRule.new({
         name: 'Gems',
@@ -248,7 +278,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B3457/S4568',
         born: [3, 4, 5, 7],
         survive: [4, 5, 6, 8],
-        colors: ['rgb(0, 0, 0)', 'rgb(0, 206, 209)']
+        aliveColor: 'rgb(0, 206, 209)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     GEMS_MINOR: GameOfLifeRule.new({
         name: 'Gems Minor',
@@ -256,7 +287,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B34578/S456',
         born: [3, 4, 5, 7, 8],
         survive: [4, 5, 6],
-        colors: ['rgb(0, 0, 0)', 'rgb(72, 209, 204)']
+        aliveColor: 'rgb(72, 209, 204)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     GEOLOGY: GameOfLifeRule.new({
         name: 'Geology',
@@ -264,7 +296,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B3578/S24678',
         born: [3, 5, 7, 8],
         survive: [2, 4, 6, 7, 8],
-        colors: ['rgb(0, 0, 0)', 'rgb(188, 143, 143)']
+        aliveColor: 'rgb(188, 143, 143)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     GNARL: GameOfLifeRule.new({
         name: 'Gnarl',
@@ -272,7 +305,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B1/S1',
         born: [1],
         survive: [1],
-        colors: ['rgb(0, 0, 0)', 'rgb(255, 69, 0)']
+        aliveColor: 'rgb(255, 69, 0)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     GROUNDED_LIFE: GameOfLifeRule.new({
         name: 'Grounded Life',
@@ -280,7 +314,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B35/S23',
         born: [3, 5],
         survive: [2, 3],
-        colors: ['rgb(0, 0, 0)', 'rgb(100, 149, 237)']
+        aliveColor: 'rgb(100, 149, 237)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     HIGH_FLOCK: GameOfLifeRule.new({
         name: 'HighFlock',
@@ -288,7 +323,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B36/S12',
         born: [3, 6],
         survive: [1, 2],
-        colors: ['rgb(0, 0, 0)', 'rgb(0, 255, 127)']
+        aliveColor: 'rgb(0, 255, 127)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     HIGH_LIFE: GameOfLifeRule.new({
         name: 'HighLife',
@@ -296,7 +332,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B36/S23',
         born: [3, 6],
         survive: [2, 3],
-        colors: ['rgb(0, 0, 0)', 'rgb(255, 50, 50)'],
+        aliveColor: 'rgb(255, 50, 50)',
+        deadColor: 'rgb(0, 0, 0)',
         previewMaxGenerations: 35n,
         previewInitialValues: [[1, 1], [1, 2], [2, 1], [3, 3], [4, 3], [4, 4]]
     }),
@@ -306,7 +343,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B35678/S4678',
         born: [3, 5, 6, 7, 8],
         survive: [4, 6, 7, 8],
-        colors: ['rgb(0, 0, 0)', 'rgb(221, 160, 221)']
+        aliveColor: 'rgb(221, 160, 221)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     HONEY_FLOCK: GameOfLifeRule.new({
         name: 'HoneyFlock',
@@ -314,7 +352,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B38/S128',
         born: [3, 8],
         survive: [1, 2, 8],
-        colors: ['rgb(0, 0, 0)', 'rgb(255, 215, 0)']
+        aliveColor: 'rgb(255, 215, 0)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     HONEY_LIFE: GameOfLifeRule.new({
         name: 'HoneyLife',
@@ -322,7 +361,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B38/S238',
         born: [3, 8],
         survive: [2, 3, 8],
-        colors: ['rgb(0, 0, 0)', 'rgb(218, 165, 32)']
+        aliveColor: 'rgb(218, 165, 32)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     H_TREES: GameOfLifeRule.new({
         name: 'H-trees',
@@ -330,7 +370,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B1/S012345678',
         born: [1],
         survive: [0, 1, 2, 3, 4, 5, 6, 7, 8],
-        colors: ['rgb(0, 0, 0)', 'rgb(70, 130, 180)']
+        aliveColor: 'rgb(70, 130, 180)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     ICEBALLS: GameOfLifeRule.new({
         name: 'Iceballs',
@@ -338,7 +379,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B25678/S5678',
         born: [2, 5, 6, 7, 8],
         survive: [5, 6, 7, 8],
-        colors: ['rgb(0, 0, 0)', 'rgb(176, 224, 230)']
+        aliveColor: 'rgb(176, 224, 230)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     INVERSE_LIFE: GameOfLifeRule.new({
         name: 'InverseLife',
@@ -346,7 +388,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B0123478/S34678',
         born: [0, 1, 2, 3, 4, 7, 8],
         survive: [3, 4, 6, 7, 8],
-        colors: ['rgb(0, 0, 0)', 'rgb(244, 164, 96)']
+        aliveColor: 'rgb(244, 164, 96)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     INVERTAMAZE: GameOfLifeRule.new({
         name: 'Invertamaze',
@@ -354,7 +397,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B028/S0124',
         born: [0, 2, 8],
         survive: [0, 1, 2, 4],
-        colors: ['rgb(0, 0, 0)', 'rgb(255, 0, 255)']
+        aliveColor: 'rgb(255, 0, 255)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     IRON_FLOCK: GameOfLifeRule.new({
         name: 'IronFlock',
@@ -362,7 +406,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B36/S128',
         born: [3, 6],
         survive: [1, 2, 8],
-        colors: ['rgb(0, 0, 0)', 'rgb(112, 128, 144)']
+        aliveColor: 'rgb(112, 128, 144)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     IRON_LIFE: GameOfLifeRule.new({
         name: 'IronLife',
@@ -370,7 +415,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B36/S238',
         born: [3, 6],
         survive: [2, 3, 8],
-        colors: ['rgb(0, 0, 0)', 'rgb(119, 136, 153)']
+        aliveColor: 'rgb(119, 136, 153)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     LAND_RUSH: GameOfLifeRule.new({
         name: 'Land Rush',
@@ -378,7 +424,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B35/S234578',
         born: [3, 5],
         survive: [2, 3, 4, 5, 7, 8],
-        colors: ['rgb(0, 0, 0)', 'rgb(154, 205, 50)']
+        aliveColor: 'rgb(154, 205, 50)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     LAND_RUSH_2: GameOfLifeRule.new({
         name: 'Land Rush 2',
@@ -386,7 +433,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B36/S234578',
         born: [3, 6],
         survive: [2, 3, 4, 5, 7, 8],
-        colors: ['rgb(0, 0, 0)', 'rgb(107, 142, 35)']
+        aliveColor: 'rgb(107, 142, 35)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     LIFEGUARD_1: GameOfLifeRule.new({
         name: 'Lifeguard 1',
@@ -394,7 +442,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B48/S234',
         born: [4, 8],
         survive: [2, 3, 4],
-        colors: ['rgb(0, 0, 0)', 'rgb(0, 191, 255)']
+        aliveColor: 'rgb(0, 191, 255)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     LIFEGUARD_2: GameOfLifeRule.new({
         name: 'Lifeguard 2',
@@ -402,7 +451,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B3/S4567',
         born: [3],
         survive: [4, 5, 6, 7],
-        colors: ['rgb(0, 0, 0)', 'rgb(30, 144, 255)']
+        aliveColor: 'rgb(30, 144, 255)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     LIFE_SKY_HIGH: GameOfLifeRule.new({
         name: 'Life SkyHigh',
@@ -410,7 +460,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B368/S236',
         born: [3, 6, 8],
         survive: [2, 3, 6],
-        colors: ['rgb(0, 0, 0)', 'rgb(0, 255, 255)']
+        aliveColor: 'rgb(0, 255, 255)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     LIFE_WITHOUT_DEATH: GameOfLifeRule.new({
         name: 'Life without death',
@@ -418,7 +469,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B3/S012345678',
         born: [3],
         survive: [0, 1, 2, 3, 4, 5, 6, 7, 8],
-        colors: ['rgb(0, 0, 0)', 'rgb(255, 255, 255)']
+        aliveColor: 'rgb(255, 255, 255)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     LIVE_FREE_OR_DIE: GameOfLifeRule.new({
         name: 'Live Free or Die',
@@ -426,7 +478,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B2/S0',
         born: [2],
         survive: [0],
-        colors: ['rgb(0, 0, 0)', 'rgb(255, 140, 0)']
+        aliveColor: 'rgb(255, 140, 0)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     LONG_LIFE: GameOfLifeRule.new({
         name: 'Long Life',
@@ -434,7 +487,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B345/S5',
         born: [3, 4, 5],
         survive: [5],
-        colors: ['rgb(0, 0, 0)', 'rgb(147, 112, 219)']
+        aliveColor: 'rgb(147, 112, 219)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     LOW_DEATH: GameOfLifeRule.new({
         name: 'LowDeath',
@@ -442,7 +496,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B368/S238',
         born: [3, 6, 8],
         survive: [2, 3, 8],
-        colors: ['rgb(0, 0, 0)', 'rgb(220, 20, 60)']
+        aliveColor: 'rgb(220, 20, 60)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     LOW_DEATH_WITHOUT_DEATH: GameOfLifeRule.new({
         name: 'LowDeath without Death',
@@ -450,7 +505,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B368/S012345678',
         born: [3, 6, 8],
         survive: [0, 1, 2, 3, 4, 5, 6, 7, 8],
-        colors: ['rgb(0, 0, 0)', 'rgb(238, 130, 238)']
+        aliveColor: 'rgb(238, 130, 238)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     LOW_FLOCK_DEATH: GameOfLifeRule.new({
         name: 'LowFlockDeath',
@@ -458,7 +514,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B368/S128',
         born: [3, 6, 8],
         survive: [1, 2, 8],
-        colors: ['rgb(0, 0, 0)', 'rgb(152, 251, 152)']
+        aliveColor: 'rgb(152, 251, 152)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     LOW_LIFE: GameOfLifeRule.new({
         name: 'LowLife',
@@ -466,7 +523,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B3/S13',
         born: [3],
         survive: [1, 3],
-        colors: ['rgb(0, 0, 0)', 'rgb(0, 250, 154)']
+        aliveColor: 'rgb(0, 250, 154)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     MAGNEZONES: GameOfLifeRule.new({
         name: 'Magnezones',
@@ -474,7 +532,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B3/S123678',
         born: [3],
         survive: [1, 2, 3, 6, 7, 8],
-        colors: ['rgb(0, 0, 0)', 'rgb(65, 105, 225)']
+        aliveColor: 'rgb(65, 105, 225)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     MAJORITY: GameOfLifeRule.new({
         name: 'Majority',
@@ -482,7 +541,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B45678/S5678',
         born: [4, 5, 6, 7, 8],
         survive: [5, 6, 7, 8],
-        colors: ['rgb(0, 0, 0)', 'rgb(119, 136, 153)']
+        aliveColor: 'rgb(119, 136, 153)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     MAZE: GameOfLifeRule.new({
         name: 'Maze',
@@ -490,7 +550,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B3/S12345',
         born: [3],
         survive: [1, 2, 3, 4, 5],
-        colors: ['rgb(0, 0, 0)', 'rgb(255, 215, 0)']
+        aliveColor: 'rgb(255, 215, 0)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     MAZECTRIC: GameOfLifeRule.new({
         name: 'Mazectric',
@@ -498,7 +559,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B3/S1234',
         born: [3],
         survive: [1, 2, 3, 4],
-        colors: ['rgb(0, 0, 0)', 'rgb(255, 165, 0)']
+        aliveColor: 'rgb(255, 165, 0)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     MAZECTRIC_WITH_MICE: GameOfLifeRule.new({
         name: 'Mazectric with Mice',
@@ -506,7 +568,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B37/S1234',
         born: [3, 7],
         survive: [1, 2, 3, 4],
-        colors: ['rgb(0, 0, 0)', 'rgb(255, 140, 0)']
+        aliveColor: 'rgb(255, 140, 0)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     MAZE_WITH_MICE: GameOfLifeRule.new({
         name: 'Maze with Mice',
@@ -514,7 +577,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B37/S12345',
         born: [3, 7],
         survive: [1, 2, 3, 4, 5],
-        colors: ['rgb(0, 0, 0)', 'rgb(255, 69, 0)']
+        aliveColor: 'rgb(255, 69, 0)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     MORLEY: GameOfLifeRule.new({
         name: 'Morley',
@@ -522,7 +586,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B368/S245',
         born: [3, 6, 8],
         survive: [2, 4, 5],
-        colors: ['rgb(0, 0, 0)', 'rgb(0, 206, 209)']
+        aliveColor: 'rgb(0, 206, 209)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     NEON_BLOBS: GameOfLifeRule.new({
         name: 'Neon Blobs',
@@ -530,7 +595,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B08/S4',
         born: [0, 8],
         survive: [4],
-        colors: ['rgb(0, 0, 0)', 'rgb(0, 255, 0)']
+        aliveColor: 'rgb(0, 255, 0)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     NEVER_HAPPY: GameOfLifeRule.new({
         name: 'Never happy',
@@ -538,7 +604,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B345/S0456',
         born: [3, 4, 5],
         survive: [0, 4, 5, 6],
-        colors: ['rgb(0, 0, 0)', 'rgb(255, 105, 180)']
+        aliveColor: 'rgb(255, 105, 180)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     OILS: GameOfLifeRule.new({
         name: 'Oils',
@@ -546,7 +613,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B014/S2',
         born: [0, 1, 4],
         survive: [2],
-        colors: ['rgb(0, 0, 0)', 'rgb(47, 79, 79)']
+        aliveColor: 'rgb(47, 79, 79)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     OSCILLATORS_RULE: GameOfLifeRule.new({
         name: 'Oscillators Rule',
@@ -554,7 +622,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B45/S1235',
         born: [4, 5],
         survive: [1, 2, 3, 5],
-        colors: ['rgb(0, 0, 0)', 'rgb(123, 104, 238)']
+        aliveColor: 'rgb(123, 104, 238)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     PEDESTRIAN_FLOCK: GameOfLifeRule.new({
         name: 'Pedestrian Flock',
@@ -562,7 +631,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B38/S12',
         born: [3, 8],
         survive: [1, 2],
-        colors: ['rgb(0, 0, 0)', 'rgb(60, 179, 113)']
+        aliveColor: 'rgb(60, 179, 113)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     PEDESTRIAN_LIFE: GameOfLifeRule.new({
         name: 'Pedestrian Life',
@@ -570,7 +640,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B38/S23',
         born: [3, 8],
         survive: [2, 3],
-        colors: ['rgb(0, 0, 0)', 'rgb(46, 139, 87)']
+        aliveColor: 'rgb(46, 139, 87)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     PEDESTRIAN_LIFE_WITHOUT_DEATH: GameOfLifeRule.new({
         name: 'Pedestrian Life without Death',
@@ -578,7 +649,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B38/S012345678',
         born: [3, 8],
         survive: [0, 1, 2, 3, 4, 5, 6, 7, 8],
-        colors: ['rgb(0, 0, 0)', 'rgb(143, 188, 143)']
+        aliveColor: 'rgb(143, 188, 143)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     PLOW_WORLD: GameOfLifeRule.new({
         name: 'Plow World',
@@ -586,7 +658,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B378/S012345678',
         born: [3, 7, 8],
         survive: [0, 1, 2, 3, 4, 5, 6, 7, 8],
-        colors: ['rgb(0, 0, 0)', 'rgb(205, 133, 63)']
+        aliveColor: 'rgb(205, 133, 63)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     PSEUDO_LIFE: GameOfLifeRule.new({
         name: 'Pseudo Life',
@@ -594,7 +667,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B357/S238',
         born: [3, 5, 7],
         survive: [2, 3, 8],
-        colors: ['rgb(0, 0, 0)', 'rgb(0, 206, 209)']
+        aliveColor: 'rgb(0, 206, 209)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     REPLICATOR: GameOfLifeRule.new({
         name: 'Replicator',
@@ -602,7 +676,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B1357/S1357',
         born: [1, 3, 5, 7],
         survive: [1, 3, 5, 7],
-        colors: ['rgb(0, 0, 0)', 'rgb(255, 0, 255)']
+        aliveColor: 'rgb(255, 0, 255)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     RINGS_N_SLUGS: GameOfLifeRule.new({
         name: "Rings 'n' Slugs",
@@ -610,7 +685,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B56/S14568',
         born: [5, 6],
         survive: [1, 4, 5, 6, 8],
-        colors: ['rgb(0, 0, 0)', 'rgb(106, 90, 205)']
+        aliveColor: 'rgb(106, 90, 205)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     SEEDS: GameOfLifeRule.new({
         name: 'Seeds',
@@ -618,7 +694,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B2/S',
         born: [2],
         survive: [],
-        colors: ['rgb(0, 0, 0)', 'rgb(255, 69, 0)']
+        aliveColor: 'rgb(255, 69, 0)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     SERVIETTES: GameOfLifeRule.new({
         name: 'Serviettes',
@@ -626,7 +703,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B234/S',
         born: [2, 3, 4],
         survive: [],
-        colors: ['rgb(0, 0, 0)', 'rgb(219, 112, 147)']
+        aliveColor: 'rgb(219, 112, 147)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     SHOOTS_AND_ROOTS: GameOfLifeRule.new({
         name: 'Shoots and Roots',
@@ -634,7 +712,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B3/S245678',
         born: [3],
         survive: [2, 4, 5, 6, 7, 8],
-        colors: ['rgb(0, 0, 0)', 'rgb(85, 107, 47)']
+        aliveColor: 'rgb(85, 107, 47)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     SLOW_BLOB: GameOfLifeRule.new({
         name: 'Slow Blob',
@@ -642,7 +721,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B367/S125678',
         born: [3, 6, 7],
         survive: [1, 2, 5, 6, 7, 8],
-        colors: ['rgb(0, 0, 0)', 'rgb(72, 61, 139)']
+        aliveColor: 'rgb(72, 61, 139)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     SNAKESKIN: GameOfLifeRule.new({
         name: 'Snakeskin',
@@ -650,7 +730,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B1/S134567',
         born: [1],
         survive: [1, 3, 4, 5, 6, 7],
-        colors: ['rgb(0, 0, 0)', 'rgb(189, 183, 107)']
+        aliveColor: 'rgb(189, 183, 107)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     SNOW_LIFE: GameOfLifeRule.new({
         name: 'SnowLife',
@@ -658,7 +739,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B3/S1237',
         born: [3],
         survive: [1, 2, 3, 7],
-        colors: ['rgb(0, 0, 0)', 'rgb(240, 248, 255)']
+        aliveColor: 'rgb(240, 248, 255)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     SOLID_ISLANDS: GameOfLifeRule.new({
         name: 'Solid islands grow amongst static',
@@ -666,7 +748,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B12678/S15678',
         born: [1, 2, 6, 7, 8],
         survive: [1, 5, 6, 7, 8],
-        colors: ['rgb(0, 0, 0)', 'rgb(112, 128, 144)']
+        aliveColor: 'rgb(112, 128, 144)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     SPIRAL_AND_POLYGONAL: GameOfLifeRule.new({
         name: 'Spiral and polygonal growth',
@@ -674,7 +757,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B34568/S15678',
         born: [3, 4, 5, 6, 8],
         survive: [1, 5, 6, 7, 8],
-        colors: ['rgb(0, 0, 0)', 'rgb(199, 21, 133)']
+        aliveColor: 'rgb(199, 21, 133)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     SQRT_REPLICATOR: GameOfLifeRule.new({
         name: 'sqrt replicator rule',
@@ -682,7 +766,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B36/S245',
         born: [3, 6],
         survive: [2, 4, 5],
-        colors: ['rgb(0, 0, 0)', 'rgb(255, 105, 180)']
+        aliveColor: 'rgb(255, 105, 180)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     STAINS: GameOfLifeRule.new({
         name: 'Stains',
@@ -690,7 +775,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B3678/S235678',
         born: [3, 6, 7, 8],
         survive: [2, 3, 5, 6, 7, 8],
-        colors: ['rgb(0, 0, 0)', 'rgb(139, 69, 19)']
+        aliveColor: 'rgb(139, 69, 19)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     STAR_TREK: GameOfLifeRule.new({
         name: 'Star Trek',
@@ -698,7 +784,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B3/S0248',
         born: [3],
         survive: [0, 2, 4, 8],
-        colors: ['rgb(0, 0, 0)', 'rgb(0, 191, 255)']
+        aliveColor: 'rgb(0, 191, 255)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     TWO_X_TWO: GameOfLifeRule.new({
         name: '2×2',
@@ -706,7 +793,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B36/S125',
         born: [3, 6],
         survive: [1, 2, 5],
-        colors: ['rgb(0, 0, 0)', 'rgb(50, 205, 50)']
+        aliveColor: 'rgb(50, 205, 50)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     TWO_X_TWO_2: GameOfLifeRule.new({
         name: '2×2 2',
@@ -714,7 +802,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B3678/S1258',
         born: [3, 6, 7, 8],
         survive: [1, 2, 5, 8],
-        colors: ['rgb(0, 0, 0)', 'rgb(34, 139, 34)']
+        aliveColor: 'rgb(34, 139, 34)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     VIRUS: GameOfLifeRule.new({
         name: 'Virus',
@@ -722,7 +811,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B36/S235',
         born: [3, 6],
         survive: [2, 3, 5],
-        colors: ['rgb(0, 0, 0)', 'rgb(255, 0, 0)']
+        aliveColor: 'rgb(255, 0, 0)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     VOTE: GameOfLifeRule.new({
         name: 'Vote',
@@ -730,7 +820,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B5678/S45678',
         born: [5, 6, 7, 8],
         survive: [4, 5, 6, 7, 8],
-        colors: ['rgb(0, 0, 0)', 'rgb(128, 128, 128)']
+        aliveColor: 'rgb(128, 128, 128)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     VOTE_4_5: GameOfLifeRule.new({
         name: 'Vote 4/5',
@@ -738,7 +829,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B4678/S35678',
         born: [4, 6, 7, 8],
         survive: [3, 5, 6, 7, 8],
-        colors: ['rgb(0, 0, 0)', 'rgb(169, 169, 169)']
+        aliveColor: 'rgb(169, 169, 169)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     WALLED_CITIES: GameOfLifeRule.new({
         name: 'Walled Cities',
@@ -746,7 +838,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B45678/S2345',
         born: [4, 5, 6, 7, 8],
         survive: [2, 3, 4, 5],
-        colors: ['rgb(0, 0, 0)', 'rgb(255, 215, 0)']
+        aliveColor: 'rgb(255, 215, 0)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     WICKSTRETCHER_AND_PARASITES: GameOfLifeRule.new({
         name: 'Wickstretcher And The Parasites',
@@ -754,7 +847,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B01356/S012345',
         born: [0, 1, 3, 5, 6],
         survive: [0, 1, 2, 3, 4, 5],
-        colors: ['rgb(0, 0, 0)', 'rgb(255, 140, 0)']
+        aliveColor: 'rgb(255, 140, 0)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     RULE_B01245_S01245: GameOfLifeRule.new({
         name: 'B01245/S01245',
@@ -762,7 +856,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B01245/S01245',
         born: [0, 1, 2, 4, 5],
         survive: [0, 1, 2, 4, 5],
-        colors: ['rgb(0, 0, 0)', 'rgb(0, 255, 255)']
+        aliveColor: 'rgb(0, 255, 255)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     RULE_B017_S01: GameOfLifeRule.new({
         name: 'B017/S01',
@@ -770,7 +865,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B017/S01',
         born: [0, 1, 7],
         survive: [0, 1],
-        colors: ['rgb(0, 0, 0)', 'rgb(238, 130, 238)']
+        aliveColor: 'rgb(238, 130, 238)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     RULE_B026_S1: GameOfLifeRule.new({
         name: 'B026/S1',
@@ -778,7 +874,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B026/S1',
         born: [0, 2, 6],
         survive: [1],
-        colors: ['rgb(0, 0, 0)', 'rgb(255, 20, 147)']
+        aliveColor: 'rgb(255, 20, 147)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     RULE_B2_S13: GameOfLifeRule.new({
         name: 'B2/S13',
@@ -786,7 +883,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B2/S13',
         born: [2],
         survive: [1, 3],
-        colors: ['rgb(0, 0, 0)', 'rgb(50, 205, 50)']
+        aliveColor: 'rgb(50, 205, 50)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     RULE_B2_S2345: GameOfLifeRule.new({
         name: 'B2/S2345',
@@ -794,7 +892,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B2/S2345',
         born: [2],
         survive: [2, 3, 4, 5],
-        colors: ['rgb(0, 0, 0)', 'rgb(255, 165, 0)']
+        aliveColor: 'rgb(255, 165, 0)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     RULE_B2_S23456: GameOfLifeRule.new({
         name: 'B2/S23456',
@@ -802,7 +901,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B2/S23456',
         born: [2],
         survive: [2, 3, 4, 5, 6],
-        colors: ['rgb(0, 0, 0)', 'rgb(255, 140, 0)']
+        aliveColor: 'rgb(255, 140, 0)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     RULE_B2_S2345678: GameOfLifeRule.new({
         name: 'B2/S2345678',
@@ -810,7 +910,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B2/S2345678',
         born: [2],
         survive: [2, 3, 4, 5, 6, 7, 8],
-        colors: ['rgb(0, 0, 0)', 'rgb(255, 69, 0)']
+        aliveColor: 'rgb(255, 69, 0)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     RULE_B25_S4: GameOfLifeRule.new({
         name: 'B25/S4',
@@ -818,7 +919,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B25/S4',
         born: [2, 5],
         survive: [4],
-        colors: ['rgb(0, 0, 0)', 'rgb(148, 0, 211)']
+        aliveColor: 'rgb(148, 0, 211)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     RULE_B3_S135: GameOfLifeRule.new({
         name: 'B3/S135',
@@ -826,7 +928,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B3/S135',
         born: [3],
         survive: [1, 3, 5],
-        colors: ['rgb(0, 0, 0)', 'rgb(0, 255, 127)']
+        aliveColor: 'rgb(0, 255, 127)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     RULE_B3_S2: GameOfLifeRule.new({
         name: 'B3/S2',
@@ -834,7 +937,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B3/S2',
         born: [3],
         survive: [2],
-        colors: ['rgb(0, 0, 0)', 'rgb(0, 206, 209)']
+        aliveColor: 'rgb(0, 206, 209)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     RULE_B3_S2378: GameOfLifeRule.new({
         name: 'B3/S2378',
@@ -842,7 +946,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B3/S2378',
         born: [3],
         survive: [2, 3, 7, 8],
-        colors: ['rgb(0, 0, 0)', 'rgb(100, 149, 237)']
+        aliveColor: 'rgb(100, 149, 237)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     RULE_B356_S23: GameOfLifeRule.new({
         name: 'B356/S23',
@@ -850,7 +955,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B356/S23',
         born: [3, 5, 6],
         survive: [2, 3],
-        colors: ['rgb(0, 0, 0)', 'rgb(220, 20, 60)']
+        aliveColor: 'rgb(220, 20, 60)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     RULE_B3678_S23: GameOfLifeRule.new({
         name: 'B3678/S23',
@@ -858,7 +964,8 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B3678/S23',
         born: [3, 6, 7, 8],
         survive: [2, 3],
-        colors: ['rgb(0, 0, 0)', 'rgb(255, 127, 80)']
+        aliveColor: 'rgb(255, 127, 80)',
+        deadColor: 'rgb(0, 0, 0)'
     }),
     RULE_B368_S12578: GameOfLifeRule.new({
         name: 'B368/S12578',
@@ -866,6 +973,7 @@ export const GameOfLifeRegistry = Object.freeze({
         notation: 'B368/S12578',
         born: [3, 6, 8],
         survive: [1, 2, 5, 7, 8],
-        colors: ['rgb(0, 0, 0)', 'rgb(0, 255, 255)']
+        aliveColor: 'rgb(0, 255, 255)',
+        deadColor: 'rgb(0, 0, 0)'
     })
 })

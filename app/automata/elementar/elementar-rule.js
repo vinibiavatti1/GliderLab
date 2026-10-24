@@ -2,9 +2,6 @@ export class ElementarRule {
     /** @type {number} */
     #number
 
-    /** @type {string} */
-    #binary
-
     /** @type {Map<string, number>} */
     #map
 
@@ -28,7 +25,6 @@ export class ElementarRule {
 
     #generateMap() {
         const byte = this.#number.toString(2).padStart(8, '0')
-        this.#binary = byte
         this.#map = new Map()
         this.#map.set('000', byte[7] === '1' ? 1 : 0)
         this.#map.set('001', byte[6] === '1' ? 1 : 0)

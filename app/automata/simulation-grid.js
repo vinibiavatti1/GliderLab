@@ -128,6 +128,8 @@ export class SimulationGrid {
     }
 
     /**
+     * @param {number} rows
+     * @param {number} cols
      * @param {number[][]} dataSnapshot 
      */
     restoreSnapshot(rows, cols, dataSnapshot) {
@@ -144,6 +146,7 @@ export class SimulationGrid {
 
     restoreInitialData() {
         this.#data = structuredClone(this.#initialData)
+        this.#buffer = structuredClone(this.#data)
     }
 
     #recreateData() {

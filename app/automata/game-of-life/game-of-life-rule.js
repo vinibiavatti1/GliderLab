@@ -2,6 +2,8 @@ export class GameOfLifeRule {
     #name = ''
     #description = ''
     #notation = ''
+    #aliveColor = ''
+    #deadColor = ''
 
     /** @type {number[]} */
     #survive = []
@@ -9,27 +11,27 @@ export class GameOfLifeRule {
     /** @type {number[]} */
     #born = []
 
-    /** @type {string[]} */
-    #colors = []
-
     /**
      * @param {string} name 
      * @param {string} description 
      * @param {string} notation 
      * @param {number[]} born 
      * @param {number[]} survive 
+     * @param {string}
+     * @param {string}
      */
-    constructor(name, description, notation, born, survive, colors = []) {
+    constructor(name, description, notation, born, survive, aliveColor, deadColor) {
         this.#name = name
         this.#description = description
         this.#notation = notation
         this.#born = born
         this.#survive = survive
-        this.#colors = colors
+        this.#aliveColor = aliveColor
+        this.#deadColor = deadColor
     }
 
-    static new({ name, description, notation, born, survive, colors = [] }) {
-        return new GameOfLifeRule(name, description, notation, born, survive, colors)
+    static new({ name, description, notation, born, survive, aliveColor, deadColor }) {
+        return new GameOfLifeRule(name, description, notation, born, survive, aliveColor, deadColor)
     }
 
     get name() {
@@ -52,7 +54,11 @@ export class GameOfLifeRule {
         return this.#born
     }
 
-    get colors() {
-        return this.#colors
+    get aliveColor() {
+        return this.#aliveColor
+    }
+
+    get deadColor() {
+        return this.#deadColor
     }
 }

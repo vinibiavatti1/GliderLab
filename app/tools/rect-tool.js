@@ -51,6 +51,11 @@ export class RectTool extends Tool {
      */
     onMouseReleased(row, col) {
         this.#mousePressed = false
+        if (this.#mouseSrcRow === null || this.#mouseSrcCol === null) {
+            return
+        }
+        this.#mouseDstRow = row
+        this.#mouseDstCol = col
         this.app.saveSnapshot()
         const cells = this.#getRectCells(this.#mouseSrcRow, this.#mouseSrcCol, this.#mouseDstRow, this.#mouseDstCol);
         for (const [col, row] of cells) {
