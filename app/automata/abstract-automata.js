@@ -1,194 +1,65 @@
-import { AppError } from '../app-error.js'
+import { AppError } from "../app-error.js";
+import { SimulationGrid } from "./simulation-grid.js";
 
+/** @interface */
 export class AbstractAutomata {
-    static DEFAULT_COLOR = 'rgb(255, 255, 255)'
-
-    /** @type {string} */
-    #name
-
-    /** @type {number[][]} */
-    #data = []
-
-    /** @type {number[][]} */
-    #buffer = []
-
-    /** @type {number[][]} */
-    #initialData = []
-
-    /** @type {string[]} */
-    #colors = []
-
-    #generationCount = 0n
-    #rows = 0
-    #cols = 0
-
     /**
-     * @param {string} name
-     * @param {number} rows 
-     * @param {number} cols 
-     * @param {string[]} colors 
+     * @abstract
      */
-    constructor(name, rows, cols, colors) {
-        if (rows < 0 || cols < 0) {
-            throw new AppError(`Invalid rows/cols: ${rows}/${cols}`)
-        }
-        this.#name = name
-        this.#rows = rows
-        this.#cols = cols
-        this.#colors = colors
-        this.#recreateData()
-    }
-
-    /** @abstract */
-    processGeneration() {
+    nextGeneration() {
         throw new AppError('Not implemented')
     }
 
-    nextGeneration() {
-        if (this.#generationCount === 0n) {
-            this.#storeInitialData()
-        }
-        this.processGeneration()
-        this.#generationCount++
-    }
-
+    /**
+     * @abstract
+     */
     resetGeneration() {
-        this.#generationCount = 0n
-        this.#restoreInitialData()
-    }
-
-    flush() {
-        this.#data = structuredClone(this.#buffer)
+        throw new AppError('Not implemented')
     }
 
     /**
+     * @abstract
      * @param {number} row 
      * @param {number} col 
-     * @param {number} value 
-     * @returns {boolean}
+     * @param {number} value
      */
     setValue(row, col, value) {
-        if (this.#areCoordsInvalid(row, col)) {
-            return false
-        }
-        this.#data[row][col] = value
-        return true
+        throw new AppError('Not implemented')
     }
 
     /**
+     * @abstract
      * @param {number} row 
      * @param {number} col 
-     * @returns {number?}
      */
     getValue(row, col) {
-        if (this.#areCoordsInvalid(row, col)) {
-            return null
-        }
-        return this.#data[row][col]
+        throw new AppError('Not implemented')
     }
 
     /**
-     * @param {number} row 
-     * @param {number} col 
-     * @returns {number?}
-     */
-    getValueWrapped(row, col) {
-        if (row < 0) {
-            row = this.#rows + row
-        }
-        if (row >= this.#rows) {
-            row = row - this.#rows
-        }
-        if (col < 0) {
-            col = this.#cols + col
-        }
-        if (col >= this.#cols) {
-            col = col - this.#cols
-        }
-        return this.#data[row][col]
-    }
-
-    /**
+     * @abstract
      * @param {number} row 
      * @param {number} col 
      * @returns {string}
      */
-    getColor(row, col) {
-        const value = this.#data[row][col]
-        if (this.#colors.length >= value) {
-            return this.#colors[value]
-        }
-        return AbstractAutomata.DEFAULT_COLOR
-    }
-
-    clear() {
-        for (let row = 0; row < this.#rows; row++) {
-            for (let col = 0; col < this.#cols; col++) {
-                this.#data[row][col] = 0
-                this.#buffer[row][col] = 0
-            }
-        }
+    getValueColor(row, col) {
+        throw new AppError('Not implemented')
     }
 
     /**
-     * @param {number} rows 
-     * @param {number} cols 
+     * @abstract
      */
-    resize(rows, cols) {
-        if (rows < 0 || cols < 0) {
-            throw new AppError(`Invalid rows/cols: ${rows}/${cols}`)
-        }
-        const newData = []
-        for (let row = 0; row < rows; row++) {
-            const line = []
-            for (let col = 0; col < cols; col++) {
-                if (row < this.#rows && col < this.#cols) {
-                    line.push(this.#data[row][col])
-                } else {
-                    line.push(0)
-                }
-            }
-            newData.push(line)
-        }
-        this.#rows = rows
-        this.#cols = cols
-        this.#data = newData
-        this.#buffer = structuredClone(this.#data)
-        this.#initialData = structuredClone(this.#data)
-    }
-
-    isGenerationZero() {
-        return generationCount === 0n
+    clear() {
+        throw new AppError('Not implemented')
     }
 
     /**
+     * @abstract
      * @param {number} row 
      * @param {number} col 
-     * @param {number} state 
-     * @returns {number}
      */
-    countSurroundingCells(row, col, state) {
-        let count = 0
-        count += this.getValueWrapped(this, row - 1, col - 1) === state ? 1 : 0
-        count += this.getValueWrapped(this, row - 1, col + 0) === state ? 1 : 0
-        count += this.getValueWrapped(this, row - 1, col + 1) === state ? 1 : 0
-        count += this.getValueWrapped(this, row + 0, col - 1) === state ? 1 : 0
-        count += this.getValueWrapped(this, row + 0, col + 1) === state ? 1 : 0
-        count += this.getValueWrapped(this, row + 1, col - 1) === state ? 1 : 0
-        count += this.getValueWrapped(this, row + 1, col + 0) === state ? 1 : 0
-        count += this.getValueWrapped(this, row + 1, col + 1) === state ? 1 : 0
-        return count
-    }
-
-    /**
-     * @param {number[][]} dataSnapshot 
-     */
-    restoreSnapshot(rows, cols, dataSnapshot) {
-        this.#data = structuredClone(dataSnapshot)
-        this.#rows = rows
-        this.#cols = cols
-        this.#buffer = structuredClone(this.#data)
-        this.#initialData = structuredClone(this.#data)
+    resize(rows, cols) {
+        throw new AppError('Not implemented')
     }
 
     /**
@@ -196,70 +67,38 @@ export class AbstractAutomata {
      * @param {number} tileSize 
      */
     render(context, tileSize) {
-        for (let row = 0; row < this.#rows; row++) {
-            for (let col = 0; col < this.#cols; col++) {
-                const color = this.#colors[this.#data[row][col]]
-                context.fillStyle = color
-                context.fillRect(col * tileSize, row * tileSize, tileSize, tileSize)
-            }
-        }
-    }
-
-    #recreateData() {
-        this.#data.length = 0
-        for (let row = 0; row < this.#rows; row++) {
-            const line = []
-            for (let col = 0; col < this.#cols; col++) {
-                line.push(0)
-            }
-            this.#data.push(line)
-        }
-        this.#buffer = structuredClone(this.#data)
-        this.#initialData = structuredClone(this.#data)
+        throw new AppError('Not implemented')
     }
 
     /**
-     * @param {number} row 
-     * @param {number} col 
-     * @returns {boolean}
+     * @abstract
+     * @returns {SimulationGrid}
      */
-    #areCoordsInvalid(row, col) {
-        return row < 0 || row >= this.#rows || col < 0 || col >= this.#cols
+    get simulationGrid() {
+        throw new AppError('Not implemented')
     }
 
-    #storeInitialData() {
-        this.#initialData = structuredClone(this.#data)
-    }
-
-    #restoreInitialData() {
-        this.#data = structuredClone(this.#initialData)
-    }
-
+    /**
+     * @abstract
+     * @returns {string}
+     */
     get name() {
-        return this.#name
+        throw new AppError('Not implemented')
     }
 
-    get rows() {
-        return this.#rows
-    }
-
-    get cols() {
-        return this.#cols
-    }
-
-    get buffer() {
-        return this.#buffer
-    }
-
-    get data() {
-        return this.#data
-    }
-
+    /**
+     * @abstract
+     * @returns {bigint}
+     */
     get generationCount() {
-        return this.#generationCount
+        throw new AppError('Not implemented')
     }
 
-    get colors() {
-        return this.#colors
+    /**
+     * @abstract
+     * @returns {number?}
+     */
+    get populationCount() {
+        throw new AppError('Not implemented')
     }
 }

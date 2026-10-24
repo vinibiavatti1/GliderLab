@@ -102,7 +102,7 @@ export class App {
         this.#automata = automata
         this.#automata.resize(this.#rows, this.#cols)
         this.#buttons.automataBtn.innerHTML = this.#automata.name
-        this.#buttons.automataBtn.style.color = automata.getValueColor(1)
+        this.#buttons.automataBtn.style.color = this.#automata.getValueColor(1)
     }
 
     /**
@@ -194,7 +194,7 @@ export class App {
         }
         this.#redoSnapshots.push(structuredClone(this.#automata.data))
         this.enableElement(this.#buttons.redoBtn)
-        this.#automata.restoreSnapshot(this.#rows, this.#cols, previousData)
+        this.#automata.simulationGrid.restoreSnapshot(this.#rows, this.#cols, previousData)
     }
 
     #restoreLastRedoSnapshot() {
@@ -215,7 +215,7 @@ export class App {
         }
         this.#undoSnapshots.push(structuredClone(this.#automata.data))
         this.enableElement(this.#buttons.undoBtn)
-        this.#automata.restoreSnapshot(this.#rows, this.#cols, subsequentData)
+        this.#automata.simulationGrid.restoreSnapshot(this.#rows, this.#cols, subsequentData)
     }
 
     #setupListeners() {

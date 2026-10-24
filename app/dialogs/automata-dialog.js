@@ -227,7 +227,6 @@ export class AutomataDialog {
     #initElementarPreview() {
         const canvas = document.getElementById('app-elementar-preview')
         const context = canvas.getContext('2d')
-        context.fillRe
         const rule = new ElementarRule(30)
         const automata = new Elementar(9, 9, rule)
         automata.setValue(0, 4, Elementar.ALIVE)
@@ -243,7 +242,6 @@ export class AutomataDialog {
     #initGameOfLifePreview() {
         const canvas = document.getElementById('app-gol-preview')
         const context = canvas.getContext('2d')
-        context.fillRe
         const automata = new GameOfLife(9, 9, GameOfLifeRegistry.GOL)
         automata.setValue(0, 1, GameOfLife.ALIVE)
         automata.setValue(1, 2, GameOfLife.ALIVE)

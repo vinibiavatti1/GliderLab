@@ -1,7 +1,12 @@
 import { App } from "./app.js"
-import { GameOfLife } from "./automata/game-of-life/game-of-life.js"
 
 export class Display {
+    static GRID_STRIP = 25
+    static GRID_STRIP_COLOR = 'rgba(255, 255, 255, .4)'
+    static GRID_COLOR = 'rgba(255, 255, 255, .2)'
+    static CURSOR_COLOR = 'rgba(255, 255, 255, .5)'
+    static RENDER_DELAY = 60
+
     /** @type {App} */
     #app
 
@@ -29,11 +34,6 @@ export class Display {
     /** @type {number?} */
     #currentMouseCol = null
 
-    #renderDelay = 60
-    #gridStep = 25
-    #gridColor = 'rgba(255, 255, 255, .2)'
-    #gridStepColor = 'rgba(255, 255, 255, .4)'
-    #cursorColor = 'rgba(255, 255, 255, .5)'
     #statusLabel = document.getElementById('app-status')
     #mouseLeave = true
 
@@ -63,7 +63,7 @@ export class Display {
     #startRenderInterval() {
         setInterval(() => {
             this.#render()
-        }, this.#renderDelay)
+        }, Display.RENDER_DELAY)
     }
 
     #render() {
@@ -73,7 +73,7 @@ export class Display {
         this.#renderStatus()
         this.#renderCursor()
         if (this.#app.currentTool) {
-            this.#displayBufferContext.fillStyle = this.#cursorColor
+            this.#displayBufferContext.fillStyle = Display.CURSOR_COLOR
             this.#app.currentTool.renderPreview(this.#displayBufferContext)
         }
         this.#flush()
@@ -89,14 +89,14 @@ export class Display {
 
     #renderGrid() {
         for (let col = 0; col <= this.#width; col += this.#app.tileSize) {
-            this.#displayBufferContext.strokeStyle = col % this.#gridStep == 0 ? this.#gridStepColor : this.#gridColor
+            this.#displayBufferContext.strokeStyle = col % Display.GRID_STRIP == 0 ? Display.GRID_STRIP_COLOR : Display.GRID_COLOR
             this.#displayBufferContext.beginPath()
             this.#displayBufferContext.moveTo(col, 0)
             this.#displayBufferContext.lineTo(col, this.#height)
             this.#displayBufferContext.stroke()
         }
         for (let row = 0; row <= this.#height; row += this.#app.tileSize) {
-            this.#displayBufferContext.strokeStyle = row % this.#gridStep == 0 ? this.#gridStepColor : this.#gridColor
+            this.#displayBufferContext.strokeStyle = row % Display.GRID_STRIP == 0 ? Display.GRID_STRIP_COLOR : Display.GRID_COLOR
             this.#displayBufferContext.beginPath()
             this.#displayBufferContext.moveTo(0, row)
             this.#displayBufferContext.lineTo(this.#width, row)
@@ -108,18 +108,17 @@ export class Display {
         if (!this.#app.automata) {
             return
         }
-        const data = this.#app.automata.data
-        for (let row = 0; row < this.#app.rows; row++) {
+        this.#app.automata.render(this.#displayBufferContext, this.#app.tileSize)
+        /*for (let row = 0; row < this.#app.rows; row++) {
             for (let col = 0; col < this.#app.cols; col++) {
-                const value = data[row][col]
-                const color = this.#app.automata.getValueColor(value)
+                const color = this.#app.automata.getValueColor(row, col)
                 this.#displayBufferContext.fillStyle = color
                 this.#displayBufferContext.fillRect(
                     col * this.#app.tileSize, row * this.#app.tileSize,
                     this.#app.tileSize, this.#app.tileSize
                 )
             }
-        }
+        }*/
     }
 
     #renderCursor() {
@@ -130,7 +129,7 @@ export class Display {
             return
         }
 
-        this.#displayBufferContext.fillStyle = this.#cursorColor
+        this.#displayBufferContext.fillStyle = Display.CURSOR_COLOR
         this.#displayBufferContext.fillRect(this.#currentMouseCol, this.#currentMouseRow, this.#app.tileSize, this.#app.tileSize)
     }
 
@@ -139,8 +138,9 @@ export class Display {
         text += `Automata: ${this.#app.automata.name} | `
         text += `State: ${this.#app.currentStateName} | `
         text += `Generation: ${this.#app.automata.generationCount}`
-        if (this.#app.automata instanceof GameOfLife) {
-            text += ` | Population: ${this.#app.automata.population}`
+        const populationCount = this.#app.automata.populationCount
+        if (populationCount !== null) {
+            text += ` | Population: ${populationCount}`
         }
         this.#statusLabel.innerHTML = text
     }
