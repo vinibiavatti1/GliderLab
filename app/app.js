@@ -38,6 +38,7 @@ export class App {
 
     #buttons = {
         automataBtn: document.getElementById('app-btn-automata'),
+        newBtn: document.getElementById('app-btn-new'),
         openBtn: document.getElementById('app-btn-open'),
         saveBtn: document.getElementById('app-btn-save'),
         playBtn: document.getElementById('app-btn-play'),
@@ -234,6 +235,7 @@ export class App {
         this.#buttons.gridBtn.addEventListener('click', () => this.#handleBtnGrid())
         this.#buttons.speedDown.addEventListener('click', () => this.#handleSpeedDown())
         this.#buttons.speedUp.addEventListener('click', () => this.#handleSpeedUp())
+        this.#buttons.newBtn.addEventListener('click', () => this.#handleNewBtn())
 
         this.#toolButtons.pencilBtn.addEventListener('click', evt => this.#handleToolBtn(evt, this.#tools.pencil))
         this.#toolButtons.lineBtn.addEventListener('click', evt => this.#handleToolBtn(evt, this.#tools.line))
@@ -436,6 +438,13 @@ export class App {
         if (this.#currentState === App.STATE_RUNNING) {
             this.stopAutoGeneration()
             this.startAutoGeneration()
+        }
+    }
+
+    #handleNewBtn() {
+        const ok = window.confirm('Are you sure you want to clear the grid? All current progress will be lost.')
+        if (ok) {
+            this.#automata.clear()
         }
     }
 
