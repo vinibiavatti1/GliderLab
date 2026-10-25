@@ -21,11 +21,6 @@ export class App {
     static STATE_STEPPING = 3
     static UNDO_SNAPSHOTS_MAX_SIZE = 20
 
-    #speeds = [240, 120, 60, 30, 1]
-    #speedLabels = ['1x', '2x', '4x', '8x', '16x']
-    #selectedSpeed = 2
-    #speedDisplay = document.getElementById('app-speed-display')
-
     #tools = {
         pencil: new PencilTool(this),
         line: new LineTool(this),
@@ -52,6 +47,8 @@ export class App {
         gridBtn: document.getElementById('app-btn-grid-toggle'),
         speedDown: document.getElementById('app-btn-speed-down'),
         speedUp: document.getElementById('app-btn-speed-up'),
+        zoomIn: document.getElementById('app-btn-zoom-in'),
+        zoomOut: document.getElementById('app-btn-zoom-out'),
     }
 
     #toolButtons = {
@@ -96,21 +93,33 @@ export class App {
     /** @type {Tool} */
     #currentTool = this.#tools.pencil
 
+    #speeds = [240, 120, 60, 30, 1]
+    #speedLabels = ['1x', '2x', '4x', '8x', '16x']
+    #selectedSpeed = 2
+    #speedDisplay = document.getElementById('app-speed-display')
+
+    #tileSizes = [3, 5, 10, 20, 40]
+    #zoomLabels = ['1x', '2x', '4x', '8x', '16x']
+    #selectedZoom = 2
+    #zoomDisplay = document.getElementById('app-zoom-display')
+
     #currentState = App.STATE_STOPPED
     #currentCellValue = 1
     #rows = 50
     #cols = 100
-    #tileSize = 10
     #generationDelay = 60
+    #tileSize = 10
 
     /**
      * @param {number} rows 
      * @param {number} cols 
+     * @param {number} tileSize
      * @param {Automata} automata
      */
-    constructor(rows, cols, automata) {
+    constructor(rows, cols, tileSize, automata) {
         this.#rows = rows
         this.#cols = cols
+        this.#tileSize = tileSize
         this.#display = new Display(this)
         this.#automataDialog = new AutomataDialog(this)
         this.#aboutDialog = new AboutDialog(this)
@@ -129,7 +138,7 @@ export class App {
         this.#automata = automata
         this.#rows = this.#automata.simulationGrid.rows
         this.#cols = this.#automata.simulationGrid.cols
-        this.#display.resize(this.#rows, this.#cols)
+        this.#display.resize(this.#rows, this.#cols, this.#tileSize)
         this.#buttons.automataBtn.innerHTML = this.#automata.name
         this.#buttons.automataBtn.style.color = this.#automata.representativeColor ?? 'rgb(255, 255, 255)'
         this.#currentCellValue = this.#automata.defaultValue
@@ -219,7 +228,7 @@ export class App {
         this.#rows = rows
         this.#cols = cols
         this.#automata.resize(this.#rows, this.#cols)
-        this.#display.resize(this.#rows, this.#cols)
+        this.#display.resize(this.#rows, this.#cols, this.#tileSize)
     }
 
     startAutoGeneration() {
@@ -309,6 +318,8 @@ export class App {
         this.#buttons.gridBtn.addEventListener('click', () => this.#handleBtnGrid())
         this.#buttons.speedDown.addEventListener('click', () => this.#handleSpeedDown())
         this.#buttons.speedUp.addEventListener('click', () => this.#handleSpeedUp())
+        this.#buttons.zoomIn.addEventListener('click', () => this.#handleZoomIn())
+        this.#buttons.zoomOut.addEventListener('click', () => this.#handleZoomOut())
         this.#buttons.newBtn.addEventListener('click', () => this.#handleNewBtn())
 
         this.#toolButtons.pencilBtn.addEventListener('click', evt => this.#handleToolBtn(evt, this.#tools.pencil))
@@ -337,7 +348,7 @@ export class App {
         if (previousData.length !== this.#rows || previousData[0].length !== this.#cols) {
             this.#rows = previousData.length
             this.#cols = previousData[0]?.length
-            this.#display.resize(this.#rows, this.#cols)
+            this.#display.resize(this.#rows, this.#cols, this.#tileSize)
         }
         this.#redoSnapshots.push(structuredClone(this.#automata.simulationGrid.data))
         this.enableElement(this.#buttons.redoBtn)
@@ -358,7 +369,7 @@ export class App {
         if (subsequentData.length !== this.#rows || subsequentData[0].length !== this.#cols) {
             this.#rows = subsequentData.length
             this.#cols = subsequentData[0]?.length
-            this.#display.resize(this.#rows, this.#cols)
+            this.#display.resize(this.#rows, this.#cols, this.#tileSize)
         }
         this.#undoSnapshots.push(structuredClone(this.#automata.simulationGrid.data))
         this.enableElement(this.#buttons.undoBtn)
@@ -439,6 +450,28 @@ export class App {
             this.stopAutoGeneration()
             this.startAutoGeneration()
         }
+    }
+
+    #handleZoomOut() {
+        this.#selectedZoom--
+        if (this.#selectedZoom == 0) {
+            this.disableElement(this.#buttons.zoomOut)
+        }
+        this.enableElement(this.#buttons.zoomIn)
+        this.#tileSize = this.#tileSizes[this.#selectedZoom]
+        this.#zoomDisplay.innerHTML = this.#zoomLabels[this.#selectedZoom]
+        this.#display.resize(this.#rows, this.#cols, this.#tileSize)
+    }
+
+    #handleZoomIn() {
+        this.#selectedZoom++
+        if (this.#selectedZoom == this.#tileSizes.length - 1) {
+            this.disableElement(this.#buttons.zoomIn)
+        }
+        this.enableElement(this.#buttons.zoomOut)
+        this.#tileSize = this.#tileSizes[this.#selectedZoom]
+        this.#zoomDisplay.innerHTML = this.#zoomLabels[this.#selectedZoom]
+        this.#display.resize(this.#rows, this.#cols, this.#tileSize)
     }
 
     #handleNewBtn() {

@@ -27,22 +27,22 @@ export class SettingsDialog {
         let rows = parseInt(this.#gridRowsInput.value)
         let cols = parseInt(this.#gridColsInput.value)
         if (!rows) {
-            rows = DEFAULT_ROWS
+            rows = SettingsDialog.DEFAULT_ROWS
         }
         if (!cols) {
-            cols = DEFAULT_COLS
+            cols = SettingsDialog.DEFAULT_COLS
         }
-        if (rows < MIN_SIZE) {
-            rows = MIN_SIZE
+        if (rows < SettingsDialog.MIN_SIZE) {
+            rows = SettingsDialog.MIN_SIZE
         }
-        if (cols < MIN_SIZE) {
-            cols = MIN_SIZE
+        if (cols < SettingsDialog.MIN_SIZE) {
+            cols = SettingsDialog.MIN_SIZE
         }
-        if (rows > MAX_SIZE) {
-            rows = MAX_SIZE
+        if (rows > SettingsDialog.MAX_SIZE) {
+            rows = SettingsDialog.MAX_SIZE
         }
-        if (cols > MAX_SIZE) {
-            cols = MAX_SIZE
+        if (cols > SettingsDialog.MAX_SIZE) {
+            cols = SettingsDialog.MAX_SIZE
         }
         this.#gridRowsInput.value = rows
         this.#gridColsInput.value = cols

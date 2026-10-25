@@ -39,15 +39,18 @@ export class Display {
     #statusLabel = document.getElementById('app-status')
     #mouseLeave = true
     #showGrid = true
+    #tileSize = 10
 
     /**
      * @param {App} app
+     * @param {number} tileSize
      */
-    constructor(app) {
+    constructor(app, tileSize) {
         this.#app = app
+        this.#tileSize = tileSize
         this.#displayContext = this.#display.getContext('2d')
         this.#displayBufferContext = this.#displayBuffer.getContext('2d')
-        this.resize(this.#app.rows, this.#app.cols, this.#app.tileSize)
+        this.resize(this.#app.rows, this.#app.cols, this.#tileSize)
         this.#startRenderInterval()
         this.#setupListeners()
     }
@@ -55,10 +58,12 @@ export class Display {
     /**
      * @param {number} rows 
      * @param {number} cols 
+     * @param {number} tileSize
      */
-    resize(rows, cols) {
-        this.#width = cols * this.#app.tileSize
-        this.#height = rows * this.#app.tileSize
+    resize(rows, cols, tileSize) {
+        this.#tileSize = tileSize
+        this.#width = cols * this.#tileSize
+        this.#height = rows * this.#tileSize
         this.#display.setAttribute('width', this.#width)
         this.#display.setAttribute('height', this.#height)
         this.#displayBuffer.setAttribute('width', this.#width)
@@ -102,14 +107,14 @@ export class Display {
         if (!this.#showGrid) {
             return
         }
-        for (let col = 0; col <= this.#width; col += this.#app.tileSize) {
+        for (let col = 0; col <= this.#width; col += this.#tileSize) {
             this.#displayBufferContext.strokeStyle = col % Display.GRID_STRIP == 0 ? Display.GRID_STRIP_COLOR : Display.GRID_COLOR
             this.#displayBufferContext.beginPath()
             this.#displayBufferContext.moveTo(col, 0)
             this.#displayBufferContext.lineTo(col, this.#height)
             this.#displayBufferContext.stroke()
         }
-        for (let row = 0; row <= this.#height; row += this.#app.tileSize) {
+        for (let row = 0; row <= this.#height; row += this.#tileSize) {
             this.#displayBufferContext.strokeStyle = row % Display.GRID_STRIP == 0 ? Display.GRID_STRIP_COLOR : Display.GRID_COLOR
             this.#displayBufferContext.beginPath()
             this.#displayBufferContext.moveTo(0, row)
@@ -122,7 +127,7 @@ export class Display {
         if (!this.#app.automata) {
             return
         }
-        this.#app.automata.render(this.#displayBufferContext, this.#app.tileSize)
+        this.#app.automata.render(this.#displayBufferContext, this.#tileSize)
     }
 
     #renderCursor() {
@@ -134,7 +139,7 @@ export class Display {
         }
 
         this.#displayBufferContext.fillStyle = Display.CURSOR_COLOR
-        this.#displayBufferContext.fillRect(this.#currentMouseCol, this.#currentMouseRow, this.#app.tileSize, this.#app.tileSize)
+        this.#displayBufferContext.fillRect(this.#currentMouseCol, this.#currentMouseRow, this.#tileSize, this.#tileSize)
     }
 
     #renderStatus() {
@@ -157,7 +162,7 @@ export class Display {
      * @returns {number}
      */
     snapToGrid(pos) {
-        return pos - (pos % this.#app.tileSize)
+        return pos - (pos % this.#tileSize)
     }
 
     /**
