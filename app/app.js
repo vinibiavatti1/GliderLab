@@ -113,7 +113,7 @@ export class App {
         this.#cols = cols
         this.#display = new Display(this)
         this.#automataDialog = new AutomataDialog(this)
-        this.#aboutDialog = new AboutDialog()
+        this.#aboutDialog = new AboutDialog(this)
         this.#settingsDialog = new SettingsDialog(this)
         this.automata = automata
         this.#setupListeners()
@@ -124,7 +124,7 @@ export class App {
      */
     set automata(automata) {
         if (this.#currentState !== App.STATE_STOPPED) {
-            this.#handleStopBtn()
+            this.stop()
         }
         this.#automata = automata
         this.#rows = this.#automata.simulationGrid.rows
@@ -135,6 +135,80 @@ export class App {
         this.#currentCellValue = this.#automata.defaultValue
         this.#clearSnapshots()
         this.#enableToolButtons()
+    }
+
+    play() {
+        if (!this.#automata) {
+            throw new AppError('Automata not set')
+        }
+
+        this.#currentState = App.STATE_RUNNING
+
+        this.#configureWireWorldPlayState()
+        this.startAutoGeneration()
+
+        this.enableElement(this.#buttons.pauseBtn)
+        this.enableElement(this.#buttons.stopBtn)
+        this.enableElement(this.#buttons.stepBtn)
+
+        this.disableElement(this.#buttons.playBtn)
+        this.disableElement(this.#buttons.undoBtn)
+        this.disableElement(this.#buttons.redoBtn)
+    }
+
+    pause() {
+        this.#currentState = App.STATE_PAUSED
+        this.stopAutoGeneration()
+
+        this.enableElement(this.#buttons.playBtn)
+        this.enableElement(this.#buttons.stopBtn)
+        this.enableElement(this.#buttons.stepBtn)
+
+        this.disableElement(this.#buttons.pauseBtn)
+    }
+
+    stop() {
+        this.#currentState = App.STATE_STOPPED
+
+        this.#configureWireWorldStopState()
+        this.stopAutoGeneration()
+        this.resetGeneration()
+
+        this.enableElement(this.#buttons.playBtn)
+        this.enableElement(this.#buttons.stepBtn)
+
+        this.disableElement(this.#buttons.pauseBtn)
+        this.disableElement(this.#buttons.stopBtn)
+
+        if (this.#undoSnapshots.length > 0) {
+            this.enableElement(this.#buttons.undoBtn)
+        }
+        if (this.#redoSnapshots.length > 0) {
+            this.enableElement(this.#buttons.redoBtn)
+        }
+    }
+
+    step() {
+        if (this.#automata instanceof WireWorld) {
+            Object.values(this.#toolButtons).forEach(btn => this.disableElement(btn))
+            this.disableElement(this.#wireWorldButtons.conductorBtn)
+            this.#wireWorldButtons.electronBtn.dispatchEvent(new Event('click', { bubbles: true }))
+        }
+
+        if (this.#currentState === App.STATE_STEPPING) {
+            this.nextGeneration()
+            return
+        }
+
+        this.#currentState = App.STATE_STEPPING
+        this.stopAutoGeneration()
+        this.nextGeneration()
+
+        this.enableElement(this.#buttons.playBtn)
+        this.enableElement(this.#buttons.stopBtn)
+        this.enableElement(this.#buttons.stepBtn)
+
+        this.disableElement(this.#buttons.pauseBtn)
     }
 
     /**
@@ -226,10 +300,10 @@ export class App {
     }
 
     #setupListeners() {
-        this.#buttons.playBtn.addEventListener('click', () => this.#handlePlayBtn())
-        this.#buttons.pauseBtn.addEventListener('click', () => this.#handlePauseBtn())
-        this.#buttons.stopBtn.addEventListener('click', () => this.#handleStopBtn())
-        this.#buttons.stepBtn.addEventListener('click', () => this.#handleStepBtn())
+        this.#buttons.playBtn.addEventListener('click', () => this.play())
+        this.#buttons.pauseBtn.addEventListener('click', () => this.pause())
+        this.#buttons.stopBtn.addEventListener('click', () => this.stop())
+        this.#buttons.stepBtn.addEventListener('click', () => this.step())
         this.#buttons.undoBtn.addEventListener('click', () => this.#handleUndoBtn())
         this.#buttons.redoBtn.addEventListener('click', () => this.#handleRedoBtn())
         this.#buttons.gridBtn.addEventListener('click', () => this.#handleBtnGrid())
@@ -296,80 +370,6 @@ export class App {
         this.#redoSnapshots = []
         this.disableElement(this.#buttons.redoBtn)
         this.disableElement(this.#buttons.undoBtn)
-    }
-
-    #handlePlayBtn() {
-        if (!this.#automata) {
-            throw new AppError('Automata not set')
-        }
-
-        this.#currentState = App.STATE_RUNNING
-
-        this.#configureWireWorldPlayState()
-        this.startAutoGeneration()
-
-        this.enableElement(this.#buttons.pauseBtn)
-        this.enableElement(this.#buttons.stopBtn)
-        this.enableElement(this.#buttons.stepBtn)
-
-        this.disableElement(this.#buttons.playBtn)
-        this.disableElement(this.#buttons.undoBtn)
-        this.disableElement(this.#buttons.redoBtn)
-    }
-
-    #handlePauseBtn() {
-        this.#currentState = App.STATE_PAUSED
-        this.stopAutoGeneration()
-
-        this.enableElement(this.#buttons.playBtn)
-        this.enableElement(this.#buttons.stopBtn)
-        this.enableElement(this.#buttons.stepBtn)
-
-        this.disableElement(this.#buttons.pauseBtn)
-    }
-
-    #handleStopBtn() {
-        this.#currentState = App.STATE_STOPPED
-
-        this.#configureWireWorldStopState()
-        this.stopAutoGeneration()
-        this.resetGeneration()
-
-        this.enableElement(this.#buttons.playBtn)
-        this.enableElement(this.#buttons.stepBtn)
-
-        this.disableElement(this.#buttons.pauseBtn)
-        this.disableElement(this.#buttons.stopBtn)
-
-        if (this.#undoSnapshots.length > 0) {
-            this.enableElement(this.#buttons.undoBtn)
-        }
-        if (this.#redoSnapshots.length > 0) {
-            this.enableElement(this.#buttons.redoBtn)
-        }
-    }
-
-    #handleStepBtn() {
-        if (this.#automata instanceof WireWorld) {
-            Object.values(this.#toolButtons).forEach(btn => this.disableElement(btn))
-            this.disableElement(this.#wireWorldButtons.conductorBtn)
-            this.#wireWorldButtons.electronBtn.dispatchEvent(new Event('click', { bubbles: true }))
-        }
-
-        if (this.#currentState === App.STATE_STEPPING) {
-            this.nextGeneration()
-            return
-        }
-
-        this.#currentState = App.STATE_STEPPING
-        this.stopAutoGeneration()
-        this.nextGeneration()
-
-        this.enableElement(this.#buttons.playBtn)
-        this.enableElement(this.#buttons.stopBtn)
-        this.enableElement(this.#buttons.stepBtn)
-
-        this.disableElement(this.#buttons.pauseBtn)
     }
 
     #handleUndoBtn() {
@@ -444,6 +444,7 @@ export class App {
     #handleNewBtn() {
         const ok = window.confirm('Are you sure you want to clear the grid? All current progress will be lost.')
         if (ok) {
+            this.stop()
             this.#automata.clear()
         }
     }

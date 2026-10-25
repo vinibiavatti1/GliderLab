@@ -2,8 +2,12 @@ import { GameOfLife } from '../automata/game-of-life/game-of-life.js'
 import { GameOfLifeRegistry } from '../automata/game-of-life/game-of-life-registry.js'
 import { GameOfLifeSpaceshipFactory } from '../automata/game-of-life/game-of-life-spaceship-factory.js'
 import { VERSION } from '../../version.js'
+import { App } from '../app.js'
 
 export class AboutDialog {
+    /** @type {App} */
+    #app
+
     #versionLabel = document.getElementById('app-version')
     #aboutBtn = document.getElementById('app-btn-about')
     #startChaosBtn = document.getElementById('easter-egg-btn')
@@ -12,7 +16,8 @@ export class AboutDialog {
     /** @type {GameOfLife} */
     #automata = null
 
-    constructor() {
+    constructor(app) {
+        this.#app = app
         this.#versionLabel.innerHTML = VERSION.toString()
         this.#showWelcome()
         this.#initGameOfLifeDisplay()
@@ -48,6 +53,7 @@ export class AboutDialog {
 
     #handleBtnGo() {
         localStorage.setItem('welcome', 'true')
+        this.#app.play()
     }
 
     #startChaos() {
