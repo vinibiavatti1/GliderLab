@@ -24,12 +24,6 @@ Despite their simple local rules, they can give rise to complex, unpredictable, 
 * **Interactive Tools:** Full drawing support, grid customization, step-by-step controls, and buffer optimization.
 * And much more!
 
-## 🛠️ Tech Stack
-
-* HTML5 & CSS3
-* JavaScript (ES6+)
-* [Bootstrap](https://getbootstrap.com/)
-
 ## 📸 Screenshots
 
 <p align="center">
@@ -44,6 +38,12 @@ Despite their simple local rules, they can give rise to complex, unpredictable, 
     <img src="assets/images/6.png" alt="Glider Lab Screenshot 6" width="45%" style="max-width: 500px;" />
     <img src="assets/images/5.png" alt="Glider Lab Screenshot 5" width="45%" style="max-width: 500px;" />
 </p>
+
+## 🛠️ Tech Stack
+
+* HTML5 & CSS3
+* JavaScript (ES6+)
+* [Bootstrap](https://getbootstrap.com/)
 
 ## 📄 License
 
