@@ -8,46 +8,53 @@ export class Entombed extends Automata {
     static EMPTY_COLOR = 'rgb(0, 0, 0)'
     static WALL_COLOR = 'rgb(187, 187, 53)'
 
+    // Entombed Mystery Table
+    static MYSTERY_TABLE = {
+        '00000': { name: 'Wall  ', getValue: () => Entombed.WALL },
+        '00001': { name: 'Wall  ', getValue: () => Entombed.WALL },
+        '00010': { name: 'Wall  ', getValue: () => Entombed.WALL },
+        '00011': { name: 'Random', getValue: () => Entombed.random() },
+        '00100': { name: 'Empty ', getValue: () => Entombed.EMPTY },
+        '00101': { name: 'Empty ', getValue: () => Entombed.EMPTY },
+        '00110': { name: 'Random', getValue: () => Entombed.random() },
+        '00111': { name: 'Random', getValue: () => Entombed.random() },
+        '01000': { name: 'Wall  ', getValue: () => Entombed.WALL },
+        '01001': { name: 'Wall  ', getValue: () => Entombed.WALL },
+        '01010': { name: 'Wall  ', getValue: () => Entombed.WALL },
+        '01011': { name: 'Wall  ', getValue: () => Entombed.WALL },
+        '01100': { name: 'Random', getValue: () => Entombed.random() },
+        '01101': { name: 'Empty ', getValue: () => Entombed.EMPTY },
+        '01110': { name: 'Empty ', getValue: () => Entombed.EMPTY },
+        '01111': { name: 'Empty ', getValue: () => Entombed.EMPTY },
+        '10000': { name: 'Wall  ', getValue: () => Entombed.WALL },
+        '10001': { name: 'Wall  ', getValue: () => Entombed.WALL },
+        '10010': { name: 'Wall  ', getValue: () => Entombed.WALL },
+        '10011': { name: 'Random', getValue: () => Entombed.random() },
+        '10100': { name: 'Empty ', getValue: () => Entombed.EMPTY },
+        '10101': { name: 'Empty ', getValue: () => Entombed.EMPTY },
+        '10110': { name: 'Empty ', getValue: () => Entombed.EMPTY },
+        '10111': { name: 'Empty ', getValue: () => Entombed.EMPTY },
+        '11000': { name: 'Random', getValue: () => Entombed.random() },
+        '11001': { name: 'Empty ', getValue: () => Entombed.EMPTY },
+        '11010': { name: 'Wall  ', getValue: () => Entombed.WALL },
+        '11011': { name: 'Random', getValue: () => Entombed.random() },
+        '11100': { name: 'Random', getValue: () => Entombed.random() },
+        '11101': { name: 'Empty ', getValue: () => Entombed.EMPTY },
+        '11110': { name: 'Empty ', getValue: () => Entombed.EMPTY },
+        '11111': { name: 'Empty ', getValue: () => Entombed.EMPTY },
+    }
+
+    /**
+     * @returns {number}
+     */
+    static random() {
+        return Math.random() < 0.5 ? Entombed.WALL : Entombed.EMPTY
+    }
+
     /** @type {SimulationGrid} */
     #simulationGrid
 
     #generationCount = 0n
-
-    // Entombed Mystery Table
-    #mysteryTable = {
-        '00000': () => Entombed.WALL,
-        '00001': () => Entombed.WALL,
-        '00010': () => Entombed.WALL,
-        '00011': () => this.#random(),
-        '00100': () => Entombed.EMPTY,
-        '00101': () => Entombed.EMPTY,
-        '00110': () => this.#random(),
-        '00111': () => this.#random(),
-        '01000': () => Entombed.WALL,
-        '01001': () => Entombed.WALL,
-        '01010': () => Entombed.WALL,
-        '01011': () => Entombed.WALL,
-        '01100': () => this.#random(),
-        '01101': () => Entombed.EMPTY,
-        '01110': () => Entombed.EMPTY,
-        '01111': () => Entombed.EMPTY,
-        '10000': () => Entombed.WALL,
-        '10001': () => Entombed.WALL,
-        '10010': () => Entombed.WALL,
-        '10011': () => this.#random(),
-        '10100': () => Entombed.EMPTY,
-        '10101': () => Entombed.EMPTY,
-        '10110': () => Entombed.EMPTY,
-        '10111': () => Entombed.EMPTY,
-        '11000': () => this.#random(),
-        '11001': () => Entombed.EMPTY,
-        '11010': () => Entombed.WALL,
-        '11011': () => this.#random(),
-        '11100': () => this.#random(),
-        '11101': () => Entombed.EMPTY,
-        '11110': () => Entombed.EMPTY,
-        '11111': () => Entombed.EMPTY,
-    }
 
     /**
      * @param {number} rows 
@@ -59,9 +66,6 @@ export class Entombed extends Automata {
     }
 
     nextGeneration() {
-        if (!this.#mysteryTable) {
-            throw new AppError('Rule not set')
-        }
         if (this.#generationCount === 0n) {
             this.#simulationGrid.storeInitialData()
         }
@@ -140,7 +144,7 @@ export class Entombed extends Automata {
             }
             const [leftLeft, left, topLeft, topMiddle, topRight] = this.#getCells(row, col)
             const key = `${leftLeft}${left}${topLeft}${topMiddle}${topRight}`
-            const value = this.#mysteryTable[key]()
+            const value = Entombed.MYSTERY_TABLE[key].getValue()
             this.#simulationGrid.setValue(row, col, value)
         }
     }
@@ -157,13 +161,6 @@ export class Entombed extends Automata {
         const topMiddle = this.getValue(row - 1, col + 0)
         const topRight = this.getValue(row - 1, col + 1)
         return [leftLeft ?? 0, left ?? 0, topLeft ?? 0, topMiddle ?? 0, topRight ?? 0]
-    }
-
-    /**
-     * @returns {number}
-     */
-    #random() {
-        return Math.random() < 0.5 ? Entombed.WALL : Entombed.EMPTY
     }
 
     get simulationGrid() {

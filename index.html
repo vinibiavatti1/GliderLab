@@ -454,7 +454,25 @@
                     </div>
                     <div>
                         <div class=""><b>Entombed</b></div>
-                        <p class="fg-secondary fs-sm mb-0"><a href="https://en.wikipedia.org/wiki/Entombed_(1983_video_game)" target="_blank">Entombed</a> is a classic 1982 Atari 2600 game famous for its legendary procedural maze-generation algorithm. Operating under extreme hardware limits, the game uses a "Mystery Table" lookup to generate complex, playable vertical labyrinths on the fly.</p>
+                        <p class="fg-secondary fs-sm mb-0"><a href="https://en.wikipedia.org/wiki/Entombed_(1983_video_game)" target="_blank">Entombed</a> is a classic 1982 Atari 2600 game famous for its legendary procedural maze-generation algorithm. Operating under extreme hardware limits, the game uses a <a href="https://arxiv.org/pdf/2104.09982">Mystery Table</a> lookup to generate complex, playable vertical labyrinths on the fly.</p>
+                    </div>
+                </div>
+                <div>
+                    <h5 class="mb-4">Mystery Table</h5>
+                    <div class="w-100 border" style="overflow-y: scroll; height: 230px;">
+                        <table class="table table-borderless w-100 fs-xs text-center m-0">
+                            <thead>
+                                <tr>
+                                    <th title="Left Left">LL</th>
+                                    <th title="Left">LE</th>
+                                    <th title="Top Left">TL</th>
+                                    <th title="Top Middle">TM</th>
+                                    <th title="Top Right">TR</th>
+                                    <th>Result</th>
+                                </tr>
+                            </thead>
+                            <tbody id="app-entombed-mystery-table"></tbody>
+                        </table>
                     </div>
                 </div>
             </div>

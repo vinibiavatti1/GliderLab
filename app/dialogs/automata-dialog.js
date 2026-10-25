@@ -72,6 +72,7 @@ export class AutomataDialog {
         this.#initWireWorldPreview()
         this.#initEntombedPreview()
         this.#initLangtonAntPreview()
+        this.#generateEntombedMysteryTable()
     }
 
     #loadAutomata() {
@@ -392,5 +393,45 @@ export class AutomataDialog {
                 automata.resetGeneration()
             }
         }, 100)
+    }
+
+    #generateEntombedMysteryTable() {
+        const table = document.getElementById('app-entombed-mystery-table')
+        const sortedKeys = Object.keys(Entombed.MYSTERY_TABLE).sort((a, b) => {
+            return parseInt(a, 2) - parseInt(b, 2)
+        })
+        for (const key of sortedKeys) {
+            const value = Entombed.MYSTERY_TABLE[key]
+
+            const tr = document.createElement('tr')
+            const td1 = document.createElement('td')
+            const td2 = document.createElement('td')
+            const td3 = document.createElement('td')
+            const td4 = document.createElement('td')
+            const td5 = document.createElement('td')
+            const td6 = document.createElement('td')
+
+            td1.innerHTML = key[0]
+            td2.innerHTML = key[1]
+            td3.innerHTML = key[2]
+            td4.innerHTML = key[3]
+            td5.innerHTML = key[4]
+            td6.innerHTML = value.name
+
+            key[0] === '0' && td1.classList.add('fg-secondary')
+            key[1] === '0' && td2.classList.add('fg-secondary')
+            key[2] === '0' && td3.classList.add('fg-secondary')
+            key[3] === '0' && td4.classList.add('fg-secondary')
+            key[4] === '0' && td5.classList.add('fg-secondary')
+            key[5] === '0' && td6.classList.add('fg-secondary')
+
+            tr.appendChild(td1)
+            tr.appendChild(td2)
+            tr.appendChild(td3)
+            tr.appendChild(td4)
+            tr.appendChild(td5)
+            tr.appendChild(td6)
+            table.appendChild(tr)
+        }
     }
 }
