@@ -15,7 +15,7 @@ Designed with a clean, retro-modern interface, it allows you to draw on the grid
 
 Cellular automata are discrete models studied in computability theory, mathematics, and theoretical biology. Consisting of a grid of cells in various states, they evolve through a set of recursive rules based on the states of neighboring cells. 
 
-Despite their simple local rules, they can give rise to complex, unpredictable, and Turing-complete global behaviors—demonstrating how intricate patterns emerge from basic underlying mathematics.
+Despite their simple local rules, they can give rise to complex, unpredictable, and Turing-complete global behaviors, demonstrating how intricate patterns emerge from basic underlying mathematics.
 
 ## 🚀 Key Features & Showcases
 
