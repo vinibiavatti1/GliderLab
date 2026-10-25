@@ -30,7 +30,20 @@ Despite their simple local rules, they can give rise to complex, unpredictable, 
 * JavaScript (ES6+)
 * [Bootstrap](https://getbootstrap.com/)
 
-## 
+## 📸 Screenshots
+
+<p align="center">
+    <img src="assets/images/1.png" alt="Glider Lab Screenshot 1" width="45%" style="max-width: 500px;" />
+    <img src="assets/images/2.png" alt="Glider Lab Screenshot 2" width="45%" style="max-width: 500px;" />
+</p>
+<p align="center">
+    <img src="assets/images/3.png" alt="Glider Lab Screenshot 3" width="45%" style="max-width: 500px;" />
+    <img src="assets/images/4.png" alt="Glider Lab Screenshot 4" width="45%" style="max-width: 500px;" />
+</p>
+<p align="center">
+    <img src="assets/images/6.png" alt="Glider Lab Screenshot 6" width="45%" style="max-width: 500px;" />
+    <img src="assets/images/5.png" alt="Glider Lab Screenshot 5" width="45%" style="max-width: 500px;" />
+</p>
 
 ## 📄 License
 
