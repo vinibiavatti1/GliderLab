@@ -66,3 +66,13 @@
 button:active {
     opacity: .75
 }
+
+/* Comming Soon */
+#app-btn-selection,
+#app-btn-new,
+#app-btn-open,
+#app-btn-save {
+    opacity: 0.25;
+    user-select: none;
+    pointer-events: none;
+}
