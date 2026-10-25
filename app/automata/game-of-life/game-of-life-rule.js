@@ -34,6 +34,13 @@ export class GameOfLifeRule {
         return new GameOfLifeRule(name, description, notation, born, survive, aliveColor, deadColor)
     }
 
+    static newCustom({ notation, born, survive }) {
+        const r = Math.floor(Math.random() * 255)
+        const g = Math.floor(Math.random() * 255)
+        const b = Math.floor(Math.random() * 255)
+        return new GameOfLifeRule('Custom', 'Custom', notation, born, survive, `rgb(${r}, ${g}, ${b})`, 'rgb(0, 0, 0)')
+    }
+
     get name() {
         return this.#name
     }

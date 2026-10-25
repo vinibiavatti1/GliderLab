@@ -123,8 +123,11 @@ export class AutomataDialog {
     #loadGameOfLife() {
         if (!this.#selectedGolRule) {
             const notation = `B${this.#customGolBorn.join('')}/S${this.#customGolSurvive.join('')}`
-            const colors = ['rgb(0, 0, 0)', 'rgb(255, 255, 255)']
-            this.#selectedGolRule = new GameOfLifeRule('Custom', 'Custom', notation, this.#customGolBorn, this.#customGolSurvive, colors)
+            this.#selectedGolRule = GameOfLifeRule.newCustom({
+                notation: notation,
+                born: this.#customGolBorn,
+                survive: this.#customGolSurvive,
+            })
         }
         const automata = new GameOfLife(this.#app.rows, this.#app.cols, this.#selectedGolRule)
         this.#app.automata = automata
