@@ -15,7 +15,7 @@ Designed with a clean, retro-modern interface, it allows you to draw on the grid
 
 Cellular automata are discrete models studied in computability theory, mathematics, and theoretical biology. Consisting of a grid of cells in various states, they evolve through a set of recursive rules based on the states of neighboring cells. 
 
-Despite their simple local rules, they can give rise to complex, unpredictable, and Turing-complete global behaviors—demonstrating how intricate patterns emerge from basic underlying mathematics.
+Despite their simple local rules, they can give rise to complex, unpredictable, and Turing-complete global behaviors, demonstrating how intricate patterns emerge from basic underlying mathematics.
 
 ## 🚀 Key Features & Showcases
 
@@ -23,12 +23,6 @@ Despite their simple local rules, they can give rise to complex, unpredictable, 
 * **Wireworld:** A specialized automaton created by Brian Silverman in 1987 to simulate electronic circuits, logical gates, and digital architecture using four distinct cell states.
 * **Interactive Tools:** Full drawing support, grid customization, step-by-step controls, and buffer optimization.
 * And much more!
-
-## 🛠️ Tech Stack
-
-* HTML5 & CSS3
-* JavaScript (ES6+)
-* [Bootstrap](https://getbootstrap.com/)
 
 ## 📸 Screenshots
 
@@ -44,6 +38,12 @@ Despite their simple local rules, they can give rise to complex, unpredictable, 
     <img src="assets/images/6.png" alt="Glider Lab Screenshot 6" width="45%" style="max-width: 500px;" />
     <img src="assets/images/5.png" alt="Glider Lab Screenshot 5" width="45%" style="max-width: 500px;" />
 </p>
+
+## 🛠️ Tech Stack
+
+* HTML5 & CSS3
+* JavaScript (ES6+)
+* [Bootstrap](https://getbootstrap.com/)
 
 ## 📄 License
 
