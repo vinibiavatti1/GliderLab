@@ -52,8 +52,11 @@ export class AboutDialog {
     }
 
     #handleBtnGo() {
-        localStorage.setItem('welcome', 'true')
-        this.#app.play()
+        const firstTime = localStorage.getItem('welcome') !== 'true'
+        if (firstTime) {
+            localStorage.setItem('welcome', 'true')
+            this.#app.play()
+        }
     }
 
     #startChaos() {
