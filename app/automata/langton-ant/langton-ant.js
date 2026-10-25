@@ -13,6 +13,7 @@ export class LangtonAnt extends Automata {
     static ANT_RIGHT = 1
     static ANT_DOWN = 2
     static ANT_LEFT = 3
+    static DEFAULT_ANT_DIRECTION = LangtonAnt.ANT_LEFT
 
     /** @type {SimulationGrid} */
     #simulationGrid
@@ -31,7 +32,6 @@ export class LangtonAnt extends Automata {
     /** @type {number?} */
     #initialAntCol = null
 
-    #initialAntDirection = LangtonAnt.ANT_LEFT
     #antDirection = LangtonAnt.ANT_LEFT
 
     /**
@@ -47,7 +47,6 @@ export class LangtonAnt extends Automata {
         if (this.#generationCount === 0n) {
             this.#initialAntRow = this.#antRow
             this.#initialAntCol = this.#antCol
-            this.#initialAntDirection = this.#antDirection
             this.#simulationGrid.storeInitialData()
         }
         this.#processGeneration()
@@ -58,7 +57,7 @@ export class LangtonAnt extends Automata {
         this.#generationCount = 0n
         this.#antRow = this.#initialAntRow
         this.#antCol = this.#initialAntCol
-        this.#antDirection = this.#initialAntDirection
+        this.#antDirection = LangtonAnt.DEFAULT_ANT_DIRECTION
         this.#simulationGrid.restoreInitialData()
     }
 
@@ -109,8 +108,8 @@ export class LangtonAnt extends Automata {
         }
     }
 
-    restoreSnapshot(rows, cols, dataSnapshot) {
-
+    loadData(rows, cols, data) {
+        this.#simulationGrid.loadData(rows, cols, data)
     }
 
     requestPause() {

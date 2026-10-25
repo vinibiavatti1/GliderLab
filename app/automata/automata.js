@@ -73,9 +73,9 @@ export class Automata {
     /**
      * @param {number} rows
      * @param {number} cols
-     * @param {number[][]} dataSnapshot 
+     * @param {number[][]} data 
      */
-    restoreSnapshot(rows, cols, dataSnapshot) {
+    loadData(rows, cols, data) {
         throw new AppError('Not implemented')
     }
 

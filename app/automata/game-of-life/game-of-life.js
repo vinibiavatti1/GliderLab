@@ -77,8 +77,8 @@ export class GameOfLife extends Automata {
         }
     }
 
-    restoreSnapshot(rows, cols, dataSnapshot) {
-        this.#simulationGrid.restoreSnapshot(rows, cols, dataSnapshot)
+    loadData(rows, cols, data) {
+        this.#simulationGrid.loadData(rows, cols, data)
     }
 
     additionalStatusInfo() {

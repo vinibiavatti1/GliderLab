@@ -20,6 +20,11 @@ export class App {
     static STATE_STEPPING = 3
     static UNDO_SNAPSHOTS_MAX_SIZE = 20
 
+    #speeds = [240, 120, 60, 30, 1]
+    #speedLabels = ['1x', '2x', '4x', '8x', '16x']
+    #selectedSpeed = 2
+    #speedDisplay = document.getElementById('app-speed-display')
+
     #tools = {
         pencil: new PencilTool(this),
         line: new LineTool(this),
@@ -37,16 +42,13 @@ export class App {
         pauseBtn: document.getElementById('app-btn-pause'),
         stopBtn: document.getElementById('app-btn-stop'),
         stepBtn: document.getElementById('app-btn-step'),
-        speed1xBtn: document.getElementById('app-btn-1x'),
-        speed2xBtn: document.getElementById('app-btn-2x'),
-        speed4xBtn: document.getElementById('app-btn-4x'),
-        speed8xBtn: document.getElementById('app-btn-8x'),
-        speed16xBtn: document.getElementById('app-btn-16x'),
         undoBtn: document.getElementById('app-btn-undo'),
         redoBtn: document.getElementById('app-btn-redo'),
         settingsBtn: document.getElementById('app-btn-settings'),
         themeBtn: document.getElementById('app-btn-theme'),
-        gridBtn: document.getElementById('app-btn-grid-toggle')
+        gridBtn: document.getElementById('app-btn-grid-toggle'),
+        speedDown: document.getElementById('app-btn-speed-down'),
+        speedUp: document.getElementById('app-btn-speed-up'),
     }
 
     #toolButtons = {
@@ -93,10 +95,10 @@ export class App {
 
     #currentState = App.STATE_STOPPED
     #currentCellValue = 1
-    #generationDelay = 60
     #rows = 50
     #cols = 100
     #tileSize = 10
+    #generationDelay = 60
 
     /**
      * @param {number} rows 
@@ -118,6 +120,9 @@ export class App {
      * @param {Automata} automata 
      */
     set automata(automata) {
+        if (this.#currentState !== App.STATE_STOPPED) {
+            this.#handleStopBtn()
+        }
         this.#automata = automata
         this.#rows = this.#automata.simulationGrid.rows
         this.#cols = this.#automata.simulationGrid.cols
@@ -127,9 +132,6 @@ export class App {
         this.#currentCellValue = this.#automata.defaultValue
         this.#clearSnapshots()
         this.#enableToolButtons()
-        if (this.#currentState !== App.STATE_STOPPED) {
-            this.#handleStopBtn()
-        }
     }
 
     /**
@@ -143,25 +145,25 @@ export class App {
         this.#display.resize(this.#rows, this.#cols)
     }
 
-    /**
-     * @param {number} delay 
-     */
-    startAutoGeneration(delay) {
+    startAutoGeneration() {
         if (!this.#automata) {
             throw new AppError('Automata not set')
         }
-        this.stopAutoGeneration()
+        if (this.#generationInterval !== null) {
+            throw new AppError('Auto-Generation is already running')
+        }
         this.#generationInterval = setInterval(() => {
             this.#automata.nextGeneration()
             if (this.#automata.requestPause()) {
                 this.#click(this.#buttons.pauseBtn)
             }
-        }, delay)
+        }, this.#generationDelay)
     }
 
     stopAutoGeneration() {
         if (this.#generationInterval != null) {
             clearInterval(this.#generationInterval)
+            this.#generationInterval = null
         }
     }
 
@@ -220,8 +222,6 @@ export class App {
         el.removeAttribute('disabled')
     }
 
-
-
     #setupListeners() {
         this.#buttons.playBtn.addEventListener('click', () => this.#handlePlayBtn())
         this.#buttons.pauseBtn.addEventListener('click', () => this.#handlePauseBtn())
@@ -230,6 +230,8 @@ export class App {
         this.#buttons.undoBtn.addEventListener('click', () => this.#handleUndoBtn())
         this.#buttons.redoBtn.addEventListener('click', () => this.#handleRedoBtn())
         this.#buttons.gridBtn.addEventListener('click', () => this.#handleBtnGrid())
+        this.#buttons.speedDown.addEventListener('click', () => this.#handleSpeedDown())
+        this.#buttons.speedUp.addEventListener('click', () => this.#handleSpeedUp())
 
         this.#toolButtons.pencilBtn.addEventListener('click', evt => this.#handleToolBtn(evt, this.#tools.pencil))
         this.#toolButtons.lineBtn.addEventListener('click', evt => this.#handleToolBtn(evt, this.#tools.line))
@@ -260,7 +262,7 @@ export class App {
         }
         this.#redoSnapshots.push(structuredClone(this.#automata.simulationGrid.data))
         this.enableElement(this.#buttons.redoBtn)
-        this.#automata.restoreSnapshot(this.#rows, this.#cols, previousData)
+        this.#automata.loadData(this.#rows, this.#cols, previousData)
     }
 
     #restoreLastRedoSnapshot() {
@@ -281,7 +283,7 @@ export class App {
         }
         this.#undoSnapshots.push(structuredClone(this.#automata.simulationGrid.data))
         this.enableElement(this.#buttons.undoBtn)
-        this.#automata.restoreSnapshot(this.#rows, this.#cols, subsequentData)
+        this.#automata.loadData(this.#rows, this.#cols, subsequentData)
     }
 
     #clearSnapshots() {
@@ -299,7 +301,7 @@ export class App {
         this.#currentState = App.STATE_RUNNING
 
         this.#configureWireWorldPlayState()
-        this.startAutoGeneration(this.#generationDelay)
+        this.startAutoGeneration()
 
         this.enableElement(this.#buttons.pauseBtn)
         this.enableElement(this.#buttons.stopBtn)
@@ -402,6 +404,34 @@ export class App {
         } else {
             icon.classList.remove('bi-grid')
             icon.classList.add('bi-grid-fill')
+        }
+    }
+
+    #handleSpeedDown() {
+        this.#selectedSpeed--
+        if (this.#selectedSpeed == 0) {
+            this.disableElement(this.#buttons.speedDown)
+        }
+        this.enableElement(this.#buttons.speedUp)
+        this.#generationDelay = this.#speeds[this.#selectedSpeed]
+        this.#speedDisplay.innerHTML = this.#speedLabels[this.#selectedSpeed]
+        if (this.#currentState === App.STATE_RUNNING) {
+            this.stopAutoGeneration()
+            this.startAutoGeneration()
+        }
+    }
+
+    #handleSpeedUp() {
+        this.#selectedSpeed++
+        if (this.#selectedSpeed == this.#speeds.length - 1) {
+            this.disableElement(this.#buttons.speedUp)
+        }
+        this.enableElement(this.#buttons.speedDown)
+        this.#generationDelay = this.#speeds[this.#selectedSpeed]
+        this.#speedDisplay.innerHTML = this.#speedLabels[this.#selectedSpeed]
+        if (this.#currentState === App.STATE_RUNNING) {
+            this.stopAutoGeneration()
+            this.startAutoGeneration()
         }
     }
 

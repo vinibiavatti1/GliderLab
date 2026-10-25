@@ -89,9 +89,17 @@ export class WireWorld extends Automata {
         }
     }
 
-    restoreSnapshot(rows, cols, dataSnapshot) {
-        this.#simulationGrid.restoreSnapshot(rows, cols, dataSnapshot)
+    loadData(rows, cols, dataSnapshot) {
+        this.#simulationGrid.loadData(rows, cols, dataSnapshot)
         this.#syncProcessCoordsWithData()
+    }
+
+    requestPause() {
+        return false
+    }
+
+    supportsSnapshots() {
+        return true
     }
 
     #processGeneration() {
@@ -129,14 +137,6 @@ export class WireWorld extends Automata {
         }
         this.#simulationGrid.flush()
         keysToDelete.forEach(key => this.#coordsToProcess.delete(key))
-    }
-
-    requestPause() {
-        return false
-    }
-
-    supportsSnapshots() {
-        return true
     }
 
     /**

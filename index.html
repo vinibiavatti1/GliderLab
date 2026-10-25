@@ -6,6 +6,8 @@
 
     <title>Glider Lab - Interactive Cellular Automata Playground</title>
 
+    <link rel="icon" type="image/svg+xml" href="/assets/gliderlab.svg">
+
     <link rel="stylesheet" href="./style.css" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@6.0.0-alpha.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-B/GM4XqrwHnWXNOWMbloTmrYXZg10cakYGmpfsR/bbzQ6JAJI4ihuyADKLnBgrCe" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.2/font/bootstrap-icons.min.css">
@@ -36,70 +38,77 @@
     <div class="bg-2">
         <div class="p-1">
             <div class="btn-group" role="group">
-                <div id="app-btn-settings" class="px-4 fw-bold">
+                <div id="app-btn-settings" class="px-4 fw-bold d-flex justify-content-center align-items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="20px" height="20px">
+                        <circle cx="50" cy="25" r="9" fill="#FFFFFF" />
+                        <circle cx="75" cy="50" r="9" fill="#FFFFFF" />
+                        <circle cx="25" cy="75" r="9" fill="#FFFFFF" />
+                        <circle cx="50" cy="75" r="9" fill="#FFFFFF" />
+                        <circle cx="75" cy="75" r="9" fill="#FFFFFF" />
+                    </svg>
                     <span>Glider Lab</span>
                 </div>
             </div>
 
             <div class="app-divider border-start border-body border-1"></div>
             <div class="btn-group" role="group">
-                <button id="app-btn-open" class="btn-icon border-0">
+                <button id="app-btn-open" class="btn-icon border-0" title="New">
                     <i class="bi bi-file-earmark"></i>
                 </button>
-                <button id="app-btn-open" class="btn-icon border-0">
+                <button id="app-btn-open" class="btn-icon border-0" title="Open">
                     <i class="bi bi-folder2-open"></i>
                 </button>
-                <button id="app-btn-save" class="btn-icon border-0">
+                <button id="app-btn-save" class="btn-icon border-0" title="Save">
                     <i class="bi bi-floppy"></i>
                 </button>
             </div>
 
             <div class="app-divider border-start border-body border-1"></div>
             <div class="btn-group" role="group">
-                <button id="app-btn-undo" type="button" class="btn-icon border-0" disabled>
+                <button id="app-btn-undo" type="button" class="btn-icon border-0" disabled title="Undo">
                     <i class="bi bi-arrow-counterclockwise"></i>
                 </button>
-                <button id="app-btn-redo" type="button" class="btn-icon border-0" disabled>
+                <button id="app-btn-redo" type="button" class="btn-icon border-0" disabled title="Redo">
                     <i class="bi bi-arrow-clockwise"></i>
                 </button>
             </div>
 
             <div class="app-divider border-start border-body border-1"></div>
             <div class="btn-group" role="group">
-                <button id="app-btn-settings" type="button" class="btn-icon border-0" data-bs-toggle="dialog" data-bs-target="#app-settings-dialog" data-bs-backdrop="static">
+                <button id="app-btn-settings" type="button" class="btn-icon border-0" data-bs-toggle="dialog" data-bs-target="#app-settings-dialog" data-bs-backdrop="static" title="Settings">
                     <i class="bi bi-gear"></i>
                 </button>
             </div>
 
             <div class="app-divider border-start border-body border-1"></div>
             <div class="btn-group" role="group">
-                <button id="app-btn-about" type="button" class="btn-icon border-0" data-bs-toggle="dialog" data-bs-target="#about-dialog" data-bs-backdrop="static">
+                <button id="app-btn-about" type="button" class="btn-icon border-0" data-bs-toggle="dialog" data-bs-target="#about-dialog" data-bs-backdrop="static" title="About">
                     <i class="bi bi-question-circle"></i>
                 </button>
-                <a href="https://github.com/vinibiavatti1/GliderLab" id="app-btn-github" type="button" class="btn-icon border-0">
+                <a href="https://github.com/vinibiavatti1/GliderLab" id="app-btn-github" type="button" class="btn-icon border-0" title="Github Repository">
                     <i class="bi bi-github"></i>
                 </a>
             </div>
         </div>
         <div class="p-1 border-1 border-bottom border-body">
             <div class="btn-group" role="group">
-                <button id="app-btn-automata" class="btn border-0" data-bs-toggle="dialog" data-bs-target="#app-automata-dialog" data-bs-backdrop="static">
+                <button id="app-btn-automata" class="btn border-0" data-bs-toggle="dialog" data-bs-target="#app-automata-dialog" data-bs-backdrop="static" title="Select Automata">
                     Select Automata
                 </button>
             </div>
 
             <div class="app-divider border-start border-body border-1"></div>
             <div class="btn-group" role="group">
-                <button id="app-btn-play" class="btn-icon border-0 fg-success">
+                <button id="app-btn-play" class="btn-icon border-0 fg-success" title="Play">
                     <i class="bi bi-play"></i>
                 </button>
-                <button id="app-btn-pause" class="btn-icon border-0 fg-warning" disabled>
+                <button id="app-btn-pause" class="btn-icon border-0 fg-warning" disabled title="Pause">
                     <i class="bi bi-pause"></i>
                 </button>
-                <button id="app-btn-stop" class="btn-icon border-0 fg-danger" disabled>
+                <button id="app-btn-stop" class="btn-icon border-0 fg-danger" disabled title="Stop">
                     <i class="bi bi-stop"></i>
                 </button>
-                <button id="app-btn-step" class="btn-icon border-0">
+                <button id="app-btn-step" class="btn-icon border-0" title="Step">
                     <i class="bi bi-skip-end"></i>
                 </button>
 
@@ -107,44 +116,38 @@
 
             <div class="app-divider border-start border-body border-1"></div>
             <div class="btn-group" role="group">
-                <button id="app-btn-1x" type="button" class="btn-icon border-0 active">
-                    1x
+                <button id="app-btn-speed-down" type="button" class="btn-icon border-0" title="Speed Down">
+                    <i class="bi bi-chevron-double-left"></i>
                 </button>
-                <button id="app-btn-2x" type="button" class="btn-icon border-0">
-                    2x
-                </button>
-                <button id="app-btn-4x" type="button" class="btn-icon border-0">
+                <button id="app-speed-display" type="button" disabled class="btn-icon border-0">
                     4x
                 </button>
-                <button id="app-btn-8x" type="button" class="btn-icon border-0">
-                    8x
-                </button>
-                <button id="app-btn-16x" type="button" class="btn-icon border-0">
-                    16x
+                <button id="app-btn-speed-up" type="button" class="btn-icon border-0" title="Speed Up">
+                    <i class="bi bi-chevron-double-right"></i>
                 </button>
             </div>
 
             <div class="app-divider border-start border-body border-1"></div>
             <div class="btn-group" role="group">
-                <button id="app-btn-pencil" type="button" class="btn-icon border-0 active">
+                <button id="app-btn-pencil" type="button" class="btn-icon border-0 active" title="Pencil">
                     <i class="bi bi-pencil"></i>
                 </button>
-                <button id="app-btn-line" type="button" class="btn-icon border-0">
+                <button id="app-btn-line" type="button" class="btn-icon border-0" title="Line">
                     <i class="bi bi-dash-lg"></i>
                 </button>
-                <button id="app-btn-rect" type="button" class="btn-icon border-0">
+                <button id="app-btn-rect" type="button" class="btn-icon border-0" title="Rect">
                     <i class="bi bi-square"></i>
                 </button>
-                <button id="app-btn-rect-fill" type="button" class="btn-icon border-0">
+                <button id="app-btn-rect-fill" type="button" class="btn-icon border-0" title="Fill Rect">
                     <i class="bi bi-square-fill"></i>
                 </button>
-                <button id="app-btn-bucket" type="button" class="btn-icon border-0">
+                <button id="app-btn-bucket" type="button" class="btn-icon border-0" title="Bucket">
                     <i class="bi bi-paint-bucket"></i>
                 </button>
-                <button id="app-btn-selection" type="button" class="btn-icon border-0">
+                <button id="app-btn-selection" type="button" class="btn-icon border-0" title="Selection">
                     <i class="bi bi-bounding-box-circles"></i>
                 </button>
-                <button id="app-btn-eraser" type="button" class="btn-icon border-0">
+                <button id="app-btn-eraser" type="button" class="btn-icon border-0" title="Eraser">
                     <i class="bi bi-eraser"></i>
                 </button>
             </div>
@@ -152,10 +155,10 @@
             <div id="app-wireworld-tools" style="display: none;">
                 <div class="app-divider border-start border-body border-1"></div>
                 <div class="btn-group" role="group">
-                    <button id="app-btn-wireworld-conductor" type="button" class="btn-icon border-0 active">
+                    <button id="app-btn-wireworld-conductor" type="button" class="btn-icon border-0 active" title="Conductor">
                         <i class="bi bi-plug"></i>
                     </button>
-                    <button id="app-btn-wireworld-electron" type="button" class="btn-icon border-0">
+                    <button id="app-btn-wireworld-electron" type="button" class="btn-icon border-0" title="Electron">
                         <i class="bi bi-lightning"></i>
                     </button>
                 </div>
@@ -163,7 +166,7 @@
 
             <div class="app-divider border-start border-body border-1"></div>
             <div class="btn-group" role="group">
-                <button id="app-btn-grid-toggle" type="button" class="btn-icon border-0">
+                <button id="app-btn-grid-toggle" type="button" class="btn-icon border-0" title="Toggle Grid">
                     <i id="app-grid-icon" class="bi bi-grid"></i>
                 </button>
             </div>
