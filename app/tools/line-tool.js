@@ -2,7 +2,8 @@ import { Tool } from "./tool.js"
 
 /** @implements {Tool} */
 export class LineTool extends Tool {
-    #mousePressed = false
+    /** @type {App} */
+    #app
 
     /** @type {number?} */
     #mouseSrcRow = null
@@ -16,21 +17,32 @@ export class LineTool extends Tool {
     /** @type {number?} */
     #mouseDstCol = null
 
+    #mousePressed = false
+
     /**
      * @param {App} app 
      */
     constructor(app) {
-        super(app)
+        super()
+        this.#app = app
     }
 
     /**
      * @param {number} row 
      * @param {number} col 
      */
-    onMousePressed(row, col) {
+    onMouseLeftPressed(row, col) {
         this.#mousePressed = true
         this.#mouseSrcRow = row
         this.#mouseSrcCol = col
+    }
+
+    /**
+     * @param {number} row 
+     * @param {number} col 
+     */
+    onMouseRightPressed(row, col) {
+        this.#reset()
     }
 
     /**
@@ -56,18 +68,15 @@ export class LineTool extends Tool {
         }
         this.#mouseDstRow = row
         this.#mouseDstCol = col
-        this.app.saveSnapshot()
+        this.#app.saveSnapshot()
         const cells = this.#getBresenhamLine(this.#mouseSrcRow, this.#mouseSrcCol, this.#mouseDstRow, this.#mouseDstCol);
         for (const [c, r] of cells) {
-            this.app.automata.setValue(r, c, this.app.currentCellValue)
+            this.#app.automata.setValue(r, c, this.#app.currentCellValue)
         }
-        this.#mouseSrcRow = null
-        this.#mouseSrcCol = null
-        this.#mouseDstRow = null
-        this.#mouseDstCol = null
+        this.#reset()
     }
 
-
+    onMouseLeave() { }
 
     /**
      * @param {CanvasRenderingContext2D} displayBufferContext
@@ -85,12 +94,19 @@ export class LineTool extends Tool {
         const cells = this.#getBresenhamLine(this.#mouseSrcRow, this.#mouseSrcCol, this.#mouseDstRow, this.#mouseDstCol);
         for (const [col, row] of cells) {
             displayBufferContext.fillRect(
-                col * this.app.tileSize,
-                row * this.app.tileSize,
-                this.app.tileSize,
-                this.app.tileSize
+                col * this.#app.tileSize,
+                row * this.#app.tileSize,
+                this.#app.tileSize,
+                this.#app.tileSize
             );
         }
+    }
+
+    #reset() {
+        this.#mouseSrcRow = null
+        this.#mouseSrcCol = null
+        this.#mouseDstRow = null
+        this.#mouseDstCol = null
     }
 
     /**

@@ -52,8 +52,12 @@ export class Elementary extends Automata {
         return this.#simulationGrid.getValue(row, col)
     }
 
-    getValueColor(row, col) {
+    getCoordinatesColor(row, col) {
         const value = this.#simulationGrid.getValue(row, col)
+        return this.getvalueColor(value)
+    }
+
+    getvalueColor(value) {
         if (value === 1) {
             return Elementary.ALIVE_COLOR
         }
@@ -71,7 +75,7 @@ export class Elementary extends Automata {
     render(context, tileSize) {
         for (let row = 0; row < this.#simulationGrid.rows; row++) {
             for (let col = 0; col < this.#simulationGrid.cols; col++) {
-                const color = this.getValueColor(row, col)
+                const color = this.getCoordinatesColor(row, col)
                 context.fillStyle = color
                 context.fillRect(col * tileSize, row * tileSize, tileSize, tileSize)
             }

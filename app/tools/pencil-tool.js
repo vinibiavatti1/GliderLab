@@ -2,23 +2,33 @@ import { Tool } from "./tool.js"
 
 /** @implements {Tool} */
 export class PencilTool extends Tool {
+    /** @type {App} */
+    #app
+
     #mousePressed = false
 
     /**
      * @param {App} app 
      */
     constructor(app) {
-        super(app)
+        super()
+        this.#app = app
     }
 
     /**
      * @param {number} row 
      * @param {number} col 
      */
-    onMousePressed(row, col) {
-        this.app.saveSnapshot()
+    onMouseLeftPressed(row, col) {
+        this.#app.saveSnapshot()
         this.#mousePressed = true
     }
+
+    /**
+     * @param {number} row 
+     * @param {number} col 
+     */
+    onMouseRightPressed(row, col) { }
 
     /**
      * @param {number} row 
@@ -28,7 +38,7 @@ export class PencilTool extends Tool {
         if (!this.#mousePressed) {
             return
         }
-        this.app.automata.setValue(row, col, this.app.currentCellValue)
+        this.#app.automata.setValue(row, col, this.#app.currentCellValue)
     }
 
     /**
@@ -37,10 +47,15 @@ export class PencilTool extends Tool {
      */
     onMouseReleased(row, col) {
         this.#mousePressed = false
-        this.app.automata.setValue(row, col, this.app.currentCellValue)
+        this.#app.automata.setValue(row, col, this.#app.currentCellValue)
     }
 
     onMouseLeave() {
         this.#mousePressed = false
     }
+
+    /**
+     * @param {CanvasRenderingContext2D} displayBufferContext
+     */
+    renderPreview(displayBufferContext) { }
 }

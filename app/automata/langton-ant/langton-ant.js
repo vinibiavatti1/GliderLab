@@ -77,8 +77,12 @@ export class LangtonAnt extends Automata {
         return this.#simulationGrid.getValue(row, col)
     }
 
-    getValueColor(row, col) {
-        switch (this.#simulationGrid.getValue(row, col)) {
+    getCoordinatesColor(row, col) {
+        return this.getvalueColor(this.#simulationGrid.getValue(row, col))
+    }
+
+    getvalueColor(value) {
+        switch (value) {
             case LangtonAnt.WHITE: return LangtonAnt.WHITE_COLOR
             case LangtonAnt.BLACK: return LangtonAnt.BLACK_COLOR
             case LangtonAnt.ANT: return LangtonAnt.ANT_COLOR
@@ -97,7 +101,7 @@ export class LangtonAnt extends Automata {
     render(context, tileSize) {
         for (let row = 0; row < this.#simulationGrid.rows; row++) {
             for (let col = 0; col < this.#simulationGrid.cols; col++) {
-                const color = this.getValueColor(row, col)
+                const color = this.getCoordinatesColor(row, col)
                 context.fillStyle = color
                 context.fillRect(col * tileSize, row * tileSize, tileSize, tileSize)
             }

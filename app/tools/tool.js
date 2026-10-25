@@ -1,55 +1,54 @@
-import { App } from "../app.js"
 import { AppError } from "../app-error.js"
 
 export class Tool {
-    /** @type {App} */
-    #app
-
     /**
-     * @param {App} app 
-     */
-    constructor(app) {
-        this.#app = app
-    }
-
-    /**
-     * @virtual
+     * @abstract
      * @param {number} row 
      * @param {number} col 
      */
-    onMousePressed(row, col) {
+    onMouseLeftPressed(row, col) {
+        throw new AppError('not implemented')
     }
 
     /**
-     * @virtual
+     * @abstract
+     * @param {number} row 
+     * @param {number} col 
+     */
+    onMouseRightPressed(row, col) {
+        throw new AppError('not implemented')
+    }
+
+    /**
+     * @abstract
      * @param {number} row 
      * @param {number} col 
      */
     onMouseMove(row, col) {
+        throw new AppError('not implemented')
     }
 
     /**
-     * @virtual
+     * @abstract
      * @param {number} row 
      * @param {number} col 
      */
     onMouseReleased(row, col) {
+        throw new AppError('not implemented')
     }
 
     /**
-     * @virtual
+     * @abstract
      */
     onMouseLeave() {
+        throw new AppError('not implemented')
     }
 
     /**
-     * @virtual
+     * @abstract
      * @param {CanvasRenderingContext2D} displayBufferContext
      */
     renderPreview(displayBufferContext) {
-    }
-
-    get app() {
-        return this.#app
+        throw new AppError('not implemented')
     }
 }

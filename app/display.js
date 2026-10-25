@@ -6,6 +6,8 @@ export class Display {
     static GRID_COLOR = 'rgba(255, 255, 255, .1)'
     static CURSOR_COLOR = 'rgba(255, 255, 255, .4)'
     static RENDER_DELAY = 60
+    static LEFT_MOUSE_BTN = 0
+    static RIGHT_MOUSE_BTN = 2
 
     /** @type {App} */
     #app
@@ -72,10 +74,10 @@ export class Display {
     #render() {
         this.#clear()
         this.#renderAutomata()
-        this.#renderGrid()
-        this.#renderStatus()
         this.#renderCursor()
         this.#renderTool()
+        this.#renderGrid()
+        this.#renderStatus()
         this.#flush()
     }
 
@@ -176,16 +178,22 @@ export class Display {
     #handleMouseDown(evt) {
         const row = this.#app.translateCoordinateToGrid(evt.offsetY)
         const col = this.#app.translateCoordinateToGrid(evt.offsetX)
-        this.#app.currentTool.onMousePressed(row, col)
+        if (evt.button === Display.LEFT_MOUSE_BTN) {
+            this.#app.currentTool.onMouseLeftPressed(row, col)
+        } else {
+            this.#app.currentTool.onMouseRightPressed(row, col)
+        }
     }
 
     /**
      * @param {MouseEvent} evt 
      */
     #handleMouseUp(evt) {
-        const row = this.#app.translateCoordinateToGrid(evt.offsetY)
-        const col = this.#app.translateCoordinateToGrid(evt.offsetX)
-        this.#app.currentTool.onMouseReleased(row, col)
+        if (evt.button === Display.LEFT_MOUSE_BTN) {
+            const row = this.#app.translateCoordinateToGrid(evt.offsetY)
+            const col = this.#app.translateCoordinateToGrid(evt.offsetX)
+            this.#app.currentTool.onMouseReleased(row, col)
+        }
     }
 
     #handleMouseLeave() {
@@ -198,6 +206,7 @@ export class Display {
         this.#display.addEventListener('mousedown', evt => this.#handleMouseDown(evt))
         this.#display.addEventListener('mouseup', evt => this.#handleMouseUp(evt))
         this.#display.addEventListener('mouseleave', () => this.#handleMouseLeave())
+        this.#display.addEventListener('contextmenu', evt => evt.preventDefault())
     }
 
     get showGrid() {

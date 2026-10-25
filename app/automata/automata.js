@@ -42,7 +42,16 @@ export class Automata {
      * @param {number} col 
      * @returns {string}
      */
-    getValueColor(row, col) {
+    getCoordinatesColor(row, col) {
+        throw new AppError('Not implemented')
+    }
+
+    /**
+     * @abstract
+     * @param {number} value 
+     * @returns {string}
+     */
+    getvalueColor(value) {
         throw new AppError('Not implemented')
     }
 

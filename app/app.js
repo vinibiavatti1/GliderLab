@@ -11,6 +11,7 @@ import { LineTool } from "./tools/line-tool.js"
 import { PencilTool } from "./tools/pencil-tool.js"
 import { RectFillTool } from "./tools/rect-fill-tool.js"
 import { RectTool } from "./tools/rect-tool.js"
+import { SelectionTool } from "./tools/selection-tool.js"
 import { Tool } from "./tools/tool.js"
 
 export class App {
@@ -32,6 +33,7 @@ export class App {
         rectFill: new RectFillTool(this),
         bucket: new BucketTool(this),
         eraser: new EraserTool(this),
+        selection: new SelectionTool(this),
     }
 
     #buttons = {
@@ -239,6 +241,7 @@ export class App {
         this.#toolButtons.rectFillBtn.addEventListener('click', evt => this.#handleToolBtn(evt, this.#tools.rectFill))
         this.#toolButtons.bucketBtn.addEventListener('click', evt => this.#handleToolBtn(evt, this.#tools.bucket))
         this.#toolButtons.eraserBtn.addEventListener('click', evt => this.#handleToolBtn(evt, this.#tools.eraser))
+        this.#toolButtons.selectionBtn.addEventListener('click', evt => this.#handleToolBtn(evt, this.#tools.selection))
 
         this.#wireWorldButtons.conductorBtn.addEventListener('click', evt => this.#handleWireWorldToolBtn(evt, WireWorld.CONDUCTOR))
         this.#wireWorldButtons.electronBtn.addEventListener('click', evt => this.#handleWireWorldToolBtn(evt, WireWorld.ELECTRON_HEAD))
@@ -383,6 +386,7 @@ export class App {
         Object.values(this.#toolButtons).map(btn => btn.classList.remove('active'))
         evt.currentTarget.classList.add('active')
         this.#currentTool = tool
+        this.#tools.selection.reset()
     }
 
     /**
