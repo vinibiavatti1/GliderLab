@@ -43,7 +43,7 @@ Despite their simple local rules, they can give rise to complex, unpredictable, 
 
 * HTML5 & CSS3
 * JavaScript (ES6+)
-* [Bootstrap](https://getbootstrap.com/)
+* [Bootstrap v6.0](https://getbootstrap.com/)
 
 ## 📄 License
 
