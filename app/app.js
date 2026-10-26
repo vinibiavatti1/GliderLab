@@ -414,13 +414,10 @@ export class App {
 
     #handleBtnGrid() {
         this.#display.showGrid = !this.#display.showGrid
-        const icon = document.getElementById('app-grid-icon')
         if (this.#display.showGrid) {
-            icon.classList.add('bi-grid')
-            icon.classList.remove('bi-grid-fill')
+            this.#buttons.gridBtn.classList.add('active')
         } else {
-            icon.classList.remove('bi-grid')
-            icon.classList.add('bi-grid-fill')
+            this.#buttons.gridBtn.classList.remove('active')
         }
     }
 

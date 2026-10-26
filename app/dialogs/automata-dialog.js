@@ -59,6 +59,7 @@ export class AutomataDialog {
     #golRulePreset = document.getElementById('app-gol-rule-preset')
     #elementerRuleInput = document.getElementById('app-elementary-rule')
     #wireWorldToolsContainer = document.getElementById('app-wireworld-tools')
+    #strobeEffectAdviceLabel = document.getElementById('app-strobe-effect-advice')
 
     /**
      * @param {App} app 
@@ -187,9 +188,15 @@ export class AutomataDialog {
         this.#selectedGolRule = null
         const value = parseInt(evt.target.getAttribute('data-value'))
         if (!evt.target.classList.contains('active')) {
+            if (value === 0) {
+                this.#strobeEffectAdviceLabel.style.display = 'block'
+            }
             evt.target.classList.add('active')
             this.#customGolBorn.push(value)
         } else {
+            if (value === 0) {
+                this.#strobeEffectAdviceLabel.style.display = 'none'
+            }
             evt.target.classList.remove('active')
             this.#customGolBorn = this.#customGolBorn.filter(x => x !== value)
         }
@@ -214,6 +221,7 @@ export class AutomataDialog {
      * @param {Event} evt 
      */
     #handleGolRuleSelectChange(evt) {
+        this.#strobeEffectAdviceLabel.style.display = 'none'
         const value = evt.target.value
         if (value === 'custom') {
             this.#selectedGolRule = null
@@ -235,6 +243,9 @@ export class AutomataDialog {
                 throw new AppError('Rule not found: ' + value)
             }
             this.#selectedGolRule = GameOfLifeRegistry[value]
+            if (this.#selectedGolRule.born.includes(0)) {
+                this.#strobeEffectAdviceLabel.style.display = 'block'
+            }
             this.#golBornBtns.forEach(btn => {
                 btn.classList.remove('active')
                 const btnValue = parseInt(btn.getAttribute('data-value'))

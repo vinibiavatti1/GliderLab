@@ -175,8 +175,8 @@
 
             <div class="app-divider border-start border-body border-1"></div>
             <div class="btn-group" role="group">
-                <button id="app-btn-grid-toggle" type="button" class="btn-icon border-0" title="Toggle Grid">
-                    <i id="app-grid-icon" class="bi bi-grid"></i>
+                <button id="app-btn-grid-toggle" type="button" class="btn-icon border-0 active" title="Toggle Grid">
+                    <i class="bi bi-grid"></i>
                 </button>
             </div>
         </div>
@@ -246,6 +246,7 @@
                 <div class="form-field mb-3">
                     <label class="form-label">Born:</label>
                     <div class="btn-group" role="group" aria-label="Basic example">
+                        <button type="button" class="btn-solid app-gol-born-btn" data-value="0" disabled>0</button>
                         <button type="button" class="btn-solid app-gol-born-btn" data-value="1" disabled>1</button>
                         <button type="button" class="btn-solid app-gol-born-btn" data-value="2" disabled>2</button>
                         <button type="button" class="btn-solid app-gol-born-btn" data-value="3" disabled>3</button>
@@ -260,6 +261,7 @@
                 <div class="form-field">
                     <label class="form-label">Survive:</label>
                     <div class="btn-group" role="group" aria-label="Basic example">
+                        <button type="button" class="btn-solid app-gol-survive-btn" data-value="0" disabled>0</button>
                         <button type="button" class="btn-solid app-gol-survive-btn" data-value="1" disabled>1</button>
                         <button type="button" class="btn-solid app-gol-survive-btn" data-value="2" disabled>2</button>
                         <button type="button" class="btn-solid app-gol-survive-btn" data-value="3" disabled>3</button>
@@ -492,9 +494,16 @@
             </div>
 
         </div>
-        <div class="dialog-footer">
-            <button type="button" class="btn-solid theme-secondary" data-bs-dismiss="dialog">Close</button>
-            <button id="app-automata-select-btn" type="button" class="btn-solid theme-primary" data-bs-dismiss="dialog">Select</button>
+        <div class="dialog-footer d-flex justify-content-between">
+            <div>
+                <div id="app-strobe-effect-advice" class="fg-warning" style="display: none;">
+                    <i class="bi bi-exclamation-diamond"></i> <b>Warning!</b> The selected GoL rule has strobe effect!
+                </div>
+            </div>
+            <div>
+                <button type="button" class="btn-solid theme-secondary" data-bs-dismiss="dialog">Close</button>
+                <button id="app-automata-select-btn" type="button" class="btn-solid theme-primary" data-bs-dismiss="dialog">Select</button>
+            </div>
         </div>
     </dialog>
 
