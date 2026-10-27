@@ -102,17 +102,18 @@ export class GameOfLife extends Automata {
         for (let row = 0; row < this.#simulationGrid.rows; row++) {
             for (let col = 0; col < this.#simulationGrid.cols; col++) {
                 const count = this.#countSurroundingCells(row, col, GameOfLife.ALIVE)
-                if (this.#rule.born.includes(count)) {
-                    this.#simulationGrid.setValueInBuffer(row, col, GameOfLife.ALIVE)
+                const isAlive = this.#simulationGrid.getValue(row, col) === GameOfLife.ALIVE
+
+                const willBeAlive = isAlive
+                    ? this.#rule.survive.includes(count)
+                    : this.#rule.born.includes(count)
+
+                this.#simulationGrid.setValueInBuffer(
+                    row, col,
+                    willBeAlive ? GameOfLife.ALIVE : GameOfLife.DEAD
+                )
+                if (willBeAlive) {
                     this.#populationCount++
-                } else if (this.#rule.survive.includes(count)) {
-                    const currentValue = this.#simulationGrid.getValue(row, col)
-                    this.#simulationGrid.setValueInBuffer(row, col, currentValue)
-                    if (currentValue === GameOfLife.ALIVE) {
-                        this.#populationCount++
-                    }
-                } else {
-                    this.#simulationGrid.setValueInBuffer(row, col, GameOfLife.DEAD)
                 }
             }
         }
