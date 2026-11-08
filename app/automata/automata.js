@@ -106,6 +106,14 @@ export class Automata {
 
     /**
      * @abstract
+     * @returns {string}
+     */
+    export() {
+        throw new AppError('Not implemented')
+    }
+
+    /**
+     * @abstract
      * @returns {SimulationGrid}
      */
     get simulationGrid() {

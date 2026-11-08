@@ -4,6 +4,7 @@ import { ElementaryRule } from "./elementary-rule.js"
 
 /** @implements {Automata} */
 export class Elementary extends Automata {
+    static ID = 'Elementary'
     static DEAD = 0
     static ALIVE = 1
     static DEAD_COLOR = 'rgb(0, 0, 0)'
@@ -92,6 +93,16 @@ export class Elementary extends Automata {
 
     supportsSnapshots() {
         return true
+    }
+
+    export() {
+        return JSON.stringify({
+            id: Elementary.ID,
+            ruleNumber: this.#rule.number,
+            rows: this.#simulationGrid.rows,
+            cols: this.#simulationGrid.cols,
+            data: structuredClone(this.#simulationGrid.data)
+        })
     }
 
     #processGeneration() {

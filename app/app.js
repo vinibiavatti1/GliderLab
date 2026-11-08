@@ -1,5 +1,8 @@
 import { AppError } from "./app-error.js"
 import { Automata } from "./automata/automata.js"
+import { AutomataImporter } from "./automata/automata-importer.js"
+import { Elementary } from "./automata/elementary/elementary.js"
+import { GameOfLife } from "./automata/game-of-life/game-of-life.js"
 import { WireWorld } from "./automata/wireworld/wireworld.js"
 import { AboutDialog } from "./dialogs/about-dialog.js"
 import { AutomataDialog } from "./dialogs/automata-dialog.js"
@@ -163,6 +166,9 @@ export class App {
         this.disableElement(this.#buttons.playBtn)
         this.disableElement(this.#buttons.undoBtn)
         this.disableElement(this.#buttons.redoBtn)
+        this.disableElement(this.#buttons.newBtn)
+        this.disableElement(this.#buttons.saveBtn)
+        this.disableElement(this.#buttons.openBtn)
     }
 
     pause() {
@@ -185,6 +191,9 @@ export class App {
 
         this.enableElement(this.#buttons.playBtn)
         this.enableElement(this.#buttons.stepBtn)
+        this.enableElement(this.#buttons.newBtn)
+        this.enableElement(this.#buttons.saveBtn)
+        this.enableElement(this.#buttons.openBtn)
 
         this.disableElement(this.#buttons.pauseBtn)
         this.disableElement(this.#buttons.stopBtn)
@@ -218,6 +227,9 @@ export class App {
         this.enableElement(this.#buttons.stepBtn)
 
         this.disableElement(this.#buttons.pauseBtn)
+        this.disableElement(this.#buttons.newBtn)
+        this.disableElement(this.#buttons.saveBtn)
+        this.disableElement(this.#buttons.openBtn)
     }
 
     /**
@@ -321,6 +333,8 @@ export class App {
         this.#buttons.zoomIn.addEventListener('click', () => this.#handleZoomIn())
         this.#buttons.zoomOut.addEventListener('click', () => this.#handleZoomOut())
         this.#buttons.newBtn.addEventListener('click', () => this.#handleNewBtn())
+        this.#buttons.saveBtn.addEventListener('click', () => this.#handleSaveBtn())
+        this.#buttons.openBtn.addEventListener('click', () => this.#handleOpenBtn())
 
         this.#toolButtons.pencilBtn.addEventListener('click', evt => this.#handleToolBtn(evt, this.#tools.pencil))
         this.#toolButtons.lineBtn.addEventListener('click', evt => this.#handleToolBtn(evt, this.#tools.line))
@@ -477,6 +491,52 @@ export class App {
             this.stop()
             this.#automata.clear()
         }
+    }
+
+    #handleSaveBtn() {
+        if (!this.#automata) {
+            throw new AppError('Automata not set')
+        }
+        const fileName = prompt('Enter the file name:', 'automata')
+        if (!fileName) {
+            return
+        }
+        const content = this.#automata.export()
+        const blob = new Blob([content], { type: 'application/json' })
+        const url = URL.createObjectURL(blob)
+        const link = document.createElement('a')
+        link.href = url
+        link.download = fileName
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+        URL.revokeObjectURL(url)
+    }
+
+    #handleOpenBtn() {
+        const input = document.createElement('input')
+        input.type = 'file'
+        input.accept = 'application/json'
+        input.addEventListener('change', evt => this.#handleOpenFile(evt))
+        document.body.appendChild(input)
+        input.click()
+        document.body.removeChild(input)
+    }
+
+    #handleOpenFile(evt) {
+        const file = evt.target.files[0]
+        if (!file) {
+            return
+        }
+        file.text().then(json => {
+            try {
+                const automata = AutomataImporter.importFromJson(json)
+                this.automata = automata
+            } catch (err) {
+                console.error(err)
+                alert('An error ocurred while importing the JSON: ' + err.message)
+            }
+        })
     }
 
     #configureWireWorldPlayState() {

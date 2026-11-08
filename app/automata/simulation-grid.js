@@ -140,10 +140,10 @@ export class SimulationGrid {
     /**
      * @param {number} rows
      * @param {number} cols
-     * @param {number[][]} dataSnapshot 
+     * @param {number[][]} data 
      */
-    loadData(rows, cols, dataSnapshot) {
-        this.#data = structuredClone(dataSnapshot)
+    loadData(rows, cols, data) {
+        this.#data = structuredClone(data)
         this.#rows = rows
         this.#cols = cols
         this.#buffer = structuredClone(this.#data)

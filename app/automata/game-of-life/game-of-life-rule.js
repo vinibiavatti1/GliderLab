@@ -30,6 +30,19 @@ export class GameOfLifeRule {
         this.#deadColor = deadColor
     }
 
+    /** @returns {object} */
+    toObject() {
+        return {
+            name: this.#name,
+            description: this.#description,
+            notation: this.#notation,
+            aliveColor: this.#aliveColor,
+            deadColor: this.#deadColor,
+            survive: this.#survive,
+            born: this.#born
+        }
+    }
+
     static new({ name, description, notation, born, survive, aliveColor, deadColor }) {
         return new GameOfLifeRule(name, description, notation, born, survive, aliveColor, deadColor)
     }

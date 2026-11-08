@@ -3,6 +3,7 @@ import { SimulationGrid } from "../simulation-grid.js"
 
 /** @implements {Automata} */
 export class LangtonAnt extends Automata {
+    static ID = 'LangtonAnt'
     static WHITE = 0
     static BLACK = 1
     static ANT = 2
@@ -124,6 +125,17 @@ export class LangtonAnt extends Automata {
         return false
     }
 
+    export() {
+        return JSON.stringify({
+            id: LangtonAnt.ID,
+            rows: this.#simulationGrid.rows,
+            cols: this.#simulationGrid.cols,
+            antRow: this.#antRow,
+            antCol: this.#antCol,
+            data: structuredClone(this.#simulationGrid.data)
+        })
+    }
+
     #processGeneration() {
         if (this.#antRow === null || this.#antCol === null) {
             return
@@ -181,6 +193,14 @@ export class LangtonAnt extends Automata {
             newValue = LangtonAnt.WHITE
         }
         [this.#antRow, this.#antCol] = this.#simulationGrid.wrapCoordinates(this.#antRow, this.#antCol)
+    }
+
+    set antRow(antRow) {
+        this.#antRow = antRow
+    }
+
+    set antCol(antCol) {
+        this.#antCol = antCol
     }
 
     get simulationGrid() {

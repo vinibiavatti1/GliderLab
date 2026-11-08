@@ -1,9 +1,12 @@
+import { AppError } from "../../app-error.js"
 import { Automata } from "../automata.js"
 import { SimulationGrid } from "../simulation-grid.js"
+import { GameOfLifeRegistry } from "./game-of-life-registry.js"
 import { GameOfLifeRule } from "./game-of-life-rule.js"
 
 /** @implements {Automata} */
 export class GameOfLife extends Automata {
+    static ID = 'GameOfLife'
     static DEAD = 0
     static ALIVE = 1
 
@@ -118,6 +121,16 @@ export class GameOfLife extends Automata {
             }
         }
         this.#simulationGrid.flush()
+    }
+
+    export() {
+        return JSON.stringify({
+            id: GameOfLife.ID,
+            rule: this.#rule.toObject(),
+            rows: this.#simulationGrid.rows,
+            cols: this.#simulationGrid.cols,
+            data: structuredClone(this.#simulationGrid.data)
+        })
     }
 
     /**

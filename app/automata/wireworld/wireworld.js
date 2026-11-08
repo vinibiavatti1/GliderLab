@@ -3,6 +3,7 @@ import { SimulationGrid } from "../simulation-grid.js"
 
 /** @implements {Automata} */
 export class WireWorld extends Automata {
+    static ID = 'WireWorld'
     static EMPTY = 0
     static CONDUCTOR = 1
     static ELECTRON_HEAD = 2
@@ -104,6 +105,15 @@ export class WireWorld extends Automata {
 
     supportsSnapshots() {
         return true
+    }
+
+    export() {
+        return JSON.stringify({
+            id: WireWorld.ID,
+            rows: this.#simulationGrid.rows,
+            cols: this.#simulationGrid.cols,
+            data: structuredClone(this.#simulationGrid.data)
+        })
     }
 
     #processGeneration() {

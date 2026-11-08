@@ -68,8 +68,7 @@ button:active {
 }
 
 /* Comming Soon */
-#app-btn-open,
-#app-btn-save {
+#app-btn-openxxx {
     opacity: 0.25;
     user-select: none;
     pointer-events: none;

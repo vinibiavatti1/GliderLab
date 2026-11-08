@@ -3,6 +3,7 @@ import { SimulationGrid } from "../simulation-grid.js"
 
 /** @implements {Automata} */
 export class Entombed extends Automata {
+    static ID = 'Entombed'
     static EMPTY = 0
     static WALL = 1
     static EMPTY_COLOR = 'rgb(0, 0, 0)'
@@ -126,6 +127,15 @@ export class Entombed extends Automata {
 
     supportsSnapshots() {
         return true
+    }
+
+    export() {
+        return JSON.stringify({
+            id: Entombed.ID,
+            rows: this.#simulationGrid.rows,
+            cols: this.#simulationGrid.cols,
+            data: structuredClone(this.#simulationGrid.data)
+        })
     }
 
     #processGeneration() {
